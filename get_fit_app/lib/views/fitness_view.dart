@@ -19,19 +19,19 @@ class FitnessScreen extends StatelessWidget implements FitnessView {
       ),
     );
   }
-  
+
   @override
   void displayWorkoutDetails(details) {
     // TODO: implement displayWorkoutDetails
   }
-  
+
   @override
   void displayWorkouts(workouts) {
     // TODO: implement displayWorkouts
   }
 
-  @override
- 
+  //@override
+
 }
 
 class FitnessPresenter {
