@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.get_fit_app"
+    namespace = "com.swe.getfit"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
