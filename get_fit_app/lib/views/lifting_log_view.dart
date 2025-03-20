@@ -1,33 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'exercise_log_view.dart';
+
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fitness Tracker',
+      title: 'Exercise Log',
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _goal = '';
   String _exercise = '';
+  int _weight = 0;
   int _reps = 0;
   int _sets = 0;
+  String _home = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fitness Tracker'),
+        title: Text('Exercise Log'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,17 +43,17 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             TextField(
               decoration: InputDecoration(
-                labelText: 'Goal',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (text) => _goal = text,
-            ),
-            TextField(
-              decoration: InputDecoration(
                 labelText: 'Exercise',
                 border: OutlineInputBorder(),
               ),
               onChanged: (text) => _exercise = text,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Weight',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (text) => _weight = int.parse(text),
             ),
             Row(
               children: [
@@ -80,4 +88,5 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-}
+  
+  }
