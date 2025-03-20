@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// This is just a template, currently working on building up the UI
+
 void main() {
   runApp(MyApp());
 }
