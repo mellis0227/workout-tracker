@@ -1,77 +1,79 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import '../presenter/fitness_alarm_presenter.dart';
 
 class AlarmApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fitness Alarm',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: AlarmView(), // The main screen
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: AlarmView(),
     );
   }
 }
 
-/// stateful widget because screen content update over time
 class AlarmView extends StatefulWidget {
   @override
   _AlarmViewState createState() => _AlarmViewState();
 }
 
-
-class _AlarmViewState extends State<AlarmView> {
+class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
+  late AlarmPresenter _presenter;
   String _currentTime = '';
-  Timer? _timer;
+  String? _alarmTime;
 
   final TextEditingController _hourController = TextEditingController();
   final TextEditingController _minuteController = TextEditingController();
 
-  String? _alarmTime;
-
   @override
   void initState() {
     super.initState();
-    _updateTime();
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _updateTime());
-  }
-
-  void _updateTime() {
-    final now = DateTime.now();
-    final formattedTime =
-        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
-    setState(() {
-      _currentTime = formattedTime;
-    });
-  }
-
-  void _setAlarm() {
-    final hour = _hourController.text;
-    final minute = _minuteController.text;
-
-    if (hour.isEmpty || minute.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter both hour and minute')),
-      );
-      return;
-    }
-
-    setState(() {
-      _alarmTime = '${hour.padLeft(2, '0')}:${minute.padLeft(2, '0')}';
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Alarm set for $_alarmTime')),
-    );
+    _presenter = AlarmPresenter(this);
+    _presenter.startClock();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _presenter.dispose();
     _hourController.dispose();
     _minuteController.dispose();
     super.dispose();
+  }
+
+  @override
+  void updateCurrentTime(String time) {
+    setState(() {
+      _currentTime = time;
+    });
+  }
+
+  @override
+  void showAlarmSet(String alarmTime) {
+    setState(() {
+      _alarmTime = alarmTime;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Alarm set for $alarmTime')),
+    );
+  }
+
+  @override
+  void showInputError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  @override
+  void showAlarmTriggered() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('⏰ Alarm is ringing!')),
+    );
+  }
+
+  void _onSetAlarmPressed() {
+    _presenter.setAlarm(_hourController.text, _minuteController.text);
   }
 
   @override
@@ -86,15 +88,10 @@ class _AlarmViewState extends State<AlarmView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Current Time:',
-              style: TextStyle(fontSize: 24),
-            ),
+            Text('Current Time:', style: TextStyle(fontSize: 24)),
             SizedBox(height: 10),
-            Text(
-              _currentTime,
-              style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-            ),
+            Text(_currentTime,
+                style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
             SizedBox(height: 40),
             TextField(
               controller: _hourController,
@@ -115,7 +112,7 @@ class _AlarmViewState extends State<AlarmView> {
             ),
             SizedBox(height: 30),
             ElevatedButton(
-              onPressed: _setAlarm,
+              onPressed: _onSetAlarmPressed,
               child: Text('Set Alarm'),
             ),
             SizedBox(height: 20),

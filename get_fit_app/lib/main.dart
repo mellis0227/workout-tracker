@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'views/fitness_alarm_view.dart';
 
 void main() {
+  runApp(AlarmApp()); //Testing Alarm App
   runApp(const MyApp());
 }
 
