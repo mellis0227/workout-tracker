@@ -40,7 +40,7 @@ class WorkoutApiModel {
   Future<void> createNewWorkoutPlan(String userID, String planName, String workoutName, String workoutDifficulty, String workoutDetails) async {
     try{
       await setWorkoutPlanName(planName, userID);
-      Future.delayed(Duration(seconds: 5));
+     // Future.delayed(Duration(seconds: 1));
       await setWorkoutDetails(userID, planName, workoutName, workoutDifficulty, workoutDetails);
 
     } catch (e){
