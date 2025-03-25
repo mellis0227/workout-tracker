@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'exercise_log_view.dart';
+
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fitness Tracker',
+      title: 'Exercise Log',
       home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -20,63 +26,121 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _goal = '';
   String _exercise = '';
+  int _weight = 0;
   int _reps = 0;
   int _sets = 0;
+  String _home = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fitness Tracker'),
+        title: Text('Exercise Log'),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Goal',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (text) => _goal = text,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Exercise',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (text) => _exercise = text,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text("Exercise"),
+                  TextField(
                     decoration: InputDecoration(
-                      labelText: 'Reps',
+                      labelText: 'Enter exercise here',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (text) => _exercise = text,
+                  ),
+                  SizedBox(height: 20),
+                  Text("Weight"),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Enter weight here',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (text) => _weight = int.parse(text),
+                  ),
+                  SizedBox(height: 20),
+                  Text("Reps"),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Enter reps here',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (text) => _reps = int.parse(text),
                   ),
-                ),
-                Expanded(
-                  child: TextField(
+                  SizedBox(height: 20),
+                  Text("Sets"),
+                  TextField(
                     decoration: InputDecoration(
-                      labelText: 'Sets',
+                      labelText: 'Enter sets here',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (text) => _sets = int.parse(text),
                   ),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Log Exercise'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    )
+                  ),
+                  Column(
+
+                    children: [
+                      SizedBox(height: 20),
+                      Text("Workout Summary", style: TextStyle(fontSize: 20.0),),
+                    ],
+
+                  ),
+                ],
+              ),
             ),
-            ElevatedButton(
-              onPressed: () => print('Button pressed'),
-              child: Text('Log Exercise'),
-            ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Transform.scale(
+                scale: 1.5,
+              child: IconButton(
+                icon: Icon(Icons.home),
+                color: Colors.blue,
+                onPressed: () => print('Home pressed'),
+              ),
+              ),
+              Transform.scale(
+                scale: 1.5,
+              child: IconButton(
+                icon: Icon(Icons.auto_graph),
+                color: Colors.blue,
+                onPressed: () => print('Activity pressed'),
+              ),
+              ),
+              Transform.scale(
+                scale: 1.5,
+              child: IconButton(
+                icon: Icon(Icons.alarm),
+                color: Colors.blue,
+                onPressed: () => print('Schedule pressed'),
+              ),
+              ),
+              Transform.scale(
+                scale: 1.5,
+              child: IconButton(
+                icon: Icon(Icons.person),
+                color: Colors.blue,
+                onPressed: () => print('Profile pressed'),
+              ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
