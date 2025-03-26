@@ -6,7 +6,7 @@ abstract class AlarmViewContract {
   void updateCurrentTime(String time);
   void showAlarmSet(String alarmTime);
   void showInputError(String message);
-  void showAlarmTriggered();
+  void showAlarmTriggered(String ringtone);
 }
 
 class AlarmPresenter {
@@ -27,22 +27,25 @@ class AlarmPresenter {
 
   void _updateTime() {
     final now = DateTime.now();
-    final formattedTime =
-        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
-    _view.updateCurrentTime(formattedTime);
+
+    final timeOnly =
+    '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    _view.updateCurrentTime(
+    '$timeOnly:${now.second.toString().padLeft(2, '0')}'); // for UI only
 
     if (_model.isAlarmTime(now)) {
-      _view.showAlarmTriggered();
-    }
+    print("Alarm triggered at $timeOnly");
+    _view.showAlarmTriggered(_model.getRingtone());
+}
   }
 
-  void setAlarm(String hour, String minute) {
+  void setAlarm(String hour, String minute, String ringtone) {
     if (hour.isEmpty || minute.isEmpty) {
       _view.showInputError('Please enter both hour and minute');
       return;
     }
 
-    _model.setAlarm(hour, minute);
+    _model.setAlarm(hour, minute, ringtone);
     _view.showAlarmSet(_model.alarmTime!);
   }
 }

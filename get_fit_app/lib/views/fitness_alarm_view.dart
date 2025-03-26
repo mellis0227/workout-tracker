@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../presenter/fitness_alarm_presenter.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class AlarmApp extends StatelessWidget {
   @override
@@ -24,6 +25,15 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
 
   final TextEditingController _hourController = TextEditingController();
   final TextEditingController _minuteController = TextEditingController();
+
+  final List<String> _ringtones = [
+    'samsung_ringtone.mp3',
+    '1985_ring.mp3',
+    'army_wake_up.mp3',
+    'air_raid_siren.mp3',
+    'extreme_alarm_clock.mp3',
+  ];
+  String _selectedRingtone = 'samsung_ringtone.mp3';
 
   @override
   void initState() {
@@ -66,14 +76,22 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   }
 
   @override
-  void showAlarmTriggered() {
+  void showAlarmTriggered(String ringtonePath) async {
+    final player = AudioPlayer();
+    await player.play(AssetSource('ringtones/$ringtonePath'));
+
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('⏰ Alarm is ringing!')),
+      SnackBar(content: Text('Alarm is ringing!')),
     );
   }
 
   void _onSetAlarmPressed() {
-    _presenter.setAlarm(_hourController.text, _minuteController.text);
+     _presenter.setAlarm(
+      _hourController.text,
+      _minuteController.text,
+      _selectedRingtone,
+    );
   }
 
   @override
@@ -110,6 +128,24 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                 border: OutlineInputBorder(),
               ),
             ),
+
+            Text('Select Ringtone:', style: TextStyle(fontSize: 18)),
+            DropdownButton<String>(
+              value: _selectedRingtone,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedRingtone = newValue!;
+                });
+              },
+              items: _ringtones.map((ringtone) {
+                return DropdownMenuItem(
+                  value: ringtone,
+                  child: Text(ringtone),
+                );
+              }).toList(),
+            ),
+
+
             SizedBox(height: 30),
             ElevatedButton(
               onPressed: _onSetAlarmPressed,
