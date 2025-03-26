@@ -5,8 +5,8 @@ import 'package:get_fit_app/viewmodel/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
-    Key ? key
-  }): super(key: key);
+    super.key
+  });
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
