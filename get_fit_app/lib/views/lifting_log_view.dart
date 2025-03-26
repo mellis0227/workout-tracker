@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(LiftingLogView());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LiftingLogView extends StatelessWidget {
+  const LiftingLogView({super.key});
 
   @override
   Widget build(BuildContext context) {
