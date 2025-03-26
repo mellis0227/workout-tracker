@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/viewmodel/api_model.dart';
+import 'package:get_fit_app/viewmodel/fitness_alarm_model.dart';
 import 'package:get_fit_app/views/workout_api_view.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:get_fit_app/views/fitness_alarm_view.dart';
+import 'package:get_fit_app/viewmodel/fitness_alarm_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,8 +18,9 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => WorkoutAPIScreen(),
-    )
+      builder: (context, state) => AlarmApp(),
+    ),
+
   ]
 );
 

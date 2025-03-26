@@ -21,6 +21,7 @@ dependencies:
   equatable: ^2.0.3
   http: ^1.3.0
   go_router: ^14.8.1
+  audioplayers: ^6.4.0
 
   
   cupertino_icons: ^1.0.8
@@ -37,3 +38,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/ringtones/
