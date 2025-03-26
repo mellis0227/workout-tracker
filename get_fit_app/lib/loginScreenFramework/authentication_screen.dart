@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/loginScreenFramework/authentication_text_form_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // A StatefulWidget to manage the authentication screen, either for login or registration.
 class AuthenticationScreen extends StatefulWidget {
@@ -24,19 +25,48 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   // Method to handle authentication (either login or register).
   Future<void> _authenticate() async {
-    if (_formKey.currentState!.validate() == false) return; // If form validation fails, return early.
+    if (_formKey.currentState!.validate() == false) return;
 
-    // Show a success message when form is valid.
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Success',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 20),
+    try {
+      // Check if the user is in registration mode
+      if (register) {
+        // Register the user with email and password
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        // Show success message on successful registration
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration Successful', textAlign: TextAlign.center),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Log the user in with email and password
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        // Show success message on successful login
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login Successful', textAlign: TextAlign.center),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error message if login or registration fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString(), textAlign: TextAlign.center),
+          backgroundColor: Colors.red,
         ),
-        backgroundColor: Colors.green,
-      ),
-    );
+      );
+    }
   }
 
   // Build method to construct the UI of the screen.

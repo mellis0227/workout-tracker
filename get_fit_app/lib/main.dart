@@ -1,7 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/loginScreenFramework/authentication_screen.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Make sure the app is initialized before Firebase
+  try {
+    await Firebase.initializeApp(); // Initialize Firebase
+  } catch (e) {
+    print("Error initializing Firebase: $e");
+  }
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
