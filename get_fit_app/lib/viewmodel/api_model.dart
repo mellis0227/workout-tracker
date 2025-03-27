@@ -37,17 +37,6 @@ class WorkoutApiModel {
     }
   }
 
-  Future<void> createNewWorkoutPlan(String userID, String planName, String workoutName, String workoutDifficulty, String workoutDetails) async {
-    try{
-      await setWorkoutPlanName(planName, userID);
-     // Future.delayed(Duration(seconds: 1));
-      await setWorkoutDetails(userID, planName, workoutName, workoutDifficulty, workoutDetails);
-
-    } catch (e){
-      print("Error $e : issues creating entire workout plan");
-    }
-  }
-
   Future<void> setWorkoutPlanName(String planName, String userID) async {
     try{
       FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -55,7 +44,6 @@ class WorkoutApiModel {
       await workoutPlanName.doc(planName).set({
         "plan_name": planName
       });
-      print("plabt namme set");
     } catch (e){
       print("Error $e : issues setting workout plan name");
     }
@@ -69,7 +57,6 @@ class WorkoutApiModel {
         'workout_difficulty': workoutData[index]['difficulty'],
         'workout_details': workoutData[index]['instructions'],
       });
-      print("workouts set");
     } catch(e) {
       print("Error $e : unable to set workouts within new plan name");
     }

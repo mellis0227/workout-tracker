@@ -7,14 +7,13 @@ class WorkoutAPIPresenter {
   Future<List> retrieveWorkoutAPIData(String nameParameter, String parameterMatcher) async {
     return await model.fetchWorkoutData(nameParameter, parameterMatcher);
   }
-
-  void createWorkoutPlan(String userID, String planName, String workoutName, String workoutDifficulty, String workoutDetails) async {
-    await model.createNewWorkoutPlan(userID, planName, workoutName, workoutDifficulty, workoutDetails);
+  Future<void> setWorkoutDetails(String userID, String planName, List<dynamic> workoutData, int index) async {
+    await model.setWorkoutDetails(userID, planName, workoutData, index);
   }
-  void createWorkoutPlanName(String userID, String planName)async{
+  Future<List> getWorkoutPlans(String userID) async {
+    return model.getWorkoutPlans(userID);
+  }
+  Future<void> setWorkoutPlanName(String planName, String userID) async {
     await model.setWorkoutPlanName(planName, userID);
-  }
-  void retrievePlaylistName(String userID) async {
-    await model.retrievePlaylistNames(userID);
   }
 }

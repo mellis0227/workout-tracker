@@ -12,7 +12,8 @@ class WorkoutAPIScreen extends StatefulWidget {
 class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
 
   String? playlistName;
-
+  String? selectedPlaylist;
+  List<dynamic> playlistNames = [];
   WorkoutAPIPresenter presenter = WorkoutAPIPresenter();
   List<dynamic> displayedWorkouts = [];
 
@@ -30,11 +31,19 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     }
   }
 
+  void _getUsersPlaylistNames(String userID) async {
+    List<dynamic> data = await presenter.getWorkoutPlans(userID);
+    setState(() {
+      playlistNames = data;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _getUsersPlaylistNames("user_test");
    // _setWorkoutData("muscle", "biceps");
-    presenter.retrievePlaylistName("user_test");
+
   }
 
   @override
@@ -189,18 +198,21 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
         height: 150,
         child: Column(
           children: [
-            DropdownButton(
+            DropdownButton<String>(
               hint: Text("Select Playlist"),
               isExpanded: true,
-              items: [
-                DropdownMenuItem(
-                  value: "",
-                  child: Text(""),
-                )
-              ],
-              onChanged: (value) => {
-                //mmm
+              value: selectedPlaylist,
+              onChanged: (String? newValue){
+                setState(() {
+                  selectedPlaylist = newValue;
+                });
               },
+              items: playlistNames.map<DropdownMenuItem<String>>((dynamic playlist) {
+                return DropdownMenuItem<String>(
+                  value: playlist,
+                  child: Text(playlist),
+                );
+              }).toList(),
             ),
             TextField(
               decoration: InputDecoration(
@@ -214,7 +226,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               child: Text("Press to Create Playlist"),
               onPressed: () => {
                 createPlaylistButton(),
-                presenter.retrievePlaylistName("user_test")
+                presenter.getWorkoutPlans("user_test")
               },
             ),
 
@@ -245,7 +257,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     );
   }
   void createPlaylistButton(){
-    presenter.createWorkoutPlanName("user_test", playlistName!);
+    presenter.setWorkoutPlanName("user_test", playlistName!);
     return;
   }
 }
