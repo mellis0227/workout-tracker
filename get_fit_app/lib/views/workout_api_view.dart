@@ -11,6 +11,8 @@ class WorkoutAPIScreen extends StatefulWidget {
 
 class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
 
+  String? playlistName;
+
   WorkoutAPIPresenter presenter = WorkoutAPIPresenter();
   List<dynamic> displayedWorkouts = [];
 
@@ -32,6 +34,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   void initState() {
     super.initState();
    // _setWorkoutData("muscle", "biceps");
+    presenter.retrievePlaylistName("user_test");
   }
 
   @override
@@ -61,8 +64,16 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                       showDialog(context: context, builder: (BuildContext context) => showFilters());
                     },
                   ),
+                  Padding(padding: EdgeInsets.all(45)),
+                  TextButton(
+                    child: Text("Workout Playlist", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+                    onPressed: (){
+                      showDialog(context: context, builder: (BuildContext context) => showPlaylist());
+                    }
+                  )
                 ],
               ),
+
             ),
             Expanded(
               child: _buildWorkoutList(),
@@ -92,10 +103,17 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                           "Difficulty ${displayedWorkouts[index]['difficulty']}\n"
                   ),
                   trailing: TextButton(
-                    child: Text("view instructions"),
+                    child: Text("View Instructions"),
                     onPressed: () => {
                       viewInstructionContainer(context, index)
                     },
+                  ),
+                  leading: TextButton(
+                    child: Text("Save"),
+                    onPressed: () => {
+
+                    },
+
                   ),
                 )
             );
@@ -111,7 +129,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
 
   AlertDialog showFilters() {
     return AlertDialog(
-        title: Text("filter by"),
+        title: Text("Filter by"),
         content: SizedBox(
           height: 150,
           child: Column(
@@ -121,20 +139,20 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 isExpanded: true,
                 items: [
                   DropdownMenuItem(
-                    value: "biceps",
-                    child: Text("biceps"),
+                    value: "Biceps",
+                    child: Text("Biceps"),
                   ),
                   DropdownMenuItem(
-                    value: "chest",
-                    child: Text("chest"),
+                    value: "Chest",
+                    child: Text("Chest"),
                   ),
                   DropdownMenuItem(
-                    value: "lats",
-                    child: Text("lats"),
+                    value: "Lats",
+                    child: Text("Lats"),
                   ),
                 ],
                 onChanged: (value) => {
-                  _setWorkoutData('muscle', value!)
+                  _setWorkoutData('Muscle', value!)
                 },
               ),
 
@@ -143,20 +161,20 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 isExpanded: true,
                 items: [
                   DropdownMenuItem(
-                    value: "beginner",
-                    child: Text("beginner"),
+                    value: "Beginner",
+                    child: Text("Beginner"),
                   ),
                   DropdownMenuItem(
-                    value: "intermediate",
-                    child: Text("intermediate"),
+                    value: "Intermediate",
+                    child: Text("Intermediate"),
                   ),
                   DropdownMenuItem(
-                    value: "expert",
-                    child: Text("expert"),
+                    value: "Expert",
+                    child: Text("Expert"),
                   ),
                 ],
                 onChanged: (value) => {
-                  _setWorkoutData('difficulty', value!)
+                  _setWorkoutData('Difficulty', value!)
                 },
               ),
             ],
@@ -164,6 +182,48 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
         )
     );
   }
+  AlertDialog showPlaylist(){
+    return AlertDialog(
+      title: Text("Workout Playlist"),
+      content: SizedBox(
+        height: 150,
+        child: Column(
+          children: [
+            DropdownButton(
+              hint: Text("Select Playlist"),
+              isExpanded: true,
+              items: [
+                DropdownMenuItem(
+                  value: "",
+                  child: Text(""),
+                )
+              ],
+              onChanged: (value) => {
+                //mmm
+              },
+            ),
+            TextField(
+              decoration: InputDecoration(
+                hintText: "Name New Playlist",
+              ),
+              onChanged: (value){
+                playlistName = value;
+              },
+            ),
+            ElevatedButton(
+              child: Text("Press to Create Playlist"),
+              onPressed: () => {
+                createPlaylistButton(),
+                presenter.retrievePlaylistName("user_test")
+              },
+            ),
+
+          ],
+        )
+      )
+    );
+  }
+
 
   void viewInstructionContainer(BuildContext context, int index) {
     showModalBottomSheet(
@@ -175,7 +235,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               child: Column(
                 children: [
                   Text("Instructions"),
-                  Text(displayedWorkouts[index]["instructions"]),
+                  Text(displayedWorkouts[index]["Instructions"]),
                 ],
               ),
             )
@@ -183,5 +243,9 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
         },
         isScrollControlled: true,
     );
+  }
+  void createPlaylistButton(){
+    presenter.createWorkoutPlanName("user_test", playlistName!);
+    return;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:get_fit_app/viewmodel/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {

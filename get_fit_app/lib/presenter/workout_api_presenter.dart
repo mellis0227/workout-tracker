@@ -11,4 +11,10 @@ class WorkoutAPIPresenter {
   void createWorkoutPlan(String userID, String planName, String workoutName, String workoutDifficulty, String workoutDetails) async {
     await model.createNewWorkoutPlan(userID, planName, workoutName, workoutDifficulty, workoutDetails);
   }
+  void createWorkoutPlanName(String userID, String planName)async{
+    await model.setWorkoutPlanName(planName, userID);
+  }
+  void retrievePlaylistName(String userID) async {
+    await model.retrievePlaylistNames(userID);
+  }
 }

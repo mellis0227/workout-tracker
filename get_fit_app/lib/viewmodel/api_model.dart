@@ -51,27 +51,46 @@ class WorkoutApiModel {
   Future<void> setWorkoutPlanName(String planName, String userID) async {
     try{
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      await firestore.collection("user_data").doc(userID).collection("workout_plan").doc(planName).set({
-        'plan_name': planName,
+      final workoutPlanName = firestore.collection('user_data/$userID/workout_plan');
+      await workoutPlanName.doc(planName).set({
+        "plan_name": planName
       });
+      print("plabt namme set");
     } catch (e){
       print("Error $e : issues setting workout plan name");
     }
   }
 
-  Future<void> setWorkoutDetails(String userID, String planName, String workoutName, String workoutDifficulty, String workoutDetails) async {
+  Future<void> setWorkoutDetails(String userID, String planName, List<dynamic> workoutData, int index) async {
     try{
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      firestore.collection('user_data').doc(userID).collection('workout_plan').doc(planName).collection("workouts").doc(workoutName).set({
-        'workout_difficulty': workoutDifficulty,
-        'workout_details': workoutDetails,
+      final workoutPlan = firestore.collection('user_data/$userID/workout_plan').doc(planName).collection("workouts");
+      await workoutPlan.doc(workoutData[index]["name"]).set({
+        'workout_difficulty': workoutData[index]['difficulty'],
+        'workout_details': workoutData[index]['instructions'],
       });
+      print("workouts set");
     } catch(e) {
       print("Error $e : unable to set workouts within new plan name");
     }
   }
 
+  Future<List<dynamic>> getWorkoutPlans(String userID) async {
+    try{
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final workoutPlansCollection = firestore.collection('user_data/$userID/workout_plan');
 
+      final querySnapshot = await workoutPlansCollection.get();
+      List<dynamic> planNames = [];
+      for(var doc in querySnapshot.docs) {
+        planNames.add(doc["plan_name"]);
+      }
+      return planNames;
+    } catch (e) {
+      print("Error $e: unable to retrieve workout plan names");
+      return [];
+    }
+  }
 }
 
 
