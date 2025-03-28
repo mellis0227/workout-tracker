@@ -3,6 +3,8 @@ import '../presenter/fitness_alarm_presenter.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class AlarmApp extends StatelessWidget {
+  const AlarmApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,6 +16,8 @@ class AlarmApp extends StatelessWidget {
 }
 
 class AlarmView extends StatefulWidget {
+  const AlarmView({super.key});
+
   @override
   _AlarmViewState createState() => _AlarmViewState();
 }
