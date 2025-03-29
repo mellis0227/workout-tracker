@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(LiftingLogView());
-}
+import '../viewmodel/lifting_log_model.dart';
+import '../presenter/lifting_log_presenter.dart';
 
 class LiftingLogView extends StatelessWidget {
   const LiftingLogView({super.key});
@@ -11,25 +9,50 @@ class LiftingLogView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Exercise Log',
-      home: MyHomePage(),
+      home: LiftingLog(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class LiftingLog extends StatefulWidget {
+  const LiftingLog({super.key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String _goal = '';
-  String _exercise = '';
-  int _weight = 0;
-  int _reps = 0;
-  int _sets = 0;
-  String _home = '';
+class _MyHomePageState extends State<LiftingLog> {
+  final TextEditingController _exerciseController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _repsController = TextEditingController();
+  final TextEditingController _setsController = TextEditingController();
+
+  final LiftingLogPresenter _presenter = LiftingLogPresenter();
+
+  void _logExercise() {
+    if (
+    _exerciseController.text.isEmpty ||
+        _weightController.text.isEmpty ||
+        _setsController.text.isEmpty ||
+        _repsController.text.isEmpty
+    ) {
+      return;
+    }
+
+    Exercise exercise = Exercise(
+      exercise: _exerciseController.text,
+      weight: int.tryParse(_weightController.text) ?? 0,
+      sets: int.tryParse(_setsController.text) ?? 0,
+      reps: int.tryParse(_repsController.text) ?? 0, id: '',
+    );
+
+    _presenter.logExercise(exercise);
+
+    _exerciseController.clear();
+    _weightController.clear();
+    _setsController.clear();
+    _repsController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,57 +70,47 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Text("Exercise"),
                   TextField(
+                    controller: _exerciseController,
                     decoration: InputDecoration(
                       labelText: 'Enter exercise here',
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (text) => _exercise = text,
                   ),
                   SizedBox(height: 20),
                   Text("Weight"),
                   TextField(
+                    controller: _weightController,
                     decoration: InputDecoration(
-                      labelText: 'Enter weight here',
+                      labelText: 'Enter weight here (lbs)',
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (text) => _weight = int.parse(text),
                   ),
                   SizedBox(height: 20),
                   Text("Reps"),
                   TextField(
+                    controller: _repsController,
                     decoration: InputDecoration(
                       labelText: 'Enter reps here',
                       border: OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (text) => _reps = int.parse(text),
                   ),
                   SizedBox(height: 20),
                   Text("Sets"),
                   TextField(
+                    controller: _setsController,
                     decoration: InputDecoration(
                       labelText: 'Enter sets here',
                       border: OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (text) => _sets = int.parse(text),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _logExercise,
                     child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     )
-                  ),
-                  Column(
-
-                    children: [
-                      SizedBox(height: 20),
-                      Text("Workout Summary", style: TextStyle(fontSize: 20.0),),
-                    ],
-
                   ),
                 ],
               ),
