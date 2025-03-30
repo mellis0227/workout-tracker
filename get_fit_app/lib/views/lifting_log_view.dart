@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../viewmodel/lifting_log_model.dart';
 import '../presenter/lifting_log_presenter.dart';
@@ -29,13 +30,14 @@ class _MyHomePageState extends State<LiftingLog> {
 
   final LiftingLogPresenter _presenter = LiftingLogPresenter();
 
+  String _vanishingMessage = '';
+  Timer? _vanishingTimer;
+
   void _logExercise() {
-    if (
-    _exerciseController.text.isEmpty ||
+    if (_exerciseController.text.isEmpty ||
         _weightController.text.isEmpty ||
         _setsController.text.isEmpty ||
-        _repsController.text.isEmpty
-    ) {
+        _repsController.text.isEmpty) {
       return;
     }
 
@@ -43,7 +45,8 @@ class _MyHomePageState extends State<LiftingLog> {
       exercise: _exerciseController.text,
       weight: int.tryParse(_weightController.text) ?? 0,
       sets: int.tryParse(_setsController.text) ?? 0,
-      reps: int.tryParse(_repsController.text) ?? 0, id: '',
+      reps: int.tryParse(_repsController.text) ?? 0,
+      id: '',
     );
 
     _presenter.logExercise(exercise);
@@ -52,11 +55,41 @@ class _MyHomePageState extends State<LiftingLog> {
     _weightController.clear();
     _setsController.clear();
     _repsController.clear();
+    _showVanishingMessage('Exercise logged successfully!');
+  }
+
+  void _showVanishingMessage(String message) {
+    setState(() {
+      _vanishingMessage = message;
+    });
+    _startVanishingMessageTimer();
+  }
+
+  void _startVanishingMessageTimer() {
+    _vanishingTimer?.cancel();
+    _vanishingTimer = Timer(const Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          _vanishingMessage = '';
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _exerciseController.dispose();
+    _weightController.dispose();
+    _repsController.dispose();
+    _setsController.dispose();
+    _vanishingTimer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Exercise Log'),
         centerTitle: true,
@@ -110,8 +143,25 @@ class _MyHomePageState extends State<LiftingLog> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                    )
+                    ),
                   ),
+                  Column(
+                    children: [
+                      if (_vanishingMessage.isNotEmpty)
+                        Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Text(
+                              _vanishingMessage,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -121,35 +171,35 @@ class _MyHomePageState extends State<LiftingLog> {
             children: [
               Transform.scale(
                 scale: 1.5,
-              child: IconButton(
-                icon: Icon(Icons.home),
-                color: Colors.blue,
-                onPressed: () => print('Home pressed'),
-              ),
-              ),
-              Transform.scale(
-                scale: 1.5,
-              child: IconButton(
-                icon: Icon(Icons.auto_graph),
-                color: Colors.blue,
-                onPressed: () => print('Activity pressed'),
-              ),
+                child: IconButton(
+                  icon: Icon(Icons.home),
+                  color: Colors.blue,
+                  onPressed: () => print('Home pressed'),
+                ),
               ),
               Transform.scale(
                 scale: 1.5,
-              child: IconButton(
-                icon: Icon(Icons.alarm),
-                color: Colors.blue,
-                onPressed: () => print('Schedule pressed'),
-              ),
+                child: IconButton(
+                  icon: Icon(Icons.auto_graph),
+                  color: Colors.blue,
+                  onPressed: () => print('Activity pressed'),
+                ),
               ),
               Transform.scale(
                 scale: 1.5,
-              child: IconButton(
-                icon: Icon(Icons.person),
-                color: Colors.blue,
-                onPressed: () => print('Profile pressed'),
+                child: IconButton(
+                  icon: Icon(Icons.alarm),
+                  color: Colors.blue,
+                  onPressed: () => print('Schedule pressed'),
+                ),
               ),
+              Transform.scale(
+                scale: 1.5,
+                child: IconButton(
+                  icon: Icon(Icons.person),
+                  color: Colors.blue,
+                  onPressed: () => print('Profile pressed'),
+                ),
               ),
             ],
           ),
