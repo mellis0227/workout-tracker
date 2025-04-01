@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-
+import 'package:get_fit_app/views/fitness_alarm_view.dart';
+import 'package:get_fit_app/views/lifting_log_view.dart';
+import 'package:get_fit_app/views/running_log_view.dart';
 void main() {
-  runApp(MyApp());
+  runApp(activityLog());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class activityLog extends StatelessWidget {
+  const activityLog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Activity Log',
-      home: MyHomePage(),
+      home: ActivityLog(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class ActivityLog extends StatefulWidget {
+  const ActivityLog({super.key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<ActivityLog> {
 
  Widget build(BuildContext context) {
     return Scaffold(
@@ -33,15 +35,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
           child:  Column(
-        //fortnite
             children:[
-              
               ElevatedButton(
-              onPressed: () => print('Button pressed'),
+              onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => const LiftingLog()),
+               );
+              },
               child: Text('Weight Lifting'),
                ),
+              
               ElevatedButton(
-              onPressed: () => print('Button pressed'),
+              onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => const runningLog()),
+               );
+              },
               child: Text('Run/Walk'),
                ),
               
