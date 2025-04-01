@@ -91,12 +91,19 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   }
 
   void _onSetAlarmPressed() {
-     _presenter.setAlarm(
-      _hourController.text,
-      _minuteController.text,
-      _selectedRingtone,
-    );
+  final hourText = _hourController.text;
+  final minuteText = _minuteController.text;
+
+  final hour = int.tryParse(hourText);
+  final minute = int.tryParse(minuteText);
+
+  if (hour == null || minute == null || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    showInputError('Please enter a valid hour (0–23) and minute (0–59)');
+    return;
   }
+
+  _presenter.setAlarm(hourText, minuteText, _selectedRingtone);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +112,8 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
         title: Text('Fitness Alarm'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(  //wrapped Padding with scroll view to fix overflow
+        child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -161,7 +169,9 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                 'Alarm Set For: $_alarmTime',
                 style: TextStyle(fontSize: 18, color: Colors.green),
               ),
-          ],
+        
+            ],
+          )
         ),
       ),
     );
