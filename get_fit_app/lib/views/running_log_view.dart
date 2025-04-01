@@ -114,16 +114,16 @@ class _MyHomePageState extends State<runningLog> {
                           });
                          },
                        ),
-                  Text("Distance"),
+                  Text("Distance (miles)"),
                   TextField(
                     controller: _distanceController,
                     decoration: InputDecoration(
-                      labelText: 'Enter distance here (miles)',
+                      labelText: 'Enter distance here',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text("Time"),
+                  Text("Time (minutes)"),
                   TextField(
                     controller: _timeController,
                     decoration: InputDecoration(
