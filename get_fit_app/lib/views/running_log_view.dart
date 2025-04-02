@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../viewmodel/running_log_model.dart';
 import '../presenter/running_log_presenter.dart';
 
-class runningLogView extends StatelessWidget {
-  const runningLogView({super.key});
+class RunningLogView extends StatelessWidget {
+  const RunningLogView({super.key});
 
   @override
   Widget build(BuildContext context) {

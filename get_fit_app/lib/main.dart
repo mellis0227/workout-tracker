@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_fit_app/views/activity_log.dart';
-import 'package:get_fit_app/views/running_log_view.dart';
-//import 'package:get_fit_app/views/authentication_screen_view.dart';
 import 'package:go_router/go_router.dart';
-import 'package:get_fit_app/views/fitness_alarm_view.dart';
+import 'package:get_fit_app/views/home_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Make sure the app is initialized before Firebase
@@ -21,7 +18,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => ActivityLog(),
+      builder: (context, state) => HomeView(),
     ),
 
   ]

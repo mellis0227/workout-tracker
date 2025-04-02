@@ -40,3 +40,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/ringtones/
+    - assets/images/dumbbell_dashboard.png
