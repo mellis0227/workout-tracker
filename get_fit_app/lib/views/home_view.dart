@@ -85,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.directions_run),
                   title: const Text('Running Log'),
                   onTap: () {
-                    _presenter.onSelectPage(2);
+                    _presenter.onSelectPage(1);
                     Navigator.pop(context);
                   },
                 ),
@@ -93,7 +93,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.timeline),
                   title: const Text('Activity Log'),
                   onTap: () {
-                    _presenter.onSelectPage(3);
+                    _presenter.onSelectPage(2);
                     Navigator.pop(context);
                   },
                 ),
@@ -101,7 +101,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.api),
                   title: const Text('Workout API'),
                   onTap: () {
-                    _presenter.onSelectPage(4);
+                    _presenter.onSelectPage(3);
                     Navigator.pop(context);
                   },
                 ),
