@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_fit_app/views/activity_log.dart';
 import '../presenter/home_presenter.dart';
 import 'fitness_alarm_view.dart';
 import 'lifting_log_view.dart';
@@ -19,6 +20,7 @@ class _HomeViewState extends State<HomeView> {
     AlarmApp(),
     LiftingLogView(),
     RunningLogView(),
+    ActivityLog(),
     WorkoutAPIScreen(),
   ];
 
@@ -84,6 +86,14 @@ class _HomeViewState extends State<HomeView> {
                 ListTile(
                   leading: const Icon(Icons.directions_run),
                   title: const Text('Running Log'),
+                  onTap: () {
+                    _presenter.onSelectPage(2);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.fitness_center),
+                  title: const Text('Lifting Log'),
                   onTap: () {
                     _presenter.onSelectPage(1);
                     Navigator.pop(context);
