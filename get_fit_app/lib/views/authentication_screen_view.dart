@@ -4,7 +4,7 @@ import 'package:get_fit_app/presenter/authentication_presenter.dart';
 import 'package:go_router/go_router.dart';
 import 'authentication_view.dart';
 
-// The screen where the user interacts for login or registration.
+// Screen where the user interacts for login or registration
 class AuthenticationScreen extends StatefulWidget {
   const AuthenticationScreen({Key? key}) : super(key: key);
 
@@ -13,38 +13,44 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> implements AuthenticationView {
-  final _emailController = TextEditingController();  // Controller for the email input field.
-  final _passwordController = TextEditingController();  // Controller for the password input field.
-  final _passwordConfirmationController = TextEditingController();  // Controller for password confirmation.
+  final _emailController = TextEditingController();  // Controller for email input
+  final _passwordController = TextEditingController();  // Controller for password input
+  final _passwordConfirmationController = TextEditingController();  // Controller for confirmation
 
-  late AuthenticationPresenter _presenter;  // Instance of the presenter to handle business logic.
+  final _formKey = GlobalKey<FormState>();  // Key to validate the form
 
-  // Getter methods to access the text from controllers.
+  late AuthenticationPresenter _presenter;
+
+  // Getter methods for input values
   String get email => _emailController.text;
   String get password => _passwordController.text;
   String? get passwordConfirmation => _passwordConfirmationController.text;
 
-  bool _register = true;  // Track if the user is in register mode.
+  bool _register = true;  // Whether user is registering or logging in
 
   @override
   void initState() {
     super.initState();
-    _presenter = AuthenticationPresenter(this);  // Initialize the presenter with the view.
+    _presenter = AuthenticationPresenter(this);  // Initialize presenter with this view
   }
 
-  // Method to show error messages (e.g., validation errors, authentication errors).
+  // Method to show error messages globally
   @override
   void showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
-  // Method to show success messages (e.g., successful login or registration).
+  // Method to show success messages
   @override
   void showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
+    );
   }
 
-  // Method to update the UI when switching between login and registration modes.
+  // Update the UI for toggling between register/login modes
   @override
   void updateUIForMode(bool register) {
     setState(() {
@@ -52,30 +58,63 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> implements 
     });
   }
 
-  // Method to build the UI of the screen.
+  // Email field validator
+  String? _emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email cannot be empty';
+    }
+    final emailRegEx = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegEx.hasMatch(value)) {
+      return 'Invalid email address';
+    }
+    return null;
+  }
+
+  // Password field validator
+  String? _passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password cannot be empty';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  // Password confirmation validator (only in register mode)
+  String? _passwordConfirmationValidator(String? value) {
+    if (_register && value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
+        key: _formKey,  // Associate the form with the key
         child: Column(
           children: [
             const SizedBox(height: 50),
             AuthenticationTextFormField(
-              label: 'Email',  // Label for email field
-              icon: Icons.email,  // Icon for email field
-              textEditingController: _emailController,  // Controller for email field
+              label: 'Email',
+              icon: Icons.email,
+              textEditingController: _emailController,
+              validator: _emailValidator,  // Use email validator
             ),
             AuthenticationTextFormField(
-              label: 'Password',  // Label for password field
-              icon: Icons.vpn_key,  // Icon for password field
-              textEditingController: _passwordController,  // Controller for password field
+              label: 'Password',
+              icon: Icons.vpn_key,
+              textEditingController: _passwordController,
+              validator: _passwordValidator,  // Use password validator
             ),
-            // Password confirmation field only shown when in registration mode.
-            if (_register)
+            if (_register)  // Only show confirmation in register mode
               AuthenticationTextFormField(
-                label: 'Password Confirmation',  // Label for password confirmation
-                icon: Icons.password,  // Icon for password confirmation field
-                textEditingController: _passwordConfirmationController,  // Controller for password confirmation
+                label: 'Password Confirmation',
+                icon: Icons.password,
+                textEditingController: _passwordConfirmationController,
+                validator: _passwordConfirmationValidator,  // Use confirmation validator
               ),
             // Button to trigger login or registration
             ElevatedButton(
@@ -88,9 +127,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> implements 
             // Link to toggle between login and register mode
             InkWell(
               onTap: () {
-                _presenter.toggleRegisterMode();  // Toggle between register/login mode
+                _presenter.toggleRegisterMode();  // Toggle between login/register
               },
-              child: Text(_register ? 'Login instead' : 'Register instead'),  // Text changes based on mode
+              child: Text(_register ? 'Login instead' : 'Register instead'),
             ),
           ],
         ),
@@ -98,5 +137,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> implements 
     );
   }
 }
+
 
 
