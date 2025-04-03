@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_fit_app/views/music_player_view.dart';
 import '../presenter/home_presenter.dart';
 import 'fitness_alarm_view.dart';
 import 'lifting_log_view.dart';
@@ -20,6 +21,7 @@ class _HomeViewState extends State<HomeView> {
     LiftingLogView(),
     RunningLogView(),
     WorkoutAPIScreen(),
+    MusicPlayerView(),
   ];
 
   @override
@@ -105,6 +107,14 @@ class _HomeViewState extends State<HomeView> {
                     Navigator.pop(context);
                   },
                 ),
+                ListTile(
+                  leading: const Icon(Icons.music_note_rounded),
+                  title: const Text('Music'),
+                  onTap: () {
+                    _presenter.onSelectPage(4);
+                    Navigator.pop(context);
+                  },
+                )
               ],
             ),
           ),
