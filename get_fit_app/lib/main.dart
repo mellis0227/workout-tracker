@@ -1,14 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_fit_app/viewmodel/api_model.dart';
-import 'package:get_fit_app/views/workout_api_view.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:get_fit_app/views/home_view.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized(); // Make sure the app is initialized before Firebase
+  try {
+    await Firebase.initializeApp(); // Initialize Firebase
+  } catch (e) {
+    print("Error initializing Firebase: $e");
+  }
+  runApp(MyApp());
 }
 
 final _router = GoRouter(
@@ -16,8 +18,9 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => WorkoutAPIScreen(),
-    )
+      builder: (context, state) => HomeView(),
+    ),
+
   ]
 );
 
