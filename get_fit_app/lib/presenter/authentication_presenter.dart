@@ -1,20 +1,23 @@
 //import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get_fit_app/viewmodel/authentication_user_model.dart';
 import 'package:get_fit_app/viewmodel/authentication_service_model.dart';
 import 'package:get_fit_app/views/authentication_view.dart';
+import 'package:go_router/go_router.dart';
 
 // Presenter class that connects the View and the Model (AuthService).
 class AuthenticationPresenter {
   final AuthService _authService = AuthService();  // Instance of the authentication service.
   final AuthenticationView _view;  // The view that the presenter will update.
 
-  bool _register = true;  // Boolean to track if the user is in register mode.
+  bool _register = true;// Boolean to track if the user is in register mode.
+  bool _isAuthenticated = false;
 
   // Constructor takes in the view to communicate with the UI.
   AuthenticationPresenter(this._view);
 
   // Method to authenticate the user based on whether they're logging in or registering.
-  Future<void> authenticate() async {
+  Future<void> authenticate(BuildContext context) async {
     // Validate form inputs (email and password).
     if (_view.email.isEmpty || _view.password.isEmpty || (_register && _view.passwordConfirmation == null)) {
       _view.showErrorMessage('Please fill in all fields.');  // Show error message if fields are empty.
@@ -33,6 +36,8 @@ class AuthenticationPresenter {
       // Call AuthService to perform the authentication.
       await _authService.authenticate(user, _register);
 
+      _authService.setUserInDatabase(user);
+      context.go("/home");
       // Show a success message once authentication is successful.
       _view.showSuccessMessage(_register ? 'Registration Successful' : 'Login Successful');
     } catch (e) {

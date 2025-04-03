@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_fit_app/viewmodel/authentication_user_model.dart';
 
@@ -5,6 +6,15 @@ import 'package:get_fit_app/viewmodel/authentication_user_model.dart';
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+
+  Future<void> setUserInDatabase(UserModel user) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final userCollection = firestore.collection("user_data").doc(user.email);
+
+    await userCollection.set({
+      "email": user.email,
+    });
+  }
   // Method to authenticate the user either via login or registration.
   Future<User?> authenticate(UserModel user, bool register) async {
     try {
@@ -27,4 +37,6 @@ class AuthService {
       throw Exception('Authentication failed: $e');
     }
   }
+
+
 }

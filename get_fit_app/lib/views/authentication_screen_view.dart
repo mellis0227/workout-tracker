@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/views/authentication_text_form_field_view.dart';
 import 'package:get_fit_app/presenter/authentication_presenter.dart';
-import 'package:go_router/go_router.dart';
 import 'authentication_view.dart';
 
 // Screen where the user interacts for login or registration
@@ -119,8 +118,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> implements 
             // Button to trigger login or registration
             ElevatedButton(
               onPressed: () {
-                _presenter.authenticate();
-                context.go('/home');
+                _presenter.authenticate(context);
                 },
               child: Text(_register ? 'Register' : 'Login'),  // Button text based on mode
             ),

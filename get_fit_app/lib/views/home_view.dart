@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../presenter/home_presenter.dart';
+import 'activity_log.dart';
 import 'fitness_alarm_view.dart';
 import 'lifting_log_view.dart';
+import 'music_player_view.dart';
 import 'running_log_view.dart';
 import 'workout_api_view.dart';
 
@@ -17,11 +19,11 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Widget> _pages = const [
     AlarmApp(),
-    LiftingLogView(),
     RunningLogView(),
     ActivityLog(),
     WorkoutAPIScreen(),
     MusicPlayerView(),
+    LiftingLogView(),
   ];
 
   @override
