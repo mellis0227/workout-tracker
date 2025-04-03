@@ -38,7 +38,7 @@ class _MyHomePageState extends State<LiftingLog> {
         _weightController.text.isEmpty ||
         _setsController.text.isEmpty ||
         _repsController.text.isEmpty) {
-      return;
+      return _showVanishingMessage('Please provide input for all boxes.');
     }
 
     Exercise exercise = Exercise(
