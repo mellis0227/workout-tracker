@@ -21,7 +21,7 @@ class AuthService {
           password: user.password,
         );
       }
-      return _firebaseAuth.currentUser;  // Return the current logged-in user.
+      return _firebaseAuth.currentUser; // Return the current logged-in user.
     } catch (e) {
       // If an error occurs, throw an exception with the error message.
       throw Exception('Authentication failed: $e');

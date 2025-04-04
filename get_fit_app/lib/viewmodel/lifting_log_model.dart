@@ -7,14 +7,14 @@ class Exercise {
   int reps;
   int sets;
 
-  Exercise({
-    required this.id,
-    required this.exercise,
-    required this.weight,
-    required this.reps,
-    required this.sets});
+  Exercise(
+      {required this.id,
+      required this.exercise,
+      required this.weight,
+      required this.reps,
+      required this.sets});
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'exercise': exercise,
       'weight': weight,
@@ -22,24 +22,24 @@ class Exercise {
       'reps': reps,
     };
   }
-  }
+}
 
 class LiftingLogModel {
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
-LiftingLogModel();
-List<Exercise> exercises = [];
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  LiftingLogModel();
+  List<Exercise> exercises = [];
 
-Future<void> logExercise(String exercise, int weight, int reps,
-    int sets) async {
-  try {
-    await firestore.collection('exercises').add({
-      '_exercise': exercise,
-      '_weight': weight,
-      '_reps': reps,
-      '_sets': sets,
-    });
-  } catch (e) {
-    print('Error logging exercise');
+  Future<void> logExercise(
+      String exercise, int weight, int reps, int sets) async {
+    try {
+      await firestore.collection('exercises').add({
+        '_exercise': exercise,
+        '_weight': weight,
+        '_reps': reps,
+        '_sets': sets,
+      });
+    } catch (e) {
+      print('Error logging exercise');
+    }
   }
-}
 }

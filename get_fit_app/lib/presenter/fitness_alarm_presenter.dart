@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import '../viewmodel/fitness_alarm_model.dart';
 
@@ -29,14 +28,14 @@ class AlarmPresenter {
     final now = DateTime.now();
 
     final timeOnly =
-    '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+        '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
     _view.updateCurrentTime(
-    '$timeOnly:${now.second.toString().padLeft(2, '0')}'); // for UI only
+        '$timeOnly:${now.second.toString().padLeft(2, '0')}'); // for UI only
 
     if (_model.isAlarmTime(now)) {
-    print("Alarm triggered at $timeOnly");
-    _view.showAlarmTriggered(_model.getRingtone());
-}
+      print("Alarm triggered at $timeOnly");
+      _view.showAlarmTriggered(_model.getRingtone());
+    }
   }
 
   void setAlarm(String hour, String minute, String ringtone) {
