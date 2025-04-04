@@ -1,13 +1,12 @@
-
 class AlarmModel {
   String? alarmTime; // Stores in "HH:mm" format
   String selectedRingtone = 'samsung_ringtone.mp3';
-  bool hasTriggered = false; 
+  bool hasTriggered = false;
 
   void setAlarm(String hour, String minute, String ringtone) {
     alarmTime = '${hour.padLeft(2, '0')}:${minute.padLeft(2, '0')}';
     selectedRingtone = ringtone;
-    hasTriggered = false; 
+    hasTriggered = false;
   }
 
   bool isAlarmTime(DateTime currentTime) {

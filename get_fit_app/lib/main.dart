@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:get_fit_app/views/home_view.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Make sure the app is initialized before Firebase
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Make sure the app is initialized before Firebase
   try {
     await Firebase.initializeApp(); // Initialize Firebase
   } catch (e) {
@@ -13,16 +14,12 @@ void main() async {
   runApp(MyApp());
 }
 
-final _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => HomeView(),
-    ),
-
-  ]
-);
+final _router = GoRouter(initialLocation: '/', routes: [
+  GoRoute(
+    path: '/',
+    builder: (context, state) => HomeView(),
+  ),
+]);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -35,4 +32,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

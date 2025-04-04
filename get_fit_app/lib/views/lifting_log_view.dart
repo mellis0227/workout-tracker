@@ -139,11 +139,11 @@ class _MyHomePageState extends State<LiftingLog> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logExercise,
-                    child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
+                    child: Text('Log Exercise'),
                   ),
                   Column(
                     children: [
