@@ -129,7 +129,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
               onPressed: () {
                 if (_formKey.currentState?.validate() ?? false) {
                   _presenter
-                      .authenticate(); // Delegate to presenter for authentication
+                      .authenticate(context); // Delegate to presenter for authentication
                 }
               },
               child: Text(_register ? 'Register' : 'Login'),
