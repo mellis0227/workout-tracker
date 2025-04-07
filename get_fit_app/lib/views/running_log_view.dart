@@ -33,26 +33,25 @@ class _MyHomePageState extends State<runningLog> {
   String _selectedExercise = 'Run';
 
   void _logRun() {
-  if (_selectedExercise.isEmpty ||
-      _distanceController.text.isEmpty ||
-      _timeController.text.isEmpty) {
-    return;
+    if (_selectedExercise.isEmpty ||
+        _distanceController.text.isEmpty ||
+        _timeController.text.isEmpty) {
+      return;
+    }
+
+    Run run = Run(
+      run: _selectedExercise, // Use the selected value
+      distance: int.tryParse(_distanceController.text) ?? 0,
+      time: int.tryParse(_timeController.text) ?? 0,
+      id: '',
+    );
+
+    _presenter.logRun(run);
+
+    _distanceController.clear();
+    _timeController.clear();
+    _showVanishingMessage('Exercise logged successfully!');
   }
-
-  Run run = Run(
-    run: _selectedExercise, // Use the selected value
-    distance: int.tryParse(_distanceController.text) ?? 0,
-    time: int.tryParse(_timeController.text) ?? 0,
-    id: '',
-  );
-
-  _presenter.logRun(run);
-
-  _distanceController.clear();
-  _timeController.clear();
-  _showVanishingMessage('Exercise logged successfully!');
-}
-
 
   void _showVanishingMessage(String message) {
     setState(() {
@@ -99,21 +98,21 @@ class _MyHomePageState extends State<runningLog> {
                   DropdownButtonFormField<String>(
                     value: _selectedExercise,
                     decoration: InputDecoration(
-                     labelText: 'Select exercise',
-                     border: OutlineInputBorder(),
+                      labelText: 'Select exercise',
+                      border: OutlineInputBorder(),
                     ),
                     items: ['Run', 'Walk'].map((String exercise) {
-                     return DropdownMenuItem<String>(
-                       value: exercise,
-                       child: Text(exercise),
-                       );
-                      }).toList(),
+                      return DropdownMenuItem<String>(
+                        value: exercise,
+                        child: Text(exercise),
+                      );
+                    }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedExercise = newValue!;
-                          });
-                         },
-                       ),
+                      });
+                    },
+                  ),
                   Text("Distance (miles)"),
                   TextField(
                     controller: _distanceController,
@@ -134,11 +133,11 @@ class _MyHomePageState extends State<runningLog> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logRun,
-                    child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
+                    child: Text('Log Exercise'),
                   ),
                   Column(
                     children: [

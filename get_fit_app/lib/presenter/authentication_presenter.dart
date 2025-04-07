@@ -7,11 +7,14 @@ import 'package:go_router/go_router.dart';
 
 // Presenter class that connects the View and the Model (AuthService).
 class AuthenticationPresenter {
-  final AuthService _authService = AuthService();  // Instance of the authentication service.
-  final AuthenticationView _view;  // The view that the presenter will update.
+  final AuthService _authService =
+      AuthService(); // Instance of the authentication service.
+  final AuthenticationView _view; // The view that the presenter will update.
+
 
   bool _register = true;// Boolean to track if the user is in register mode.
   bool _isAuthenticated = false;
+
 
   // Constructor takes in the view to communicate with the UI.
   AuthenticationPresenter(this._view);
@@ -19,13 +22,17 @@ class AuthenticationPresenter {
   // Method to authenticate the user based on whether they're logging in or registering.
   Future<void> authenticate(BuildContext context) async {
     // Validate form inputs (email and password).
-    if (_view.email.isEmpty || _view.password.isEmpty || (_register && _view.passwordConfirmation == null)) {
-      _view.showErrorMessage('Please fill in all fields.');  // Show error message if fields are empty.
+    if (_view.email.isEmpty ||
+        _view.password.isEmpty ||
+        (_register && _view.passwordConfirmation == null)) {
+      _view.showErrorMessage(
+          'Please fill in all fields.'); // Show error message if fields are empty.
       return;
     }
 
     if (_register && _view.password != _view.passwordConfirmation) {
-      _view.showErrorMessage('Passwords do not match.');  // Show error message if passwords don't match.
+      _view.showErrorMessage(
+          'Passwords do not match.'); // Show error message if passwords don't match.
       return;
     }
 
@@ -39,7 +46,8 @@ class AuthenticationPresenter {
       _authService.setUserInDatabase(user);
       context.go("/home");
       // Show a success message once authentication is successful.
-      _view.showSuccessMessage(_register ? 'Registration Successful' : 'Login Successful');
+      _view.showSuccessMessage(
+          _register ? 'Registration Successful' : 'Login Successful');
     } catch (e) {
       // If authentication fails, show an error message.
       _view.showErrorMessage('Error: $e');
@@ -49,6 +57,7 @@ class AuthenticationPresenter {
   // Method to toggle between register and login modes.
   void toggleRegisterMode() {
     _register = !_register;
-    _view.updateUIForMode(_register);  // Update the view to reflect the mode change.
+    _view.updateUIForMode(
+        _register); // Update the view to reflect the mode change.
   }
 }
