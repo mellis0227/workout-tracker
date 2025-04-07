@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get_fit_app/views/activity_log.dart';
 import '../presenter/home_presenter.dart';
+import 'activity_log.dart';
 import 'fitness_alarm_view.dart';
 import 'lifting_log_view.dart';
+import 'music_player_view.dart';
 import 'running_log_view.dart';
 import 'workout_api_view.dart';
 
@@ -18,10 +19,11 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Widget> _pages = const [
     AlarmApp(),
-    LiftingLogView(),
     RunningLogView(),
     ActivityLog(),
     WorkoutAPIScreen(),
+    MusicPlayerView(),
+    LiftingLogView(),
   ];
 
   @override
@@ -87,14 +89,6 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.directions_run),
                   title: const Text('Running Log'),
                   onTap: () {
-                    _presenter.onSelectPage(2);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.fitness_center),
-                  title: const Text('Lifting Log'),
-                  onTap: () {
                     _presenter.onSelectPage(1);
                     Navigator.pop(context);
                   },
@@ -115,6 +109,14 @@ class _HomeViewState extends State<HomeView> {
                     Navigator.pop(context);
                   },
                 ),
+                ListTile(
+                  leading: const Icon(Icons.music_note_rounded),
+                  title: const Text('Music'),
+                  onTap: () {
+                    _presenter.onSelectPage(4);
+                    Navigator.pop(context);
+                  },
+                )
               ],
             ),
           ),

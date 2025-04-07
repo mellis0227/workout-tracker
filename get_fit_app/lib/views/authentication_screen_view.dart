@@ -124,6 +124,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                 validator:
                     _passwordConfirmationValidator, // Use confirmation validator
               ),
+            // Button to trigger login or registration
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState?.validate() ?? false) {
@@ -133,6 +134,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
               },
               child: Text(_register ? 'Register' : 'Login'),
             ),
+            // Link to toggle between login and register mode
             InkWell(
               onTap: () {
                 _presenter

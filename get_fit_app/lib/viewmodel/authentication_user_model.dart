@@ -5,4 +5,8 @@ class UserModel {
 
   // Constructor to create a UserModel instance
   UserModel({required this.email, required this.password});
+
+  String getCurrentUserID(UserModel user) {
+    return user.email;
+  }
 }
