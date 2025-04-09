@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/presenter/workout_api_presenter.dart';
+
 
 class WorkoutAPIScreen extends StatefulWidget {
   const WorkoutAPIScreen({super.key});
@@ -11,6 +13,7 @@ class WorkoutAPIScreen extends StatefulWidget {
 class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   String? playlistName;
   String? selectedPlaylist;
+  String? username;
   List<dynamic> playlistNames = [];
   WorkoutAPIPresenter presenter = WorkoutAPIPresenter();
   List<dynamic> displayedWorkouts = [];
@@ -40,7 +43,8 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   @override
   void initState() {
     super.initState();
-    _getUsersPlaylistNames("user_test");
+    username = FirebaseAuth.instance.currentUser?.email;
+    _getUsersPlaylistNames(username!);
     // _setWorkoutData("muscle", "biceps");
   }
 
@@ -244,7 +248,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               child: Column(
                 children: [
                   Text("Instructions"),
-                  Text(displayedWorkouts[index]["Instructions"]),
+                  Text(displayedWorkouts[index]["instructions"]),
                 ],
               ),
             ));
