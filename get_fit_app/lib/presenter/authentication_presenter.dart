@@ -11,10 +11,8 @@ class AuthenticationPresenter {
       AuthService(); // Instance of the authentication service.
   final AuthenticationView _view; // The view that the presenter will update.
 
-
-  bool _register = true;// Boolean to track if the user is in register mode.
-  bool _isAuthenticated = false;
-
+  bool _register = true; // Boolean to track if the user is in register mode.
+  final bool _isAuthenticated = false;
 
   // Constructor takes in the view to communicate with the UI.
   AuthenticationPresenter(this._view);

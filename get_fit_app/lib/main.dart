@@ -15,22 +15,16 @@ void main() async {
   runApp(MyApp());
 }
 
-
-final _router = GoRouter(
-  initialLocation: '/',
-  routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => AuthenticationScreen(),
-    ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => HomeView(),
-    )
-
-  ]
-);
-
+final _router = GoRouter(initialLocation: '/', routes: [
+  GoRoute(
+    path: '/',
+    builder: (context, state) => AuthenticationScreen(),
+  ),
+  GoRoute(
+    path: '/home',
+    builder: (context, state) => HomeView(),
+  )
+]);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_fit_app/views/fitness_alarm_view.dart';
-import 'package:get_fit_app/views/lifting_log_view.dart';
 import 'package:get_fit_app/views/running_log_view.dart';
+import 'lifting_log_view.dart';
 
 void main() {
   runApp(activityLog());

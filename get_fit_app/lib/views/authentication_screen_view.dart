@@ -128,8 +128,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState?.validate() ?? false) {
-                  _presenter
-                      .authenticate(context); // Delegate to presenter for authentication
+                  _presenter.authenticate(
+                      context); // Delegate to presenter for authentication
                 }
               },
               child: Text(_register ? 'Register' : 'Login'),
