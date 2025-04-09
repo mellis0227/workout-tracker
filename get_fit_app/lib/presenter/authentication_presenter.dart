@@ -11,8 +11,10 @@ class AuthenticationPresenter {
       AuthService(); // Instance of the authentication service.
   final AuthenticationView _view; // The view that the presenter will update.
 
-  bool _register = true; // Boolean to track if the user is in register mode.
-  final bool _isAuthenticated = false;
+
+
+  bool _register = true;// Boolean to track if the user is in register mode.
+
 
   // Constructor takes in the view to communicate with the UI.
   AuthenticationPresenter(this._view);
@@ -20,6 +22,11 @@ class AuthenticationPresenter {
   // Method to authenticate the user based on whether they're logging in or registering.
   Future<void> authenticate(BuildContext context) async {
     // Validate form inputs (email and password).
+    print(_view.email);
+    print(_view.password);
+    print(_view.lastName);
+    print(_view.firstName);
+
     if (_view.email.isEmpty ||
         _view.password.isEmpty ||
         (_register && _view.passwordConfirmation == null)) {
@@ -36,7 +43,25 @@ class AuthenticationPresenter {
 
     try {
       // Create a UserModel with the email and password.
-      UserModel user = UserModel(email: _view.email, password: _view.password);
+      UserModel user;
+
+      if (_register) {
+        // Include firstName and lastName in the UserModel if it's a registration.
+        user = UserModel(
+          email: _view.email,
+          password: _view.password,
+          firstName: _view.firstName,
+          lastName: _view.lastName,
+        );
+      } else {
+        // For login, only pass email and password.
+        user = UserModel(
+          email: _view.email,
+          password: _view.password,
+        );
+      }
+
+
 
       // Call AuthService to perform the authentication.
       await _authService.authenticate(user, _register);
