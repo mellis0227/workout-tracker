@@ -142,6 +142,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                 ),
                 child: _buildLoginComponents(context),
               ),
+            ),
             Padding(padding: EdgeInsets.all(10),),
             _registerOrLoginButton(context),
             _switchLoginOrRegister()
