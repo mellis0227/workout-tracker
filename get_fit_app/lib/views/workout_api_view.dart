@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/presenter/workout_api_presenter.dart';
 
-
-
+// This screen allows users to interact with workout API and manage their workout playlists.
 class WorkoutAPIScreen extends StatefulWidget {
   const WorkoutAPIScreen({super.key});
 
@@ -19,13 +18,15 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   WorkoutAPIPresenter presenter = WorkoutAPIPresenter();
   List<dynamic> displayedWorkouts = [];
 
+  // Fetches workout data based on muscle and difficulty filters and updates the UI
   void _setWorkoutData(String nameParameter, String parameterMatcher) async {
     List<dynamic> data =
-        await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
+    await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
     setState(() {
       displayedWorkouts = data;
     });
 
+    // Print the selected workout data attributes (name, type, difficulty) to the console
     List<String> printedCats = ["name", "type", "difficulty"];
     for (int i = 0; i < displayedWorkouts.length; i++) {
       for (int j = 0; j < printedCats.length; j++) {
@@ -34,6 +35,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     }
   }
 
+  // Fetches the list of workout playlist names for the current user
   void _getUsersPlaylistNames(String userID) async {
     List<dynamic> data = await presenter.getWorkoutPlans(userID);
     setState(() {
@@ -45,7 +47,9 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.currentUser?.email;
+    // Fetch the user's playlist names from Firestore using the user email
     _getUsersPlaylistNames(user!);
+    // Uncomment to initially fetch workouts by default filter (muscle = "biceps")
     // _setWorkoutData("muscle", "biceps");
   }
 
@@ -65,6 +69,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
         ),
         body: Column(
           children: [
+            // Header with buttons for filtering and managing workout playlists
             Container(
               width: 425,
               height: 45,
@@ -101,6 +106,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 ],
               ),
             ),
+            // Display the list of workouts
             Expanded(
               child: _buildWorkoutList(),
             ),
@@ -108,7 +114,9 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
         ));
   }
 
+  // Builds the workout list view
   ListView _buildWorkoutList() {
+    // If there are workouts, display them in a list, otherwise show a message
     if (displayedWorkouts.isNotEmpty) {
       return ListView.builder(
           itemCount: displayedWorkouts.length,
@@ -124,8 +132,8 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   ),
                   subtitle: Text(
                       "Muscle: ${displayedWorkouts[index]["muscle"]}\n"
-                      "Type: ${displayedWorkouts[index]["type"]}\n"
-                      "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
+                          "Type: ${displayedWorkouts[index]["type"]}\n"
+                          "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
                   trailing: TextButton(
                     child: Text("View Instructions"),
                     onPressed: () => {viewInstructionContainer(context, index)},
@@ -147,6 +155,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     );
   }
 
+  // Displays the filter options in a dialog for selecting muscle and difficulty
   AlertDialog showFilters() {
     return AlertDialog(
         title: Text("Filter by"),
@@ -154,21 +163,23 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
             height: 150,
             child: Column(
               children: [
+                // Dropdown to select muscle type (e.g., biceps, chest)
                 DropdownButton<String>(
                   hint: Text("Muscle"),
                   isExpanded: true,
-                  items: <String>['Biceps', 'Chest', 'lats'].map((String value){
+                  items: <String>['Biceps', 'Chest', 'lats'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
                     );
-                }).toList(),
+                  }).toList(),
                   onChanged: (value) => {_setWorkoutData('Muscle', value!)},
                 ),
+                // Dropdown to select workout difficulty (e.g., Beginner, Intermediate)
                 DropdownButton<String>(
                   hint: Text("Difficulty"),
                   isExpanded: true,
-                  items: <String>['Beginner', 'Intermediate', 'Expert'].map((String value){
+                  items: <String>['Beginner', 'Intermediate', 'Expert'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -180,6 +191,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
             )));
   }
 
+  // Displays the workout playlist options in a dialog
   AlertDialog showPlaylist() {
     return AlertDialog(
         title: Text("Workout Playlist"),
@@ -187,6 +199,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
             height: 150,
             child: Column(
               children: [
+                // Dropdown to select a playlist
                 DropdownButton<String>(
                   hint: Text("Select Playlist"),
                   isExpanded: true,
@@ -204,6 +217,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                     );
                   }).toList(),
                 ),
+                // TextField to create a new playlist by name
                 TextField(
                   decoration: InputDecoration(
                     hintText: "Name New Playlist",
@@ -212,6 +226,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                     playlistName = value;
                   },
                 ),
+                // Button to create the new playlist
                 ElevatedButton(
                   child: Text("Press to Create Playlist"),
                   onPressed: () => {
@@ -223,6 +238,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
             )));
   }
 
+  // Show the instructions for a selected workout in a bottom sheet
   void viewInstructionContainer(BuildContext context, int index) {
     showModalBottomSheet(
       context: context,
@@ -242,6 +258,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     );
   }
 
+  // Create a new workout playlist for the user
   void createPlaylistButton() {
     presenter.setWorkoutPlanName(user!, playlistName!);
     return;
