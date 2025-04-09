@@ -5,6 +5,7 @@ import 'fitness_alarm_view.dart';
 import 'lifting_log_view.dart';
 import 'running_log_view.dart';
 import 'workout_api_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -43,10 +44,21 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, index, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(_presenter.pageTitles[index]),
+            centerTitle: true,
+            title: Text(_presenter.pageTitles[index],
+              style: GoogleFonts.bebasNeue(
+                fontSize: 35,
+              ),
+            ),
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/luke-chesser-PHtp0cDBJSM-unsplash.jpg'),
+                fit: BoxFit.cover)),
+            ),
             elevation: 0,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
           ),
           drawer: Drawer(
             shape: const RoundedRectangleBorder(
