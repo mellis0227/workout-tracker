@@ -53,6 +53,7 @@ class AuthenticationPresenter {
           firstName: _view.firstName,
           lastName: _view.lastName,
         );
+        _authService.setUserInDatabase(user);
       } else {
         // For login, only pass email and password.
         user = UserModel(
@@ -61,12 +62,9 @@ class AuthenticationPresenter {
         );
       }
 
-
-
       // Call AuthService to perform the authentication.
       await _authService.authenticate(user, _register);
-
-      _authService.setUserInDatabase(user);
+      //sends to home page
       context.go("/home");
       // Show a success message once authentication is successful.
       _view.showSuccessMessage(
