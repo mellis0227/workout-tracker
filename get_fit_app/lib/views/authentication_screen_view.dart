@@ -118,12 +118,14 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xFFDFFDFF),
+      backgroundColor: Color(0xFFEFF6E0),
       body: Form(
         key: _formKey, // Associate the form with the key
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.all(100)),
+            Padding(padding: EdgeInsets.all(50)),
+            Text("Get Fit", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.black),),
+            Padding(padding: EdgeInsets.all(40)),
             Center(
               child: Container(
                 height: _register ? 500 : 340,
@@ -131,16 +133,17 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color(0xFFE5E1EE),
+                      color: Color(0xFF124559),
                       spreadRadius: 10,
                     ),
                   ],
                   borderRadius: BorderRadius.circular(30),
-                  color: Color(0xFF90BEDE),
+                  color: Color(0xFF598392),
                 ),
                 child: _buildLoginComponents(context),
               ),
             ),
+            Padding(padding: EdgeInsets.all(10),),
             _registerOrLoginButton(context),
             _switchLoginOrRegister()
           ],
@@ -162,7 +165,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                   style: TextStyle(
                     fontSize: 45,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFFDFFDFF),
+                    color: Color(0xFFEFF6E0),
                   ),
                 ),
                 Padding(padding: EdgeInsets.all(10)),
@@ -220,7 +223,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                       .toggleRegisterMode(); // Toggle between login/register
                 },
                 child: Text(_register ? 'Login instead' : 'Register instead',
-                  style: TextStyle(color: Colors.black26, fontSize: 14, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Color(0xFF598392), fontSize: 14, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
                 ),
               );
   }

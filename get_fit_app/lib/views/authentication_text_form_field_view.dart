@@ -23,16 +23,20 @@ class AuthenticationTextFormField extends StatelessWidget {
           .toLowerCase()
           .contains('password'), // Hide text for password field
       decoration: InputDecoration(
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(17)),
+          borderSide: BorderSide(color: Colors.red..shade900),
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(17)),
-          borderSide: BorderSide(color: Color(0xFFE5E1EE)),
+          borderSide: BorderSide(color: Color(0xFFEFF6E0)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(17)),
-          borderSide: BorderSide(color: Color(0xFFDFFDFF)), // Enabled color
+          borderSide: BorderSide(color: Color(0xFFEFF6E0)), // Enabled color
         ),
         labelText: label, // Display the label for the text field
-        labelStyle: TextStyle(color: Color(0xFFDFFDFF)),
+        labelStyle: TextStyle(color: Color(0xFFEFF6E0)),
       ),
       validator: validator, // Set the validator for this field
     );
