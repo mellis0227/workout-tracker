@@ -6,6 +6,7 @@ import 'lifting_log_view.dart';
 import 'music_player_view.dart';
 import 'running_log_view.dart';
 import 'workout_api_view.dart';
+import 'dashboard_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -17,7 +18,8 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   late final HomePresenter _presenter;
 
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
+    DashboardView(),
     AlarmApp(),
     RunningLogView(),
     ActivityLog(),
@@ -76,6 +78,14 @@ class _HomeViewState extends State<HomeView> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.line_axis),
+                  title: const Text('Dashboard'),
+                  onTap: () {
+                    _presenter.onSelectPage(0);
+                    Navigator.pop(context);
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.alarm),

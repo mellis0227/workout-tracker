@@ -53,7 +53,8 @@ class _MusicPlayerViewState extends State<MusicPlayerView> {
 
   Future<void> _setupPlayer() async {
     //use this logic on the api
-    await fetchPlayerUrl('https://discoveryprovider.audius.co/v1/tracks/D7KyD/stream');
+    await fetchPlayerUrl(
+        'https://discoveryprovider.audius.co/v1/tracks/D7KyD/stream');
 
     player.positionStream.listen((p) {
       setState(() {
@@ -79,10 +80,12 @@ class _MusicPlayerViewState extends State<MusicPlayerView> {
             Slider(
               min: 0.0,
               max: duration.inSeconds.toDouble(),
-              value: position.inSeconds.toDouble().clamp(0.0, duration.inSeconds.toDouble()),
+              value: position.inSeconds
+                  .toDouble()
+                  .clamp(0.0, duration.inSeconds.toDouble()),
               onChanged: handleSeek,
             ),
-            Text("${formatDuration(position)}"),
+            Text(formatDuration(position)),
             IconButton(
               icon: Icon(player.playing ? Icons.pause : Icons.play_arrow),
               onPressed: handlePlayPause,
