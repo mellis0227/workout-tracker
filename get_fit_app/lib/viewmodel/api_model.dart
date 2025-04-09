@@ -37,7 +37,7 @@ class WorkoutApiModel {
     }
   }
 
-  Future<void> setWorkoutPlanName(String planName, String userID) async {
+  Future<void> setWorkoutPlanName(String userID, String planName) async {
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       final workoutPlanName =

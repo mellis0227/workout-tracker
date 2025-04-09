@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/presenter/workout_api_presenter.dart';
+
+
 
 class WorkoutAPIScreen extends StatefulWidget {
   const WorkoutAPIScreen({super.key});
@@ -11,6 +14,7 @@ class WorkoutAPIScreen extends StatefulWidget {
 class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   String? playlistName;
   String? selectedPlaylist;
+  String? user;
   List<dynamic> playlistNames = [];
   WorkoutAPIPresenter presenter = WorkoutAPIPresenter();
   List<dynamic> displayedWorkouts = [];
@@ -40,7 +44,8 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   @override
   void initState() {
     super.initState();
-    _getUsersPlaylistNames("user_test");
+    user = FirebaseAuth.instance.currentUser?.email;
+    _getUsersPlaylistNames(user!);
     // _setWorkoutData("muscle", "biceps");
   }
 
@@ -136,7 +141,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
       children: [
         Text(
           "No Workouts Found press filter to find workouts!",
-          style: TextStyle(fontSize: 40),
+          style: TextStyle(fontSize: 20),
         ),
       ],
     );
@@ -149,42 +154,26 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
             height: 150,
             child: Column(
               children: [
-                DropdownButton(
+                DropdownButton<String>(
                   hint: Text("Muscle"),
                   isExpanded: true,
-                  items: [
-                    DropdownMenuItem(
-                      value: "Biceps",
-                      child: Text("Biceps"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Chest",
-                      child: Text("Chest"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Lats",
-                      child: Text("Lats"),
-                    ),
-                  ],
+                  items: <String>['Biceps', 'Chest', 'lats'].map((String value){
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                }).toList(),
                   onChanged: (value) => {_setWorkoutData('Muscle', value!)},
                 ),
-                DropdownButton(
+                DropdownButton<String>(
                   hint: Text("Difficulty"),
                   isExpanded: true,
-                  items: [
-                    DropdownMenuItem(
-                      value: "Beginner",
-                      child: Text("Beginner"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Intermediate",
-                      child: Text("Intermediate"),
-                    ),
-                    DropdownMenuItem(
-                      value: "Expert",
-                      child: Text("Expert"),
-                    ),
-                  ],
+                  items: <String>['Beginner', 'Intermediate', 'Expert'].map((String value){
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                   onChanged: (value) => {_setWorkoutData('Difficulty', value!)},
                 ),
               ],
@@ -254,7 +243,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   }
 
   void createPlaylistButton() {
-    presenter.setWorkoutPlanName("user_test", playlistName!);
+    presenter.setWorkoutPlanName(user!, playlistName!);
     return;
   }
 }
