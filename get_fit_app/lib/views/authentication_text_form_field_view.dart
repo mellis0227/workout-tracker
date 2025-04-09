@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 // Custom widget for reusable text input fields (email, password, etc.)
 class AuthenticationTextFormField extends StatelessWidget {
   final String label; // Label for the text field
-  final IconData icon; // Icon for the text field
   final TextEditingController
       textEditingController; // Controller for text input
   final String? Function(String?)?
@@ -11,7 +10,6 @@ class AuthenticationTextFormField extends StatelessWidget {
 
   const AuthenticationTextFormField({
     required this.label,
-    required this.icon,
     required this.textEditingController,
     this.validator, // Optional validator for the field
     super.key,
@@ -25,8 +23,16 @@ class AuthenticationTextFormField extends StatelessWidget {
           .toLowerCase()
           .contains('password'), // Hide text for password field
       decoration: InputDecoration(
-        icon: Icon(icon), // Display the icon for the text field
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(17)),
+          borderSide: BorderSide(color: Color(0xFFE5E1EE)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(17)),
+          borderSide: BorderSide(color: Color(0xFFDFFDFF)), // Enabled color
+        ),
         labelText: label, // Display the label for the text field
+        labelStyle: TextStyle(color: Color(0xFFDFFDFF)),
       ),
       validator: validator, // Set the validator for this field
     );

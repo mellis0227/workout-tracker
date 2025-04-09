@@ -11,9 +11,17 @@ class AuthService {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final userCollection = firestore.collection("user_data").doc(user.email);
 
-    await userCollection.set({
-      "email": user.email,
-    });
+    if(user.firstName != null && user.lastName != null){
+      await userCollection.set({
+        "email": user.email,
+        "first_name": user.firstName,
+        "last_name": user.lastName,
+      });
+    } else {
+      await userCollection.set({
+        "email": user.email,
+      });
+    }
   }
   // Method to authenticate the user either via login or registration.
   Future<User?> authenticate(UserModel user, bool register) async {
