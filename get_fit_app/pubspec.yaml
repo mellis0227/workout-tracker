@@ -26,6 +26,7 @@ dependencies:
   
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
+  google_fonts: ^6.2.1
 
 
 dev_dependencies:
@@ -41,3 +42,4 @@ flutter:
   assets:
     - assets/ringtones/
     - assets/images/dumbbell_dashboard.png
+    - assets\images\luke-chesser-PHtp0cDBJSM-unsplash.jpg

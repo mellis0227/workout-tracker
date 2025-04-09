@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get_fit_app/views/fitness_alarm_view.dart';
+import 'package:get_fit_app/views/lifting_log_view.dart';
+import 'package:get_fit_app/views/profile_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get_fit_app/views/home_view.dart';
 
@@ -18,7 +21,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => HomeView(),
+      builder: (context, state) => ProfileView(),
     ),
 
   ]
