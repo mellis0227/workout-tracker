@@ -8,10 +8,9 @@ class HomePresenter {
   final List<String> pageTitles = [
     'Dashboard',
     'Fitness Alarm',
-    'Lifting Log',
-    'Running Log',
     'Activity Log',
-    'Workout API',
+    'Find Workouts',
+    'Music',
   ];
 
   // Updates the selected page index

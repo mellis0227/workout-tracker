@@ -10,7 +10,7 @@ class LiftingLogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Exercise Log',
+      title: 'Lifting Log',
       home: LiftingLog(), // The LiftingLog widget is the home screen for this app
     );
   }
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<LiftingLog> {
     return Scaffold(
       resizeToAvoidBottomInset: false, // Prevent layout issues when the keyboard is displayed
       appBar: AppBar(
-        title: Text('Exercise Log'), // Title of the screen
+        title: Text('Lifting Log'), // Title of the screen
         centerTitle: true,
       ),
       body: Column(

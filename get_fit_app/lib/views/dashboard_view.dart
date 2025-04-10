@@ -17,10 +17,6 @@ class DashboardView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        centerTitle: true, // Centers the title on the app bar
-      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -63,9 +59,9 @@ class DashboardView extends StatelessWidget {
 
             // Quick access tiles for different functionalities
             _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
-            _buildTile(context, Icons.timeline, 'Activity Log', 3),
-            _buildTile(context, Icons.api, 'Workout API', 4),
-            _buildTile(context, Icons.music_note_rounded, 'Music Player', 5),
+            _buildTile(context, Icons.timeline, 'Activity Log', 2),
+            _buildTile(context, Icons.api, 'Workouts', 3),
+            _buildTile(context, Icons.music_note_rounded, 'Music Player', 4),
           ],
         ),
       ),
