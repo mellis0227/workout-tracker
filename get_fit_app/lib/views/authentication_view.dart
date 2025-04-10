@@ -2,7 +2,8 @@
 abstract class AuthenticationView {
   String get email; // Getter to retrieve the email input
   String get password; // Getter to retrieve the password input
-  String? get passwordConfirmation; // Getter to retrieve the password confirmation input (if applicable)
+  String?
+      get passwordConfirmation; // Getter to retrieve the password confirmation input (if applicable)
   String? get firstName;
   String? get lastName;
 

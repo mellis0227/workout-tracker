@@ -4,7 +4,7 @@ import '../viewmodel/dashboard_model.dart';
 
 class DashboardView extends StatelessWidget {
   final DashboardPresenter _presenter;
-  final void Function(int index)? onTabSelected; 
+  final void Function(int index)? onTabSelected;
 
   DashboardView({super.key, this.onTabSelected})
       : _presenter = DashboardPresenter(model: DashboardModel());
@@ -115,11 +115,12 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildTile(BuildContext context, IconData icon, String title, int tabIndex) {
+  Widget _buildTile(
+      BuildContext context, IconData icon, String title, int tabIndex) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
-        onTap: () => onTabSelected?.call(tabIndex), 
+        onTap: () => onTabSelected?.call(tabIndex),
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(

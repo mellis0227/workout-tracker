@@ -21,7 +21,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   // Fetches workout data based on muscle and difficulty filters and updates the UI
   void _setWorkoutData(String nameParameter, String parameterMatcher) async {
     List<dynamic> data =
-    await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
+        await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
     setState(() {
       displayedWorkouts = data;
     });
@@ -132,8 +132,8 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   ),
                   subtitle: Text(
                       "Muscle: ${displayedWorkouts[index]["muscle"]}\n"
-                          "Type: ${displayedWorkouts[index]["type"]}\n"
-                          "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
+                      "Type: ${displayedWorkouts[index]["type"]}\n"
+                      "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
                   trailing: TextButton(
                     child: Text("View Instructions"),
                     onPressed: () => {viewInstructionContainer(context, index)},
@@ -167,7 +167,8 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 DropdownButton<String>(
                   hint: Text("Muscle"),
                   isExpanded: true,
-                  items: <String>['Biceps', 'Chest', 'lats'].map((String value) {
+                  items:
+                      <String>['Biceps', 'Chest', 'lats'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -179,7 +180,8 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 DropdownButton<String>(
                   hint: Text("Difficulty"),
                   isExpanded: true,
-                  items: <String>['Beginner', 'Intermediate', 'Expert'].map((String value) {
+                  items: <String>['Beginner', 'Intermediate', 'Expert']
+                      .map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
