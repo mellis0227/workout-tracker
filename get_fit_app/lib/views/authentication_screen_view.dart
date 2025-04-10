@@ -159,30 +159,39 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
 
   Container _buildLoginComponents(BuildContext context) {
     return Container(
-      width: 350,
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child: Expanded(
-        child: Column(
-          children: [
-            Padding(padding: EdgeInsets.all(20)),
-            Text(
-              _register ? "SIGN UP" : "LOGIN",
-              style: TextStyle(
-                fontSize: 45,
-                fontWeight: FontWeight.w900,
-                color: Color(0xFFEFF6E0),
-              ),
-            ),
-            Padding(padding: EdgeInsets.all(10)),
-            if (_register)
-              Row(
-                children: [
-                  Flexible(
-                    child: AuthenticationTextFormField(
-                      label: "First Name",
-                      textEditingController: _firstNameController,
-                      validator: _firstAndLastNameValidator,
-                    ),
+          width: 350,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+              children: [
+                Padding(padding: EdgeInsets.all(20)),
+                Text(
+                  _register ? "SIGN UP" : "LOGIN",
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFFEFF6E0),
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(10)),
+                if(_register)
+                  Row(
+                    children: [
+                      Flexible(
+                        child: AuthenticationTextFormField(
+                          label: "First Name",
+                          textEditingController: _firstNameController,
+                          validator: _firstAndLastNameValidator,
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.all(10),),
+                      Flexible(
+                        child: AuthenticationTextFormField(
+                          label: "Last Name",
+                          textEditingController: _lastNameController,
+                          validator: _firstAndLastNameValidator,
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.all(10),
@@ -193,7 +202,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                       textEditingController: _lastNameController,
                       validator: _firstAndLastNameValidator,
                     ),
-                  )
+                  ),
                 ],
               ),
             Padding(
