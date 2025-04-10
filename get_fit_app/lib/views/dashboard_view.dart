@@ -3,64 +3,65 @@ import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
 class DashboardView extends StatelessWidget {
-  final DashboardPresenter _presenter;
-  final void Function(int index)? onTabSelected;
+  final DashboardPresenter _presenter; // Presenter to handle logic
+  final void Function(int index)? onTabSelected; // Callback for tab selection
 
+  // Constructor initializes the presenter with a model
   DashboardView({super.key, this.onTabSelected})
       : _presenter = DashboardPresenter(model: DashboardModel());
 
   @override
   Widget build(BuildContext context) {
-    final String welcomeMessage = _presenter.getWelcomeMessage();
-    final String quote = _presenter.getMotivationalQuote();
+    final String welcomeMessage = _presenter.getWelcomeMessage(); // Get welcome message
+    final String quote = _presenter.getMotivationalQuote(); // Get motivational quote
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Dashboard'),
-        centerTitle: true,
+        centerTitle: true, // Centers the title on the app bar
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Welcome Message
+            // Display the welcome message
             Text(
               welcomeMessage,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1C1C1E),
-                  ),
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1C1C1E),
+              ),
             ),
             const SizedBox(height: 24),
 
-            // Workout Summary Card
+            // Display workout summary card (No workout scheduled)
             _buildCard(
               title: "Today's Workout",
               content: "No workout scheduled. Let's get moving!",
             ),
             const SizedBox(height: 16),
 
-            // Quote Card
+            // Display motivational quote card
             _buildCard(
               title: "Motivation",
               content: '"$quote"',
-              isItalic: true,
+              isItalic: true, // Quote is italicized
             ),
             const SizedBox(height: 24),
 
-            // Quick Access
+            // Quick Access section header
             Text(
               "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1C1C1E),
-                  ),
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1C1C1E),
+              ),
             ),
             const SizedBox(height: 12),
 
-            // Quick Access Tiles
+            // Quick access tiles for different functionalities
             _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
             _buildTile(context, Icons.timeline, 'Activity Log', 3),
             _buildTile(context, Icons.api, 'Workout API', 4),
@@ -71,6 +72,7 @@ class DashboardView extends StatelessWidget {
     );
   }
 
+  // Helper method to build a card with title and content
   Widget _buildCard({
     required String title,
     required String content,
@@ -93,6 +95,7 @@ class DashboardView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Display card title
           Text(
             title,
             style: const TextStyle(
@@ -102,6 +105,7 @@ class DashboardView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
+          // Display card content, optionally italicized
           Text(
             content,
             style: TextStyle(
@@ -115,12 +119,13 @@ class DashboardView extends StatelessWidget {
     );
   }
 
+  // Helper method to build a clickable tile with an icon and title
   Widget _buildTile(
       BuildContext context, IconData icon, String title, int tabIndex) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
-        onTap: () => onTabSelected?.call(tabIndex),
+        onTap: () => onTabSelected?.call(tabIndex), // Calls callback on tap
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
@@ -137,7 +142,7 @@ class DashboardView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Row(
             children: [
-              Icon(icon, color: Theme.of(context).colorScheme.primary),
+              Icon(icon, color: Theme.of(context).colorScheme.primary), // Icon
               const SizedBox(width: 16),
               Text(
                 title,

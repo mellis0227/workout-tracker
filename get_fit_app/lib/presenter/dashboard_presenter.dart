@@ -6,13 +6,16 @@ class DashboardPresenter {
 
   DashboardPresenter({required this.model});
 
+  // Returns a simple welcome message
   String getWelcomeMessage() {
     return "Welcome back, User!";
   }
 
+  // Returns a random motivational quote from the model
   String getMotivationalQuote() {
     final quotes = model.quotes;
     final randomIndex = Random().nextInt(quotes.length);
     return quotes[randomIndex];
   }
 }
+

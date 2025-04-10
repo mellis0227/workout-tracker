@@ -16,44 +16,45 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late final HomePresenter _presenter;
-  late List<Widget> _pages;
+  late final HomePresenter _presenter; // Presenter that manages state
+  late List<Widget> _pages; // List of pages/screens to display
 
+  // Called when a tab is selected from the drawer or tabs
   void _onSelectTab(int index) {
     setState(() {
-      _presenter.onSelectPage(index);
+      _presenter.onSelectPage(index); // Update the page index in presenter
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _presenter = HomePresenter();
+    _presenter = HomePresenter(); // Initialize presenter
     _pages = [
-      DashboardView(onTabSelected: _onSelectTab),
-      const AlarmApp(),
-      const RunningLogView(),
-      const ActivityLog(),
-      const WorkoutAPIScreen(),
-      const MusicPlayerView(),
-      const LiftingLogView(),
+      DashboardView(onTabSelected: _onSelectTab), // Dashboard screen
+      const AlarmApp(), // Fitness alarm screen
+      const RunningLogView(), // Running log screen
+      const ActivityLog(), // Activity log screen
+      const WorkoutAPIScreen(), // Workout API screen
+      const MusicPlayerView(), // Music player screen
+      const LiftingLogView(), // Lifting log screen
     ];
   }
 
   @override
   void dispose() {
-    _presenter.dispose();
+    _presenter.dispose(); // Clean up resources used by the presenter
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: _presenter.currentIndex,
+      valueListenable: _presenter.currentIndex, // Listen to changes in selected page
       builder: (context, index, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(_presenter.pageTitles[index]),
+            title: Text(_presenter.pageTitles[index]), // Set app bar title based on current page
             elevation: 0,
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
@@ -68,6 +69,7 @@ class _HomeViewState extends State<HomeView> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
+                // Drawer header with a gradient background
                 DrawerHeader(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -77,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   child: const Text(
-                    'Navigation',
+                    'Navigation', // Header text
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -85,19 +87,20 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                 ),
+                // List tiles for each tab
                 ListTile(
                   leading: const Icon(Icons.line_axis),
                   title: const Text('Dashboard'),
                   onTap: () {
-                    _presenter.onSelectPage(0);
-                    Navigator.pop(context);
+                    _presenter.onSelectPage(0); // Switch to Dashboard
+                    Navigator.pop(context); // Close drawer
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.alarm),
                   title: const Text('Fitness Alarm'),
                   onTap: () {
-                    _presenter.onSelectPage(1);
+                    _presenter.onSelectPage(1); // Switch to Fitness Alarm
                     Navigator.pop(context);
                   },
                 ),
@@ -105,7 +108,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.directions_run),
                   title: const Text('Running Log'),
                   onTap: () {
-                    _presenter.onSelectPage(2);
+                    _presenter.onSelectPage(2); // Switch to Running Log
                     Navigator.pop(context);
                   },
                 ),
@@ -113,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.timeline),
                   title: const Text('Activity Log'),
                   onTap: () {
-                    _presenter.onSelectPage(3);
+                    _presenter.onSelectPage(3); // Switch to Activity Log
                     Navigator.pop(context);
                   },
                 ),
@@ -121,7 +124,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.api),
                   title: const Text('Workout API'),
                   onTap: () {
-                    _presenter.onSelectPage(4);
+                    _presenter.onSelectPage(4); // Switch to Workout API
                     Navigator.pop(context);
                   },
                 ),
@@ -129,7 +132,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.music_note_rounded),
                   title: const Text('Music'),
                   onTap: () {
-                    _presenter.onSelectPage(5);
+                    _presenter.onSelectPage(5); // Switch to Music
                     Navigator.pop(context);
                   },
                 ),
@@ -137,16 +140,17 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.fitness_center),
                   title: const Text('Lifting Log'),
                   onTap: () {
-                    _presenter.onSelectPage(6);
+                    _presenter.onSelectPage(6); // Switch to Lifting Log
                     Navigator.pop(context);
                   },
                 ),
               ],
             ),
           ),
+          // Animated transition between pages
           body: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: _pages[index],
+            child: _pages[index], // Display the selected page
           ),
         );
       },

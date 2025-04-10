@@ -3,7 +3,7 @@ import 'package:get_fit_app/views/running_log_view.dart';
 import 'lifting_log_view.dart';
 
 void main() {
-  runApp(activityLog());
+  runApp(activityLog()); // Runs the app and initializes the activity log screen
 }
 
 class activityLog extends StatelessWidget {
@@ -12,8 +12,8 @@ class activityLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Activity Log',
-      home: ActivityLog(),
+      title: 'Activity Log', // Title of the app
+      home: ActivityLog(), // Initial screen of the app
     );
   }
 }
@@ -30,12 +30,13 @@ class _MyHomePageState extends State<ActivityLog> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose your activity'),
-        centerTitle: true,
+        title: Text('Choose your activity'), // AppBar title
+        centerTitle: true, // Centers the title
       ),
       body: Center(
         child: Column(
           children: [
+            // Button to navigate to the Weight Lifting log screen
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -45,6 +46,7 @@ class _MyHomePageState extends State<ActivityLog> {
               },
               child: Text('Weight Lifting'),
             ),
+            // Button to navigate to the Running/Walking log screen
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
