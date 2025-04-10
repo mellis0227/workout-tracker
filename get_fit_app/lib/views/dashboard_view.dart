@@ -59,9 +59,9 @@ class DashboardView extends StatelessWidget {
 
             // Quick access tiles for different functionalities
             _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
-            _buildTile(context, Icons.timeline, 'Activity Log', 3),
-            _buildTile(context, Icons.api, 'Workout API', 4),
-            _buildTile(context, Icons.music_note_rounded, 'Music Player', 5),
+            _buildTile(context, Icons.timeline, 'Activity Log', 2),
+            _buildTile(context, Icons.api, 'Workouts', 3),
+            _buildTile(context, Icons.music_note_rounded, 'Music Player', 4),
           ],
         ),
       ),

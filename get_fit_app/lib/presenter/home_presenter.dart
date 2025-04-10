@@ -10,7 +10,7 @@ class HomePresenter {
     'Fitness Alarm',
     'Activity Log',
     'Find Workouts',
-    'Muisc',
+    'Music',
   ];
 
   // Updates the selected page index
