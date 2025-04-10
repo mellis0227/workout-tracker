@@ -140,10 +140,6 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text("Fitness Alarm"),
-        centerTitle: true, // Center the title
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

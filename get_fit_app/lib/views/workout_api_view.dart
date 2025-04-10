@@ -58,17 +58,6 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.redAccent.shade200, // AppBar color
-          title: Text(
-            "Find Workouts", // Title for the screen
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-        ),
         body: Column(
           children: [
             // Header with buttons for filtering and managing workout playlists

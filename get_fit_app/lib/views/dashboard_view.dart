@@ -17,10 +17,6 @@ class DashboardView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        centerTitle: true, // Centers the title on the app bar
-      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(

@@ -10,7 +10,7 @@ class LiftingLogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Exercise Log',
+      title: 'Lifting Log',
       home: LiftingLog(), // The LiftingLog widget is the home screen for this app
     );
   }
