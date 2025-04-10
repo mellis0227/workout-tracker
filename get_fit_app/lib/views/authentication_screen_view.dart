@@ -159,80 +159,61 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
 
   Container _buildLoginComponents(BuildContext context) {
     return Container(
-          width: 350,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+      width: 350,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Padding(padding: EdgeInsets.all(20)),
+          Text(
+            _register ? "SIGN UP" : "LOGIN",
+            style: TextStyle(
+              fontSize: 45,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFFEFF6E0),
+            ),
+          ),
+          Padding(padding: EdgeInsets.all(10)),
+          if(_register)
+            Row(
               children: [
-                Padding(padding: EdgeInsets.all(20)),
-                Text(
-                  _register ? "SIGN UP" : "LOGIN",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFFEFF6E0),
+                Flexible(
+                  child: AuthenticationTextFormField(
+                    label: "First Name",
+                    textEditingController: _firstNameController,
+                    validator: _firstAndLastNameValidator,
                   ),
                 ),
-                Padding(padding: EdgeInsets.all(10)),
-                if(_register)
-                  Row(
-                    children: [
-                      Flexible(
-                        child: AuthenticationTextFormField(
-                          label: "First Name",
-                          textEditingController: _firstNameController,
-                          validator: _firstAndLastNameValidator,
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.all(10),),
-                      Flexible(
-                        child: AuthenticationTextFormField(
-                          label: "Last Name",
-                          textEditingController: _lastNameController,
-                          validator: _firstAndLastNameValidator,
-                        ),
-                      ),
-                    ],
+                Padding(padding: EdgeInsets.all(10),),
+                Flexible(
+                  child: AuthenticationTextFormField(
+                    label: "Last Name",
+                    textEditingController: _lastNameController,
+                    validator: _firstAndLastNameValidator,
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                  ),
-                  Flexible(
-                    child: AuthenticationTextFormField(
-                      label: "Last Name",
-                      textEditingController: _lastNameController,
-                      validator: _firstAndLastNameValidator,
-                    ),
-                  ),
-                ],
-              ),
-            Padding(
-              padding: EdgeInsets.all(10),
+                )
+              ],
             ),
+          Padding(padding: EdgeInsets.all(10),),
+          AuthenticationTextFormField(
+            label: 'Email',
+            textEditingController: _emailController,
+            validator: _emailValidator, // Use email validator
+          ),
+          Padding(padding: EdgeInsets.all(10),),
+          AuthenticationTextFormField(
+            label: 'Password',
+            textEditingController: _passwordController,
+            validator: _passwordValidator, // Use password validator
+          ),
+          Padding(padding: EdgeInsets.all(10),),
+          if (_register) // Only show confirmation in register mode
             AuthenticationTextFormField(
-              label: 'Email',
-              textEditingController: _emailController,
-              validator: _emailValidator, // Use email validator
+              label: 'Confirm Password',
+              textEditingController: _passwordConfirmationController,
+              validator:
+              _passwordConfirmationValidator, // Use confirmation validator
             ),
-            Padding(
-              padding: EdgeInsets.all(10),
-            ),
-            AuthenticationTextFormField(
-              label: 'Password',
-              textEditingController: _passwordController,
-              validator: _passwordValidator, // Use password validator
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-            ),
-            if (_register) // Only show confirmation in register mode
-              AuthenticationTextFormField(
-                label: 'Confirm Password',
-                textEditingController: _passwordConfirmationController,
-                validator:
-                    _passwordConfirmationValidator, // Use confirmation validator
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
