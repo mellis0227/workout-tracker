@@ -17,21 +17,27 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late final HomePresenter _presenter;
+  late List<Widget> _pages;
 
-  final List<Widget> _pages = [
-    DashboardView(),
-    AlarmApp(),
-    RunningLogView(),
-    ActivityLog(),
-    WorkoutAPIScreen(),
-    MusicPlayerView(),
-    LiftingLogView(),
-  ];
+  void _onSelectTab(int index) {
+    setState(() {
+      _presenter.onSelectPage(index);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _presenter = HomePresenter();
+    _pages = [
+      DashboardView(onTabSelected: _onSelectTab),
+      const AlarmApp(),
+      const RunningLogView(),
+      const ActivityLog(),
+      const WorkoutAPIScreen(),
+      const MusicPlayerView(),
+      const LiftingLogView(),
+    ];
   }
 
   @override
@@ -91,7 +97,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.alarm),
                   title: const Text('Fitness Alarm'),
                   onTap: () {
-                    _presenter.onSelectPage(0);
+                    _presenter.onSelectPage(1);
                     Navigator.pop(context);
                   },
                 ),
@@ -99,7 +105,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.directions_run),
                   title: const Text('Running Log'),
                   onTap: () {
-                    _presenter.onSelectPage(1);
+                    _presenter.onSelectPage(2);
                     Navigator.pop(context);
                   },
                 ),
@@ -107,7 +113,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.timeline),
                   title: const Text('Activity Log'),
                   onTap: () {
-                    _presenter.onSelectPage(2);
+                    _presenter.onSelectPage(3);
                     Navigator.pop(context);
                   },
                 ),
@@ -115,7 +121,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.api),
                   title: const Text('Workout API'),
                   onTap: () {
-                    _presenter.onSelectPage(3);
+                    _presenter.onSelectPage(4);
                     Navigator.pop(context);
                   },
                 ),
@@ -123,10 +129,18 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.music_note_rounded),
                   title: const Text('Music'),
                   onTap: () {
-                    _presenter.onSelectPage(4);
+                    _presenter.onSelectPage(5);
                     Navigator.pop(context);
                   },
-                )
+                ),
+                ListTile(
+                  leading: const Icon(Icons.fitness_center),
+                  title: const Text('Lifting Log'),
+                  onTap: () {
+                    _presenter.onSelectPage(6);
+                    Navigator.pop(context);
+                  },
+                ),
               ],
             ),
           ),

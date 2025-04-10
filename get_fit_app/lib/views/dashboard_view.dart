@@ -4,8 +4,9 @@ import '../viewmodel/dashboard_model.dart';
 
 class DashboardView extends StatelessWidget {
   final DashboardPresenter _presenter;
+  final void Function(int index)? onTabSelected; 
 
-  DashboardView({super.key})
+  DashboardView({super.key, this.onTabSelected})
       : _presenter = DashboardPresenter(model: DashboardModel());
 
   @override
@@ -24,6 +25,7 @@ class DashboardView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Welcome Message
             Text(
               welcomeMessage,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -31,80 +33,121 @@ class DashboardView extends StatelessWidget {
                     color: const Color(0xFF1C1C1E),
                   ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
 
-            // Today's Workout Card with Dumbbell Icon
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Today's Workout",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1C1C1E),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          "No workout scheduled. Let's get moving!",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Color(0xFF6E6E73),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            // Workout Summary Card
+            _buildCard(
+              title: "Today's Workout",
+              content: "No workout scheduled. Let's get moving!",
+            ),
+            const SizedBox(height: 16),
+
+            // Quote Card
+            _buildCard(
+              title: "Motivation",
+              content: '"$quote"',
+              isItalic: true,
             ),
             const SizedBox(height: 24),
 
-            // Motivational Quote Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
+            // Quick Access
+            Text(
+              "Quick Access",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF1C1C1E),
                   ),
-                ],
+            ),
+            const SizedBox(height: 12),
+
+            // Quick Access Tiles
+            _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
+            _buildTile(context, Icons.timeline, 'Activity Log', 3),
+            _buildTile(context, Icons.api, 'Workout API', 4),
+            _buildTile(context, Icons.music_note_rounded, 'Music Player', 5),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard({
+    required String title,
+    required String content,
+    bool isItalic = false,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1C1C1E),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            content,
+            style: TextStyle(
+              fontSize: 16,
+              color: const Color(0xFF6E6E73),
+              fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTile(BuildContext context, IconData icon, String title, int tabIndex) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: InkWell(
+        onTap: () => onTabSelected?.call(tabIndex), 
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 8,
+                offset: Offset(0, 4),
               ),
-              child: Text(
-                '"$quote"',
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Row(
+            children: [
+              Icon(icon, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 16),
+              Text(
+                title,
                 style: const TextStyle(
                   fontSize: 16,
-                  fontStyle: FontStyle.italic,
                   color: Color(0xFF1C1C1E),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
