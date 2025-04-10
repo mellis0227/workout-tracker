@@ -156,8 +156,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
     return Container(
           width: 350,
           margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Expanded(
-            child: Column(
+          child: Column(
               children: [
                 Padding(padding: EdgeInsets.all(20)),
                 Text(
@@ -211,7 +210,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                   ),
               ],
             ),
-          ),
       );
   }
 
