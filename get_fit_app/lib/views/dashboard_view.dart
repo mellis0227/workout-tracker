@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
@@ -18,24 +20,31 @@ class _DashboardViewState extends State<DashboardView> {
   late final DashboardPresenter _presenter;
   late String welcomeMessage; // Get welcome message
   late String quote; // Get motivational quote// Presenter to handle logic
+  String? userID;
+  String fullName = "";
+
+  Future<void> getFullName(String userID) async {
+    String tempFullName = await _presenter.getUsersName(userID);
+    setState(() {
+      if(tempFullName.isNotEmpty) {
+        fullName = tempFullName;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _presenter = DashboardPresenter(model: DashboardModel());
-    welcomeMessage = _presenter.getWelcomeMessage(); // Get welcome message
+    userID = FirebaseAuth.instance.currentUser?.email;
+    getFullName(userID!);
     quote = _presenter.getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
-
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        centerTitle: true, // Centers the title on the app bar
-      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -43,7 +52,7 @@ class _DashboardViewState extends State<DashboardView> {
           children: [
             // Display the welcome message
             Text(
-              welcomeMessage,
+              fullName.isNotEmpty ? "Welcome Back, $fullName!" : "Welcome Back!",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: const Color(0xFF1C1C1E),
