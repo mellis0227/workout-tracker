@@ -2,18 +2,33 @@ import 'package:flutter/material.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
-class DashboardView extends StatelessWidget {
-  final DashboardPresenter _presenter; // Presenter to handle logic
+class DashboardView extends StatefulWidget {
   final void Function(int index)? onTabSelected; // Callback for tab selection
 
   // Constructor initializes the presenter with a model
-  DashboardView({super.key, this.onTabSelected})
-      : _presenter = DashboardPresenter(model: DashboardModel());
+  const DashboardView({super.key, this.onTabSelected});
 
   @override
+  _DashboardViewState createState() {
+    return _DashboardViewState();
+  }
+}
+
+class _DashboardViewState extends State<DashboardView> {
+  late final DashboardPresenter _presenter;
+  late String welcomeMessage; // Get welcome message
+  late String quote; // Get motivational quote// Presenter to handle logic
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = DashboardPresenter(model: DashboardModel());
+    welcomeMessage = _presenter.getWelcomeMessage(); // Get welcome message
+    quote = _presenter.getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
+
+  }
+  @override
   Widget build(BuildContext context) {
-    final String welcomeMessage = _presenter.getWelcomeMessage(); // Get welcome message
-    final String quote = _presenter.getMotivationalQuote(); // Get motivational quote
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -125,7 +140,7 @@ class DashboardView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
-        onTap: () => onTabSelected?.call(tabIndex), // Calls callback on tap
+        onTap: () => widget.onTabSelected?.call(tabIndex), // Calls callback on tap
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
