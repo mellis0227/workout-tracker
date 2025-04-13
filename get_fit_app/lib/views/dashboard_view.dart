@@ -44,19 +44,15 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.white60,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display the welcome message
-            Text(
-              fullName.isNotEmpty ? "Welcome Back, $fullName!" : "Welcome Back!",
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF1C1C1E),
-              ),
+            Center(
+              child: buildWelcomeText(context),
             ),
             const SizedBox(height: 24),
 
@@ -79,8 +75,9 @@ class _DashboardViewState extends State<DashboardView> {
             Text(
               "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 color: const Color(0xFF1C1C1E),
+                letterSpacing: .8
               ),
             ),
             const SizedBox(height: 12),
@@ -96,6 +93,27 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
+  Text buildWelcomeText(BuildContext context) {
+    if(fullName.length <= 12){
+      return Text(
+        fullName.isNotEmpty ? "Welcome Back, $fullName!" : "Welcome Back!",
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+            color: const Color(0xFF1C1C1E),
+            letterSpacing: .5
+        ),
+      );
+    }
+    return Text(
+      fullName.isNotEmpty ? "Welcome Back\n$fullName!" : "Welcome Back!",
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w800,
+          color: const Color(0xFF1C1C1E),
+          letterSpacing: .5
+      ),
+    );
+  }
+
   // Helper method to build a card with title and content
   Widget _buildCard({
     required String title,
@@ -106,7 +124,7 @@ class _DashboardViewState extends State<DashboardView> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFF598392),
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -125,7 +143,7 @@ class _DashboardViewState extends State<DashboardView> {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1C1C1E),
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 8),
@@ -134,7 +152,7 @@ class _DashboardViewState extends State<DashboardView> {
             content,
             style: TextStyle(
               fontSize: 16,
-              color: const Color(0xFF6E6E73),
+              color: const Color(0xFFAEC3B0),
               fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
             ),
           ),
@@ -153,7 +171,7 @@ class _DashboardViewState extends State<DashboardView> {
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFF598392),
             borderRadius: BorderRadius.circular(16),
             boxShadow: const [
               BoxShadow(
@@ -166,13 +184,13 @@ class _DashboardViewState extends State<DashboardView> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Row(
             children: [
-              Icon(icon, color: Theme.of(context).colorScheme.primary), // Icon
+              Icon(icon, color: Color(0xFFAEC3B0)), // Icon
               const SizedBox(width: 16),
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Color(0xFF1C1C1E),
+                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
