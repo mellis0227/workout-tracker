@@ -1,20 +1,48 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
-class DashboardView extends StatelessWidget {
-  final DashboardPresenter _presenter; // Presenter to handle logic
+class DashboardView extends StatefulWidget {
   final void Function(int index)? onTabSelected; // Callback for tab selection
 
   // Constructor initializes the presenter with a model
-  DashboardView({super.key, this.onTabSelected})
-      : _presenter = DashboardPresenter(model: DashboardModel());
+  const DashboardView({super.key, this.onTabSelected});
+
+  @override
+  _DashboardViewState createState() {
+    return _DashboardViewState();
+  }
+}
+
+class _DashboardViewState extends State<DashboardView> {
+  late final DashboardPresenter _presenter;
+  late String welcomeMessage; // Get welcome message
+  late String quote; // Get motivational quote// Presenter to handle logic
+  //the id that is capable of fetching data && full name is the users displayed name
+  String? userID;
+  String fullName = "";
+
+  Future<void> getFullName(String userID) async {
+    String tempFullName = await _presenter.getUsersFullName(userID);
+    setState(() {
+      if(tempFullName.isNotEmpty) {
+        fullName = tempFullName;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _presenter = DashboardPresenter(model: DashboardModel());
+    userID = FirebaseAuth.instance.currentUser?.email;
+    getFullName(userID!);
+    quote = _presenter.getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
+  }
 
   @override
   Widget build(BuildContext context) {
-    final String welcomeMessage = _presenter.getWelcomeMessage(); // Get welcome message
-    final String quote = _presenter.getMotivationalQuote(); // Get motivational quote
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Padding(
@@ -24,7 +52,7 @@ class DashboardView extends StatelessWidget {
           children: [
             // Display the welcome message
             Text(
-              welcomeMessage,
+              fullName.isNotEmpty ? "Welcome Back, $fullName!" : "Welcome Back!",
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: const Color(0xFF1C1C1E),
@@ -121,7 +149,7 @@ class DashboardView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
-        onTap: () => onTabSelected?.call(tabIndex), // Calls callback on tap
+        onTap: () => widget.onTabSelected?.call(tabIndex), // Calls callback on tap
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(
