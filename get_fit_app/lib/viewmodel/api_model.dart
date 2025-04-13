@@ -56,7 +56,18 @@ class WorkoutApiModel {
       print("Error $e : issues setting workout plan name");
     }
   }
+  /*Not finished function, delete if i forgot to
 
+  Future<void> saveWorkoutToPlaylist(String planName, String userID){
+    try{
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      final workoutInPlaylist = firestore.collection('user_data/$userID/workout_plan/$planName');
+      await workoutInPlaylist.doc().set({"saved_workout" : )
+    }
+  }
+
+   */
   // This function sets the workout details for a specific workout in a user's workout plan
   // It takes the userID, planName, workoutData, and the index of the specific workout to update
   Future<void> setWorkoutDetails(String userID, String planName,
@@ -69,6 +80,7 @@ class WorkoutApiModel {
           .doc(planName)
           .collection("workouts");
       // Set the workout details in Firestore (difficulty and instructions)
+      print(workoutData[index]);
       await workoutPlan.doc(workoutData[index]["name"]).set({
         'workout_difficulty': workoutData[index]['difficulty'],
         'workout_details': workoutData[index]['instructions'],
