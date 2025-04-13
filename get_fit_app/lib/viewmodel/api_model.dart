@@ -48,7 +48,7 @@ class WorkoutApiModel {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Reference to the user's workout plan collection in Firestore
       final workoutPlanName =
-          firestore.collection('user_data/$userID/workout_plan');
+      firestore.collection('user_data/$userID/workout_plans');
       // Create or update the workout plan document with the specified planName
       await workoutPlanName.doc(planName).set({"plan_name": planName});
     } catch (e) {
@@ -56,7 +56,18 @@ class WorkoutApiModel {
       print("Error $e : issues setting workout plan name");
     }
   }
+  /*Not finished function, delete if i forgot to
 
+  Future<void> saveWorkoutToPlaylist(String planName, String userID){
+    try{
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      final workoutInPlaylist = firestore.collection('user_data/$userID/workout_plan/$planName');
+      await workoutInPlaylist.doc().set({"saved_workout" : )
+    }
+  }
+
+   */
   // This function sets the workout details for a specific workout in a user's workout plan
   // It takes the userID, planName, workoutData, and the index of the specific workout to update
   Future<void> setWorkoutDetails(String userID, String planName,
@@ -65,10 +76,11 @@ class WorkoutApiModel {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Reference to the specific workout collection within the user's workout plan
       final workoutPlan = firestore
-          .collection('user_data/$userID/workout_plan')
+          .collection('user_data/$userID/workout_plans')
           .doc(planName)
           .collection("workouts");
       // Set the workout details in Firestore (difficulty and instructions)
+      print(workoutData[index]);
       await workoutPlan.doc(workoutData[index]["name"]).set({
         'workout_difficulty': workoutData[index]['difficulty'],
         'workout_details': workoutData[index]['instructions'],
@@ -86,7 +98,8 @@ class WorkoutApiModel {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Reference to the user's workout plans collection
       final workoutPlansCollection =
-          firestore.collection('user_data/$userID/workout_plan');
+      firestore.collection('user_data/$userID/workout_plans');
+
 
       // Fetch all workout plan documents from Firestore
       final querySnapshot = await workoutPlansCollection.get();

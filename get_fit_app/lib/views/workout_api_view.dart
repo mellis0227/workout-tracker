@@ -11,29 +11,24 @@ class WorkoutAPIScreen extends StatefulWidget {
 }
 
 class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
-  String? playlistName; // To store the name of a new playlist
-  String? selectedPlaylist; // To store the currently selected playlist
-  String? user; // To store the current user's email
-  List<dynamic> playlistNames = []; // List of workout playlist names
-  WorkoutAPIPresenter presenter = WorkoutAPIPresenter(); // Presenter to handle workout data
-  List<dynamic> displayedWorkouts = []; // List to hold displayed workout data
+  int? selectedWorkoutIndex;
+  String? playlistName;
+  String? selectedPlaylist;
+  String? user;
+  List<dynamic> playlistNames = [];
+  WorkoutAPIPresenter presenter = WorkoutAPIPresenter();
+  List<dynamic> displayedWorkouts = [];
+  List<dynamic> selectedWorkout = [];
+
 
   // Fetches workout data based on muscle and difficulty filters and updates the UI
   void _setWorkoutData(String nameParameter, String parameterMatcher) async {
     // Call the presenter to retrieve workout data from the API
     List<dynamic> data =
-    await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
+        await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
     setState(() {
       displayedWorkouts = data; // Update the state with the fetched data
     });
-
-    // Print the selected workout data attributes (name, type, difficulty) to the console
-    List<String> printedCats = ["name", "type", "difficulty"];
-    for (int i = 0; i < displayedWorkouts.length; i++) {
-      for (int j = 0; j < printedCats.length; j++) {
-        print(displayedWorkouts[i][printedCats[j]]);
-      }
-    }
   }
 
   // Fetches the list of workout playlist names for the current user
@@ -51,8 +46,6 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     user = FirebaseAuth.instance.currentUser?.email; // Get the current user's email
     // Fetch the user's playlist names from Firestore using the user email
     _getUsersPlaylistNames(user!);
-    // Uncomment to initially fetch workouts by default filter (muscle = "biceps")
-    // _setWorkoutData("muscle", "biceps");
   }
 
   @override
@@ -65,7 +58,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               width: 425,
               height: 45,
               decoration: BoxDecoration(
-                color: Colors.redAccent.shade100, // Container color
+                color: Color(0xFFAEC3B0),
               ),
               child: Row(
                 children: [
@@ -75,7 +68,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                     child: Text("Filter",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Color(0xFF124559),
                             fontSize: 20)),
                     onPressed: () {
                       // Show the filter dialog
@@ -90,7 +83,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                       child: Text("Workout Playlist",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Color(0xFF124559),
                               fontSize: 20)),
                       onPressed: () {
                         // Show the playlist management dialog
@@ -118,24 +111,28 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
           itemBuilder: (BuildContext context, index) {
             return Card(
                 elevation: 5,
-                shadowColor: Colors.black26,
+                shadowColor: Color(0xFF01161E),
                 child: ListTile(
-                  tileColor: Colors.grey.shade100,
+                  tileColor: Color(0xFF598392),
                   title: Text(
                     displayedWorkouts[index]["name"], // Workout name
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
                       "Muscle: ${displayedWorkouts[index]["muscle"]}\n"
-                          "Type: ${displayedWorkouts[index]["type"]}\n"
-                          "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
+                      "Type: ${displayedWorkouts[index]["type"]}\n"
+                      "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
                   trailing: TextButton(
                     child: Text("View Instructions"),
                     onPressed: () => {viewInstructionContainer(context, index)},
                   ),
                   leading: TextButton(
                     child: Text("Save"),
-                    onPressed: () => {},
+                    onPressed: () => {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => savePlaylist(index)),
+                    },
                   ),
                 ));
           });
@@ -160,29 +157,29 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               children: [
                 // Dropdown to select muscle type (e.g., biceps, chest)
                 DropdownButton<String>(
-                    hint: Text("Muscle"),
-                    isExpanded: true,
-                    items:
-                    <String>['Biceps', 'Chest', 'lats'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) => {_setWorkoutData('Muscle', value!)} // Set workout data based on muscle
+                  hint: Text("Muscle"),
+                  isExpanded: true,
+                  items:
+                      <String>['biceps', 'chest', 'lats'].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) => {_setWorkoutData('muscle', value!)},
                 ),
                 // Dropdown to select workout difficulty (e.g., Beginner, Intermediate)
                 DropdownButton<String>(
-                    hint: Text("Difficulty"),
-                    isExpanded: true,
-                    items: <String>['Beginner', 'Intermediate', 'Expert']
-                        .map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (value) => {_setWorkoutData('Difficulty', value!)} // Set workout data based on difficulty
+                  hint: Text("Difficulty"),
+                  isExpanded: true,
+                  items: <String>['beginner', 'intermediate', 'expert']
+                      .map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) => {_setWorkoutData('difficulty', value!)},
                 ),
               ],
             ))); // Close filter dialog
@@ -193,8 +190,9 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     return AlertDialog(
         title: Text("Workout Playlist"),
         content: SizedBox(
-            height: 150,
-            child: Column(
+          height: 150,
+          child: StatefulBuilder(builder: (context, StateSetter setState) {
+            return Column(
               children: [
                 // Dropdown to select a playlist
                 DropdownButton<String>(
@@ -202,6 +200,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   isExpanded: true,
                   value: selectedPlaylist,
                   onChanged: (String? newValue) {
+                    _getUsersPlaylistNames(user!);
                     setState(() {
                       selectedPlaylist = newValue; // Update the selected playlist
                     });
@@ -227,12 +226,55 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 ElevatedButton(
                   child: Text("Press to Create Playlist"),
                   onPressed: () => {
-                    createPlaylistButton(), // Create the playlist when pressed
-                    presenter.getWorkoutPlans("user_test") // Fetch workout plans
+                    createPlaylistButton(),
+                    presenter.getWorkoutPlans(user!),
+                    _getUsersPlaylistNames(user!)
                   },
                 ),
               ],
-            )));
+            );
+          }),
+        ));
+  }
+
+  AlertDialog savePlaylist(int index) {
+    return AlertDialog(
+      title: Text("Select Playlist to Save to"),
+      content: SizedBox(
+        height: 150,
+        child: StatefulBuilder(builder: (context, StateSetter setState) {
+          return Column(
+            children: [
+              DropdownButtonFormField<String>(
+                hint: Text("Select Playlist"),
+                isExpanded: true,
+                value: selectedPlaylist,
+                onChanged: (String? newValue) {
+                  _getUsersPlaylistNames(user!);
+
+                  setState(() {
+                    selectedPlaylist = newValue;
+                  });
+                },
+                items: playlistNames
+                    .map<DropdownMenuItem<String>>((dynamic playlist) {
+                  return DropdownMenuItem<String>(
+                    value: playlist,
+                    child: Text(playlist),
+                  );
+                }).toList(),
+              ),
+              if (selectedPlaylist != null)
+                Text("Selected Playlist:    " + selectedPlaylist!),
+              if (selectedPlaylist == null) Text("No Playlist Selected"),
+              ElevatedButton(child: Text("Save"), onPressed: () => {
+                  selectedPlaylist!.isNotEmpty ? saveWorkoutButton(user, selectedPlaylist, index) : Text("No Playlist Selected")
+              })
+            ],
+          );
+        }),
+      ),
+    );
   }
 
   // Show the instructions for a selected workout in a bottom sheet
@@ -257,8 +299,14 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
 
   // Create a new workout playlist for the user
   void createPlaylistButton() {
-    presenter.setWorkoutPlanName(user!, playlistName!); // Create playlist using the entered name
+    presenter.setWorkoutPlanName(
+      user!,
+      playlistName!,
+    );
     return;
   }
+  void saveWorkoutButton(String? user, String? planName, int selectedWorkoutIndex) {
+    presenter.setWorkoutDetails(
+        user!, planName!, displayedWorkouts, selectedWorkoutIndex);
+  }
 }
-
