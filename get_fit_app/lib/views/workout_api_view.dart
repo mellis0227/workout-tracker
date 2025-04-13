@@ -48,17 +48,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.redAccent.shade200,
-          title: Text(
-            "Find Workouts",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-        ),
+
         body: Column(
           children: [
             // Header with buttons for filtering and managing workout playlists
@@ -66,7 +56,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               width: 425,
               height: 45,
               decoration: BoxDecoration(
-                color: Colors.redAccent.shade100,
+                color: Color(0xFFAEC3B0),
               ),
               child: Row(
                 children: [
@@ -75,7 +65,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                     child: Text("Filter",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Color(0xFF124559),
                             fontSize: 20)),
                     onPressed: () {
                       showDialog(
@@ -88,7 +78,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                       child: Text("Workout Playlist",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Color(0xFF124559),
                               fontSize: 20)),
                       onPressed: () {
                         showDialog(
@@ -115,9 +105,9 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
           itemBuilder: (BuildContext context, index) {
             return Card(
                 elevation: 5,
-                shadowColor: Colors.black26,
+                shadowColor: Color(0xFF01161E),
                 child: ListTile(
-                  tileColor: Colors.grey.shade100,
+                  tileColor: Color(0xFF598392),
                   title: Text(
                     displayedWorkouts[index]["name"],
                     style: TextStyle(fontWeight: FontWeight.bold),
