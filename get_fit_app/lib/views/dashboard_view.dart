@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
@@ -20,11 +19,12 @@ class _DashboardViewState extends State<DashboardView> {
   late final DashboardPresenter _presenter;
   late String welcomeMessage; // Get welcome message
   late String quote; // Get motivational quote// Presenter to handle logic
+  //the id that is capable of fetching data && full name is the users displayed name
   String? userID;
   String fullName = "";
 
   Future<void> getFullName(String userID) async {
-    String tempFullName = await _presenter.getUsersName(userID);
+    String tempFullName = await _presenter.getUsersFullName(userID);
     setState(() {
       if(tempFullName.isNotEmpty) {
         fullName = tempFullName;

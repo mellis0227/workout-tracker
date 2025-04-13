@@ -13,8 +13,8 @@ class DashboardPresenter {
     return quotes[randomIndex];
   }
 
-  Future<String> getUsersName(String userID) async {
-    return model.getUsersName(userID);
+  Future<String> getUsersFullName(String userID) async {
+    return model.getUsersFullName(userID);
   }
 }
 

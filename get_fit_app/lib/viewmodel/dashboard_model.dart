@@ -8,12 +8,14 @@ class DashboardModel {
     "Don’t limit your challenges. Challenge your limits.",
     "You don’t have to be extreme, just consistent.",
     "Success starts with self-discipline.",
+    "Hmm... exercise? I thought you just said extra fries xD",
+    "Working out is life, when life give you workout lemons you make GAINS lemonade!"
   ];
 
   List<String> get quotes => _quotes;
 
 
-  Future<String> getUsersName(String userID) async {
+  Future<String> getUsersFullName(String userID) async {
     String fullName = "";
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
