@@ -19,10 +19,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
       TextEditingController(); // Controller for password input
   final _passwordConfirmationController =
       TextEditingController(); // Controller for confirmation
-  final _firstNameController =
-      TextEditingController();
-  final _lastNameController =
-      TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>(); // Key to validate the form
 
@@ -39,7 +37,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
   String get firstName => _firstNameController.text;
   @override
   String get lastName => _lastNameController.text;
-
 
   bool _register = true; // Whether user is registering or logging in
   double registerToLoginPadding = 0;
@@ -106,9 +103,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
   }
 
   String? _firstAndLastNameValidator(String? value) {
-    if(_register && _firstNameController.text.isEmpty) {
+    if (_register && _firstNameController.text.isEmpty) {
       return "Enter first name";
-    } else if(_register && _firstNameController.text.isEmpty) {
+    } else if (_register && _firstNameController.text.isEmpty) {
       return "Enter last name";
     }
     return null;
@@ -124,7 +121,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
         child: Column(
           children: [
             Padding(padding: EdgeInsets.all(50)),
-            Text("Get Fit", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.black),),
+            Text(
+              "Get Fit",
+              style: TextStyle(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
             Padding(padding: EdgeInsets.all(40)),
             Center(
               child: Container(
@@ -143,7 +146,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                 child: _buildLoginComponents(context),
               ),
             ),
-            Padding(padding: EdgeInsets.all(10),),
+            Padding(
+              padding: EdgeInsets.all(10),
+            ),
             _registerOrLoginButton(context),
             _switchLoginOrRegister()
           ],
@@ -154,93 +159,97 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
 
   Container _buildLoginComponents(BuildContext context) {
     return Container(
-          width: 350,
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          child: Expanded(
-            child: Column(
-              children: [
-                Padding(padding: EdgeInsets.all(20)),
-                Text(
-                  _register ? "SIGN UP" : "LOGIN",
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontWeight: FontWeight.w900,
-                    color: Color(0xFFEFF6E0),
-                  ),
-                ),
-                Padding(padding: EdgeInsets.all(10)),
-                if(_register)
-                  Row(
-                    children: [
-                      Flexible(
-                        child: AuthenticationTextFormField(
-                          label: "First Name",
-                          textEditingController: _firstNameController,
-                          validator: _firstAndLastNameValidator,
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.all(10),),
-                      Flexible(
-                        child: AuthenticationTextFormField(
-                          label: "Last Name",
-                          textEditingController: _lastNameController,
-                          validator: _firstAndLastNameValidator,
-                        ),
-                      )
-                    ],
-                  ),
-                Padding(padding: EdgeInsets.all(10),),
-                AuthenticationTextFormField(
-                  label: 'Email',
-                  textEditingController: _emailController,
-                  validator: _emailValidator, // Use email validator
-                ),
-                Padding(padding: EdgeInsets.all(10),),
-                AuthenticationTextFormField(
-                  label: 'Password',
-                  textEditingController: _passwordController,
-                  validator: _passwordValidator, // Use password validator
-                ),
-                Padding(padding: EdgeInsets.all(10),),
-                if (_register) // Only show confirmation in register mode
-                  AuthenticationTextFormField(
-                    label: 'Confirm Password',
-                    textEditingController: _passwordConfirmationController,
-                    validator:
-                    _passwordConfirmationValidator, // Use confirmation validator
-                  ),
-              ],
+      width: 350,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Padding(padding: EdgeInsets.all(20)),
+          Text(
+            _register ? "SIGN UP" : "LOGIN",
+            style: TextStyle(
+              fontSize: 45,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFFEFF6E0),
             ),
           ),
-      );
+          Padding(padding: EdgeInsets.all(10)),
+          if(_register)
+            Row(
+              children: [
+                Flexible(
+                  child: AuthenticationTextFormField(
+                    label: "First Name",
+                    textEditingController: _firstNameController,
+                    validator: _firstAndLastNameValidator,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(10),),
+                Flexible(
+                  child: AuthenticationTextFormField(
+                    label: "Last Name",
+                    textEditingController: _lastNameController,
+                    validator: _firstAndLastNameValidator,
+                  ),
+                )
+              ],
+            ),
+          Padding(padding: EdgeInsets.all(10),),
+          AuthenticationTextFormField(
+            label: 'Email',
+            textEditingController: _emailController,
+            validator: _emailValidator, // Use email validator
+          ),
+          Padding(padding: EdgeInsets.all(10),),
+          AuthenticationTextFormField(
+            label: 'Password',
+            textEditingController: _passwordController,
+            validator: _passwordValidator, // Use password validator
+          ),
+          Padding(padding: EdgeInsets.all(10),),
+          if (_register) // Only show confirmation in register mode
+            AuthenticationTextFormField(
+              label: 'Confirm Password',
+              textEditingController: _passwordConfirmationController,
+              validator:
+              _passwordConfirmationValidator, // Use confirmation validator
+            ),
+        ],
+      ),
+    );
   }
 
   InkWell _switchLoginOrRegister() {
     return InkWell(
-                focusColor: Color(0xFFDFFDFF),
-                onTap: () {
-                  _presenter
-                      .toggleRegisterMode(); // Toggle between login/register
-                },
-                child: Text(_register ? 'Login instead' : 'Register instead',
-                  style: TextStyle(color: Color(0xFF598392), fontSize: 14, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
-                ),
-              );
+      focusColor: Color(0xFFDFFDFF),
+      onTap: () {
+        _presenter.toggleRegisterMode(); // Toggle between login/register
+      },
+      child: Text(
+        _register ? 'Login instead' : 'Register instead',
+        style: TextStyle(
+            color: Color(0xFF598392),
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline),
+      ),
+    );
   }
 
   ElevatedButton _registerOrLoginButton(BuildContext context) {
     return ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    _presenter
-                        .authenticate(context); // Delegate to presenter for authentication
-                  }
-                },
-                style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Color(0xFF50C4A1)),
-                    fixedSize: WidgetStateProperty.all(Size(101, 30))
-                ),
-                child: Text(_register ? 'Register' : 'Login', style: TextStyle(color: Colors.white),),
-              );
+      onPressed: () {
+        if (_formKey.currentState?.validate() ?? false) {
+          _presenter.authenticate(
+              context); // Delegate to presenter for authentication
+        }
+      },
+      style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(Color(0xFF50C4A1)),
+          fixedSize: WidgetStateProperty.all(Size(101, 30))),
+      child: Text(
+        _register ? 'Register' : 'Login',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
   }
 }

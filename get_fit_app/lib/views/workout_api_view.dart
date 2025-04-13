@@ -20,27 +20,30 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   List<dynamic> displayedWorkouts = [];
   List<dynamic> selectedWorkout = [];
 
+
   // Fetches workout data based on muscle and difficulty filters and updates the UI
   void _setWorkoutData(String nameParameter, String parameterMatcher) async {
+    // Call the presenter to retrieve workout data from the API
     List<dynamic> data =
         await presenter.retrieveWorkoutAPIData(nameParameter, parameterMatcher);
     setState(() {
-      displayedWorkouts = data;
+      displayedWorkouts = data; // Update the state with the fetched data
     });
   }
 
   // Fetches the list of workout playlist names for the current user
   void _getUsersPlaylistNames(String userID) async {
+    // Get the user's workout plans from Firestore
     List<dynamic> data = await presenter.getWorkoutPlans(userID);
     setState(() {
-      playlistNames = data;
+      playlistNames = data; // Update the playlist names for the user
     });
   }
 
   @override
   void initState() {
     super.initState();
-    user = FirebaseAuth.instance.currentUser?.email;
+    user = FirebaseAuth.instance.currentUser?.email; // Get the current user's email
     // Fetch the user's playlist names from Firestore using the user email
     _getUsersPlaylistNames(user!);
   }
@@ -48,7 +51,6 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         body: Column(
           children: [
             // Header with buttons for filtering and managing workout playlists
@@ -61,6 +63,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               child: Row(
                 children: [
                   Padding(padding: EdgeInsets.all(20)),
+                  // Button to filter workouts by muscle and difficulty
                   TextButton(
                     child: Text("Filter",
                         style: TextStyle(
@@ -68,12 +71,14 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                             color: Color(0xFF124559),
                             fontSize: 20)),
                     onPressed: () {
+                      // Show the filter dialog
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => showFilters());
                     },
                   ),
                   Padding(padding: EdgeInsets.all(45)),
+                  // Button to manage workout playlists
                   TextButton(
                       child: Text("Workout Playlist",
                           style: TextStyle(
@@ -81,6 +86,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                               color: Color(0xFF124559),
                               fontSize: 20)),
                       onPressed: () {
+                        // Show the playlist management dialog
                         showDialog(
                             context: context,
                             builder: (BuildContext context) => showPlaylist());
@@ -109,7 +115,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 child: ListTile(
                   tileColor: Color(0xFF598392),
                   title: Text(
-                    displayedWorkouts[index]["name"],
+                    displayedWorkouts[index]["name"], // Workout name
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
@@ -134,7 +140,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     return ListView(
       children: [
         Text(
-          "No Workouts Found press filter to find workouts!",
+          "No Workouts Found press filter to find workouts!", // Message when no workouts are found
           style: TextStyle(fontSize: 40),
         ),
       ],
@@ -176,7 +182,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   onChanged: (value) => {_setWorkoutData('difficulty', value!)},
                 ),
               ],
-            )));
+            ))); // Close filter dialog
   }
 
   // Displays the workout playlist options in a dialog
@@ -196,7 +202,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   onChanged: (String? newValue) {
                     _getUsersPlaylistNames(user!);
                     setState(() {
-                      selectedPlaylist = newValue;
+                      selectedPlaylist = newValue; // Update the selected playlist
                     });
                   },
                   items: playlistNames
@@ -213,7 +219,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                     hintText: "Name New Playlist",
                   ),
                   onChanged: (value) {
-                    playlistName = value;
+                    playlistName = value; // Update playlist name when user types
                   },
                 ),
                 // Button to create the new playlist
@@ -299,7 +305,6 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
     );
     return;
   }
-
   void saveWorkoutButton(String? user, String? planName, int selectedWorkoutIndex) {
     presenter.setWorkoutDetails(
         user!, planName!, displayedWorkouts, selectedWorkoutIndex);
