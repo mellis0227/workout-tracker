@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
-/*
-todo:  no sized box but padding, then access todays workout example. (those are going to be based on schedules)
- */
-
 class DashboardView extends StatefulWidget {
   final void Function(int index)? onTabSelected; // Callback for tab selection
 
