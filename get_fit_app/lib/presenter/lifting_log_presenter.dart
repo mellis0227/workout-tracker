@@ -1,10 +1,14 @@
 import '../viewmodel/lifting_log_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LiftingLogPresenter {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final LiftingLogModel model = LiftingLogModel();
 
-  Future<void> logExercise(Exercise exercise) async {
-    await _firestore.collection('exercises').add(exercise.toMap());
+  Future<void> logExercise(String userID, Exercise exercises) async {
+    await model.logExercise(
+      userID: userID,
+      exercise: exercises.exercise,
+      weight: exercises.weight,
+      sets: exercises.sets,
+      reps: exercises.reps);
   }
 }
