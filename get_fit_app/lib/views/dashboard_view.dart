@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
+/*
+todo:  no sized box but padding, then access todays workout example. (those are going to be based on schedules)
+ */
+
 class DashboardView extends StatefulWidget {
   final void Function(int index)? onTabSelected; // Callback for tab selection
 
@@ -19,7 +23,7 @@ class _DashboardViewState extends State<DashboardView> {
   late final DashboardPresenter _presenter;
   late String welcomeMessage; // Get welcome message
   late String quote; // Get motivational quote// Presenter to handle logic
-  //the id that is capable of fetching data && full name is the users displayed name
+  //the userID is capable of fetching data && full name is the users displayed name
   String? userID;
   String fullName = "";
 
@@ -44,7 +48,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white60,
+      backgroundColor: Colors.white70,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -80,12 +84,12 @@ class _DashboardViewState extends State<DashboardView> {
                 letterSpacing: .8
               ),
             ),
-            const SizedBox(height: 12),
+            Padding(padding: EdgeInsets.all(10)),
 
             // Quick access tiles for different functionalities
             _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
             _buildTile(context, Icons.timeline, 'Activity Log', 2),
-            _buildTile(context, Icons.api, 'Workouts', 3),
+            _buildTile(context, Icons.api, 'Find Workouts', 3),
             _buildTile(context, Icons.music_note_rounded, 'Music Player', 4),
           ],
         ),
@@ -128,7 +132,7 @@ class _DashboardViewState extends State<DashboardView> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-            color: Colors.black12,
+            color: Colors.black45,
             blurRadius: 8,
             offset: Offset(0, 4),
           ),
@@ -175,7 +179,7 @@ class _DashboardViewState extends State<DashboardView> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: const [
               BoxShadow(
-                color: Colors.black12,
+                color: Colors.black45,
                 blurRadius: 8,
                 offset: Offset(0, 4),
               ),
