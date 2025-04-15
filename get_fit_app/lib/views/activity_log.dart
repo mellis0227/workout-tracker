@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get_fit_app/views/fitness_alarm_view.dart';
 import 'package:get_fit_app/views/lifting_log_view.dart';
 import 'package:get_fit_app/views/running_log_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 void main() {
   runApp(activityLog());
@@ -29,9 +31,19 @@ class ActivityLog extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<ActivityLog> {
+  String? _userID;
+
+  @override
+  void initState() {
+    super.initState();
+    _userID = FirebaseAuth.instance.currentUser?.email;
+    print("Current user ID: $_userID");
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference runs = FirebaseFirestore.instance.collection('runs');
+    CollectionReference runs = FirebaseFirestore.instance.collection('user_data/$_userID/runs');
 
     return Scaffold(
       appBar: AppBar(title: Text("Activity Log")),
