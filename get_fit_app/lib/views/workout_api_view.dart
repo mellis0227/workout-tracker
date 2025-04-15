@@ -113,7 +113,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 elevation: 5,
                 shadowColor: Color(0xFF01161E),
                 child: ListTile(
-                  tileColor: Color(0xFF598392),
+                  tileColor: Color(0xFFEFF6E0),
                   title: Text(
                     displayedWorkouts[index]["name"], // Workout name
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -123,11 +123,11 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                       "Type: ${displayedWorkouts[index]["type"]}\n"
                       "Difficulty ${displayedWorkouts[index]['difficulty']}\n"),
                   trailing: TextButton(
-                    child: Text("View Instructions"),
+                    child: Text("View Instructions", style:TextStyle(color: Colors.black)),
                     onPressed: () => {viewInstructionContainer(context, index)},
                   ),
                   leading: TextButton(
-                    child: Text("Save"),
+                    child: Text("Save", style:TextStyle(color: Colors.black)),
                     onPressed: () => {
                       showDialog(
                           context: context,
@@ -157,12 +157,12 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
               children: [
                 // Dropdown to select muscle type (e.g., biceps, chest)
                 DropdownButton<String>(
-                  hint: Text("Muscle"),
+                  hint: Text("Muscle", style: TextStyle(color: Colors.black)),
                   isExpanded: true,
                   items:
-                      <String>['biceps', 'chest', 'lats'].map((String value) {
+                      <String>['Biceps', 'Chest', 'Lats'].map((String value) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: value.toLowerCase(),
                       child: Text(value),
                     );
                   }).toList(),
@@ -170,12 +170,12 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 ),
                 // Dropdown to select workout difficulty (e.g., Beginner, Intermediate)
                 DropdownButton<String>(
-                  hint: Text("Difficulty"),
+                  hint: Text("Difficulty", style: TextStyle(color: Colors.black)),
                   isExpanded: true,
-                  items: <String>['beginner', 'intermediate', 'expert']
+                  items: <String>['Beginner', 'Intermediate', 'Expert']
                       .map((String value) {
                     return DropdownMenuItem<String>(
-                      value: value,
+                      value: value.toLowerCase(),
                       child: Text(value),
                     );
                   }).toList(),
@@ -187,6 +187,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
 
   // Displays the workout playlist options in a dialog
   AlertDialog showPlaylist() {
+    bool playlistCreated = false;
     return AlertDialog(
         title: Text("Workout Playlist"),
         content: SizedBox(
@@ -228,7 +229,13 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   onPressed: () => {
                     createPlaylistButton(),
                     presenter.getWorkoutPlans(user!),
-                    _getUsersPlaylistNames(user!)
+                    _getUsersPlaylistNames(user!),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Playlist created successfully!"),
+                      duration: Duration(seconds: 5),
+                      ),
+                    )
                   },
                 ),
               ],
@@ -268,7 +275,13 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                 Text("Selected Playlist:    " + selectedPlaylist!),
               if (selectedPlaylist == null) Text("No Playlist Selected"),
               ElevatedButton(child: Text("Save"), onPressed: () => {
-                  selectedPlaylist!.isNotEmpty ? saveWorkoutButton(user, selectedPlaylist, index) : Text("No Playlist Selected")
+                  selectedPlaylist!.isNotEmpty ? saveWorkoutButton(user, selectedPlaylist, index) : Text("No Playlist Selected"),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Workout added successfully!"),
+                      duration: Duration(seconds: 5),
+                  ),
+                )
               })
             ],
           );
@@ -283,12 +296,13 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
       context: context,
       builder: (context) {
         return SizedBox(
-            height: 450,
+
+            height: ( displayedWorkouts[index]["instructions"].length / 2.3),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   Text("Instructions"),
-                  Text(displayedWorkouts[index]["instructions"]),
+                  Text(displayedWorkouts[index]["instructions"], style: TextStyle(letterSpacing: 0.8))
                 ],
               ),
             ));
