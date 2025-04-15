@@ -10,7 +10,7 @@ class AuthService {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final userCollection = firestore.collection("user_data").doc(user.email);
 
-    if(user.firstName != null && user.lastName != null){
+    if (user.firstName != null && user.lastName != null) {
       await userCollection.set({
         "email": user.email,
         "first_name": user.firstName,

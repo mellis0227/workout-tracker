@@ -11,10 +11,7 @@ class AuthenticationPresenter {
       AuthService(); // Instance of the authentication service.
   final AuthenticationView _view; // The view that the presenter will update.
 
-
-
-  bool _register = true;// Boolean to track if the user is in register mode.
-
+  bool _register = true; // Boolean to track if the user is in register mode.
 
   // Constructor takes in the view to communicate with the UI.
   AuthenticationPresenter(this._view);
@@ -53,6 +50,7 @@ class AuthenticationPresenter {
           firstName: _view.firstName,
           lastName: _view.lastName,
         );
+        _authService.setUserInDatabase(user);
       } else {
         // For login, only pass email and password.
         user = UserModel(
@@ -61,12 +59,9 @@ class AuthenticationPresenter {
         );
       }
 
-
-
       // Call AuthService to perform the authentication.
       await _authService.authenticate(user, _register);
-
-      _authService.setUserInDatabase(user);
+      //sends to home page
       context.go("/home");
       // Show a success message once authentication is successful.
       _view.showSuccessMessage(
