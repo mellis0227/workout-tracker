@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get_fit_app/views/activity_log.dart';
 import '../presenter/home_presenter.dart';
+import 'activity_log.dart';
 import 'fitness_alarm_view.dart';
 import 'lifting_log_view.dart';
+import 'music_player_view.dart';
 import 'running_log_view.dart';
 import 'workout_api_view.dart';
+import 'dashboard_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,36 +16,43 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late final HomePresenter _presenter;
+  late final HomePresenter _presenter; // Presenter that manages state
+  late List<Widget> _pages; // List of pages/screens to display
 
-  final List<Widget> _pages = const [
-    AlarmApp(),
-    LiftingLogView(),
-    RunningLogView(),
-    ActivityLog(),
-    WorkoutAPIScreen(),
-  ];
+  // Called when a tab is selected from the drawer or tabs
+  void _onSelectTab(int index) {
+    setState(() {
+      _presenter.onSelectPage(index); // Update the page index in presenter
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    _presenter = HomePresenter();
+    _presenter = HomePresenter(); // Initialize presenter
+    _pages = [
+      DashboardView(onTabSelected: _onSelectTab), // Dashboard screen
+      const AlarmApp(), // Fitness alarm screen
+      const ActivityLog(), // Activity log screen
+      const WorkoutAPIScreen(), // Workout API screen
+      const MusicPlayerView(), // Music player screen
+    ];
   }
 
   @override
   void dispose() {
-    _presenter.dispose();
+    _presenter.dispose(); // Clean up resources used by the presenter
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: _presenter.currentIndex,
+      valueListenable: _presenter.currentIndex, // Listen to changes in selected page
       builder: (context, index, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(_presenter.pageTitles[index]),
+            title: Text(_presenter.pageTitles[index]), // Set app bar title based on current page
             elevation: 0,
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
@@ -58,6 +67,7 @@ class _HomeViewState extends State<HomeView> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
+                // Drawer header with a gradient background
                 DrawerHeader(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -67,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   child: const Text(
-                    'Navigation',
+                    'Navigation', // Header text
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -75,27 +85,20 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                 ),
+                // List tiles for each tab
+                ListTile(
+                  leading: const Icon(Icons.line_axis),
+                  title: const Text('Dashboard'),
+                  onTap: () {
+                    _presenter.onSelectPage(0); // Switch to Dashboard
+                    Navigator.pop(context); // Close drawer
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.alarm),
                   title: const Text('Fitness Alarm'),
                   onTap: () {
-                    _presenter.onSelectPage(0);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.directions_run),
-                  title: const Text('Running Log'),
-                  onTap: () {
-                    _presenter.onSelectPage(2);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.fitness_center),
-                  title: const Text('Lifting Log'),
-                  onTap: () {
-                    _presenter.onSelectPage(1);
+                    _presenter.onSelectPage(1); // Switch to Fitness Alarm
                     Navigator.pop(context);
                   },
                 ),
@@ -103,24 +106,33 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.timeline),
                   title: const Text('Activity Log'),
                   onTap: () {
-                    _presenter.onSelectPage(2);
+                    _presenter.onSelectPage(2); // Switch to Activity Log
                     Navigator.pop(context);
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.api),
-                  title: const Text('Workout API'),
+                  title: const Text('Workouts'),
                   onTap: () {
-                    _presenter.onSelectPage(3);
+                    _presenter.onSelectPage(3); // Switch to Workout API
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.music_note_rounded),
+                  title: const Text('Music'),
+                  onTap: () {
+                    _presenter.onSelectPage(4); // Switch to Music
                     Navigator.pop(context);
                   },
                 ),
               ],
             ),
           ),
+          // Animated transition between pages
           body: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: _pages[index],
+            child: _pages[index], // Display the selected page
           ),
         );
       },

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../viewmodel/lifting_log_model.dart';
 import '../presenter/lifting_log_presenter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LiftingLogView extends StatelessWidget {
   const LiftingLogView({super.key});
@@ -9,7 +10,7 @@ class LiftingLogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Exercise Log',
+      title: 'Lifting Log',
       home: LiftingLog(),
     );
   }
@@ -29,9 +30,16 @@ class _MyHomePageState extends State<LiftingLog> {
   final TextEditingController _setsController = TextEditingController();
 
   final LiftingLogPresenter _presenter = LiftingLogPresenter();
-
+  String? _userID;
   String _vanishingMessage = '';
   Timer? _vanishingTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _userID = FirebaseAuth.instance.currentUser?.email;
+    print("Current user ID: $_userID");
+  }
 
   void _logExercise() {
     if (_exerciseController.text.isEmpty ||
@@ -46,10 +54,10 @@ class _MyHomePageState extends State<LiftingLog> {
       weight: int.tryParse(_weightController.text) ?? 0,
       sets: int.tryParse(_setsController.text) ?? 0,
       reps: int.tryParse(_repsController.text) ?? 0,
-      id: '',
+      userID: '',
     );
 
-    _presenter.logExercise(exercise);
+    _presenter.logExercise(_userID!, exercise);
 
     _exerciseController.clear();
     _weightController.clear();
@@ -91,7 +99,7 @@ class _MyHomePageState extends State<LiftingLog> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Exercise Log'),
+        title: Text('Lifting Log'),
         centerTitle: true,
       ),
       body: Column(
@@ -139,11 +147,11 @@ class _MyHomePageState extends State<LiftingLog> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logExercise,
-                    child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
+                    child: Text('Log Exercise'),
                   ),
                   Column(
                     children: [

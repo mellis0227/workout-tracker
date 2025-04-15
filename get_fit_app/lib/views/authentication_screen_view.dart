@@ -3,47 +3,67 @@ import 'package:get_fit_app/views/authentication_text_form_field_view.dart';
 import 'package:get_fit_app/presenter/authentication_presenter.dart';
 import 'authentication_view.dart';
 
-// The screen where the user interacts for login or registration.
+// Screen where the user interacts for login or registration
 class AuthenticationScreen extends StatefulWidget {
-  const AuthenticationScreen({Key? key}) : super(key: key);
+  const AuthenticationScreen({super.key});
 
   @override
   _AuthenticationScreenState createState() => _AuthenticationScreenState();
 }
 
-class _AuthenticationScreenState extends State<AuthenticationScreen> implements AuthenticationView {
-  final _emailController = TextEditingController();  // Controller for the email input field.
-  final _passwordController = TextEditingController();  // Controller for the password input field.
-  final _passwordConfirmationController = TextEditingController();  // Controller for password confirmation.
+class _AuthenticationScreenState extends State<AuthenticationScreen>
+    implements AuthenticationView {
+  final _emailController =
+      TextEditingController(); // Controller for email input
+  final _passwordController =
+      TextEditingController(); // Controller for password input
+  final _passwordConfirmationController =
+      TextEditingController(); // Controller for confirmation
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
-  late AuthenticationPresenter _presenter;  // Instance of the presenter to handle business logic.
+  final _formKey = GlobalKey<FormState>(); // Key to validate the form
 
-  // Getter methods to access the text from controllers.
+  late AuthenticationPresenter _presenter;
+
+  // Getter methods for input values
+  @override
   String get email => _emailController.text;
+  @override
   String get password => _passwordController.text;
+  @override
   String? get passwordConfirmation => _passwordConfirmationController.text;
+  @override
+  String get firstName => _firstNameController.text;
+  @override
+  String get lastName => _lastNameController.text;
 
-  bool _register = true;  // Track if the user is in register mode.
-
+  bool _register = true; // Whether user is registering or logging in
+  double registerToLoginPadding = 0;
   @override
   void initState() {
     super.initState();
-    _presenter = AuthenticationPresenter(this);  // Initialize the presenter with the view.
+    _presenter =
+        AuthenticationPresenter(this); // Initialize presenter with this view
   }
 
-  // Method to show error messages (e.g., validation errors, authentication errors).
+  // Method to show error messages globally
   @override
   void showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
   }
 
-  // Method to show success messages (e.g., successful login or registration).
+  // Method to show success messages
   @override
   void showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.green),
+    );
   }
 
-  // Method to update the UI when switching between login and registration modes.
+  // Update the UI for toggling between register/login modes
   @override
   void updateUIForMode(bool register) {
     setState(() {
@@ -51,48 +71,185 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> implements 
     });
   }
 
-  // Method to build the UI of the screen.
+  // Email field validator
+  String? _emailValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Enter an email';
+    }
+    final emailRegEx = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegEx.hasMatch(value)) {
+      return 'Invalid email address';
+    }
+    return null;
+  }
+
+  // Password field validator
+  String? _passwordValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Enter a password';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  // Password confirmation validator (only in register mode)
+  String? _passwordConfirmationValidator(String? value) {
+    if (_register && value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  String? _firstAndLastNameValidator(String? value) {
+    if (_register && _firstNameController.text.isEmpty) {
+      return "Enter first name";
+    } else if (_register && _firstNameController.text.isEmpty) {
+      return "Enter last name";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Color(0xFFEFF6E0),
       body: Form(
+        key: _formKey, // Associate the form with the key
         child: Column(
           children: [
-            const SizedBox(height: 50),
-            AuthenticationTextFormField(
-              label: 'Email',  // Label for email field
-              icon: Icons.email,  // Icon for email field
-              textEditingController: _emailController,  // Controller for email field
+            Padding(padding: EdgeInsets.all(50)),
+            Text(
+              "Get Fit",
+              style: TextStyle(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
-            AuthenticationTextFormField(
-              label: 'Password',  // Label for password field
-              icon: Icons.vpn_key,  // Icon for password field
-              textEditingController: _passwordController,  // Controller for password field
-            ),
-            // Password confirmation field only shown when in registration mode.
-            if (_register)
-              AuthenticationTextFormField(
-                label: 'Password Confirmation',  // Label for password confirmation
-                icon: Icons.password,  // Icon for password confirmation field
-                textEditingController: _passwordConfirmationController,  // Controller for password confirmation
+            Padding(padding: EdgeInsets.all(40)),
+            Center(
+              child: Container(
+                height: _register ? 500 : 340,
+                width: 380,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF124559),
+                      spreadRadius: 10,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(30),
+                  color: Color(0xFF598392),
+                ),
+                child: _buildLoginComponents(context),
               ),
-            // Button to trigger login or registration
-            ElevatedButton(
-              onPressed: () => _presenter.authenticate(),
-              child: Text(_register ? 'Register' : 'Login'),  // Button text based on mode
             ),
-            // Link to toggle between login and register mode
-            InkWell(
-              onTap: () {
-                _presenter.toggleRegisterMode();  // Toggle between register/login mode
-              },
-              child: Text(_register ? 'Login instead' : 'Register instead'),  // Text changes based on mode
+            Padding(
+              padding: EdgeInsets.all(10),
             ),
+            _registerOrLoginButton(context),
+            _switchLoginOrRegister()
           ],
         ),
       ),
     );
   }
+
+  Container _buildLoginComponents(BuildContext context) {
+    return Container(
+      width: 350,
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Padding(padding: EdgeInsets.all(20)),
+          Text(
+            _register ? "SIGN UP" : "LOGIN",
+            style: TextStyle(
+              fontSize: 45,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFFEFF6E0),
+            ),
+          ),
+          Padding(padding: EdgeInsets.all(10)),
+          if(_register)
+            Row(
+              children: [
+                Flexible(
+                  child: AuthenticationTextFormField(
+                    label: "First Name",
+                    textEditingController: _firstNameController,
+                    validator: _firstAndLastNameValidator,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.all(10),),
+                Flexible(
+                  child: AuthenticationTextFormField(
+                    label: "Last Name",
+                    textEditingController: _lastNameController,
+                    validator: _firstAndLastNameValidator,
+                  ),
+                )
+              ],
+            ),
+          Padding(padding: EdgeInsets.all(10),),
+          AuthenticationTextFormField(
+            label: 'Email',
+            textEditingController: _emailController,
+            validator: _emailValidator, // Use email validator
+          ),
+          Padding(padding: EdgeInsets.all(10),),
+          AuthenticationTextFormField(
+            label: 'Password',
+            textEditingController: _passwordController,
+            validator: _passwordValidator, // Use password validator
+          ),
+          Padding(padding: EdgeInsets.all(10),),
+          if (_register) // Only show confirmation in register mode
+            AuthenticationTextFormField(
+              label: 'Confirm Password',
+              textEditingController: _passwordConfirmationController,
+              validator:
+              _passwordConfirmationValidator, // Use confirmation validator
+            ),
+        ],
+      ),
+    );
+  }
+
+  InkWell _switchLoginOrRegister() {
+    return InkWell(
+      focusColor: Color(0xFFDFFDFF),
+      onTap: () {
+        _presenter.toggleRegisterMode(); // Toggle between login/register
+      },
+      child: Text(
+        _register ? 'Login instead' : 'Register instead',
+        style: TextStyle(
+            color: Color(0xFF598392),
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.underline),
+      ),
+    );
+  }
+
+  ElevatedButton _registerOrLoginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState?.validate() ?? false) {
+          _presenter.authenticate(
+              context); // Delegate to presenter for authentication
+        }
+      },
+      style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(Color(0xFF50C4A1)),
+          fixedSize: WidgetStateProperty.all(Size(101, 30))),
+      child: Text(
+        _register ? 'Register' : 'Login',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
 }
-
-

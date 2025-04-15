@@ -22,11 +22,12 @@ dependencies:
   http: ^1.3.0
   go_router: ^14.8.1
   audioplayers: ^6.4.0
+  just_audio: ^0.9.46
 
   
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
-  google_fonts: ^6.2.1
+  flutter_time_picker_spinner: ^2.0.0
 
 
 dev_dependencies:
@@ -42,4 +43,3 @@ flutter:
   assets:
     - assets/ringtones/
     - assets/images/dumbbell_dashboard.png
-    - assets\images\luke-chesser-PHtp0cDBJSM-unsplash.jpg
