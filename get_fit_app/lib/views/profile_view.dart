@@ -13,142 +13,233 @@ class ProfileView extends StatelessWidget {
 }
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-void editEntry(){}
-
 class _MyHomePageState extends State<Profile> {
+  String text = '';
+  String height = '';
+  String weight = '';
+  int index = 0;
+  late DateTime date = DateTime(2025, 4, 15);
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final dateController = TextEditingController();
+  final heightFeetController = ScrollController();
+
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _weightController.dispose();
+    dateController.dispose();
+    super.dispose();
+  }
+
+  Future<String?> openHeightDialog(BuildContext context) => showDialog<String>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Height'),
+      content: TextField(
+        autofocus: true,
+       decoration: InputDecoration(hintText: 'Enter your height (feet)'),
+        controller: _heightController,
+      ),
+      actions: [
+        TextButton(
+          child: Text('SUBMIT'),
+          onPressed: submitHeight,
+        )
+      ]
+    ),
+  );
+
+  Future<String?> openWeightDialog(BuildContext context) => showDialog<String>(
+    context: context,
+    builder: (context) => AlertDialog(
+        title: Text('Weight'),
+        content: TextField(
+          autofocus: true,
+          decoration: InputDecoration(hintText: 'Enter your height (lbs)'),
+          controller: _weightController,
+        ),
+        actions: [
+          TextButton(
+            child: Text('SUBMIT'),
+            onPressed: submitWeight,
+          )
+        ]
+    ),
+  );
+
+  void submitHeight() {
+    Navigator.of(context).pop(_heightController.text);
+  }
+
+  void submitWeight() {
+    Navigator.of(context).pop(_weightController.text);
+  }
+
+  Widget buildList() => ListView.builder(
+    controller: heightFeetController,
+    itemCount: 10,
+    itemBuilder: (context, index) => ListTile(
+      title: Center(
+        child: Text(
+          '${index + 1}',
+          style: TextStyle(fontSize: 32),
+        )
+      )
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('Profile'),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            height: 220,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.tealAccent],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.5, 0.9],
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 10,),
-              CircleAvatar(
-              minRadius: 60.0,
-              child: CircleAvatar(
-                  radius: 50.0,
-                  backgroundImage: AssetImage('assets/images/luke-chesser-PHtp0cDBJSM-unsplash.jpg'),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text('@username',
-            style: TextStyle(
-              color: Colors.white,
-            )),
-            Text('Your Name',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                )),
-            SizedBox(
-              height: 10,
-            ),
-            ListTile(
-              title: Center(
-                child: Text('Birthday',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 20,
-                    ),
-                ),
-                ),
-                subtitle: Text(
-                    'May 31st, 2005',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 20,
-                    )
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text('Profile'),
+          centerTitle: true,
+        ),
+        body: ListView(
+          children: <Widget>[
+                Column(
+                    children: <Widget>[
+                      SizedBox(height: 10,),
+                      CircleAvatar(
+                        minRadius: 60.0,
+                        child: CircleAvatar(
+                          radius: 50.0,
+                          backgroundImage: AssetImage('assets/images/luke-chesser-PHtp0cDBJSM-unsplash.jpg'),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text('@username',
+                          style: TextStyle(
+                            color: Colors.blue,
+                          )),
+                      Text('Your Name',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ListTile(
+                          title: Center(
+                            child: Text('Birthday',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          subtitle: Text(
+                              '${date.month}/${date.day}/${date.year}',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 20,
+                              )
+                          )
+                      ),
+                      Builder(
+                        builder: (context) {
+                          return ElevatedButton(
+                            child: Text('Edit'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.blue,
+                            ),
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: date,
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime(2100),
+                              );
+                              if (newDate == null) return;
+                              setState(() => date = newDate);
+                            },
+                          );
+                        },
+                      ),
+                      Divider(),
+                      ListTile(
+                          title: Center(
+                            child: Text('Height',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 20,
+                                )),
+                          ),
+                          subtitle: Text(
+                              height,
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 20,
+                              )
+                          )
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8.0),
+                      child:
+                      ElevatedButton(
+                        child: Text('Edit'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue,
+                        ),
+                          onPressed: () async {
+                            final height = await openHeightDialog(context);
+                            if(height == null || height.isEmpty) return;
+
+                            setState(() => this.height = height);
+                          }
+                      ),
+                      ),
+                      Divider(),
+                      ListTile(
+                          title: Center(
+                              child: Text('Weight',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 20,)
+                              )
+                          ),
+                          subtitle: Text(
+                              weight + ' lbs',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 20,
+                              )
+                          )
+                      ),
+                      ElevatedButton(
+                          child: Text('Edit'),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
+                          ),
+                          onPressed: () async {
+                            final weight = await openWeightDialog(context);
+                            if(weight == null || weight.isEmpty) return;
+
+                            setState(() => this.weight = weight);
+                          }
+                      ),
+                      Divider(),
+                    ]
                 )
-          ),
-            ElevatedButton(
-              onPressed: editEntry,
-              child: Text('Edit'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
-              )
-            ),
-            Divider(),
-            ListTile(
-              title: Center(
-                child: Text('Height',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 20,
-                    )),
-              ),
-              subtitle: Text(
-                '8 ft 3 in',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 20,
-                )
-              )
-            ),
-            ElevatedButton(
-              onPressed: editEntry,
-              child: Text('Edit'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
-              )
-            ),
-            Divider(),
-            ListTile(
-              title: Center(
-                  child: Text('Weight',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 20,)
-                  )
-              ),
-              subtitle: Text(
-                '25 lbs',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 20,
-                )
-              )
-            ),
-                ElevatedButton(
-                  onPressed: editEntry,
-                  child: Text('Edit'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
-                  )
-                ),
-                Divider(),
-        ]
-      )
-      ),
-      ],
-      )
+          ],
+        )
     );
   }
 }
