@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+/* Profile page/code is unfinished and very clunky right now, merging to main to
+meet sprint requirements
+ */
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -21,7 +26,7 @@ class _MyHomePageState extends State<Profile> {
   String text = '';
   String height = '';
   String weight = '';
-  int index = 0;
+  int _selectedValue = 0;
   late DateTime date = DateTime(2025, 4, 15);
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -84,18 +89,7 @@ class _MyHomePageState extends State<Profile> {
     Navigator.of(context).pop(_weightController.text);
   }
 
-  Widget buildList() => ListView.builder(
-    controller: heightFeetController,
-    itemCount: 10,
-    itemBuilder: (context, index) => ListTile(
-      title: Center(
-        child: Text(
-          '${index + 1}',
-          style: TextStyle(fontSize: 32),
-        )
-      )
-    ),
-  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -197,12 +191,37 @@ class _MyHomePageState extends State<Profile> {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
                         ),
-                          onPressed: () async {
-                            final height = await openHeightDialog(context);
-                            if(height == null || height.isEmpty) return;
-
-                            setState(() => this.height = height);
-                          }
+                          onPressed: () => showCupertinoModalPopup(
+                              context: context,
+                              builder: (_) => SizedBox(
+                                width: double.infinity,
+                                height: 400,
+                                child: CupertinoPicker(
+                                  backgroundColor: Colors.white,
+                                    itemExtent: 10,
+                                    scrollController: FixedExtentScrollController(
+                                      initialItem: 1,
+                                    ),
+                                  children: const [
+                                    Text('0'),
+                                    Text('1'),
+                                    Text('2'),
+                                    Text('3'),
+                                    Text('4'),
+                                    Text('5'),
+                                    Text('6'),
+                                    Text('7'),
+                                    Text('8'),
+                                    Text('9'),
+                                    Text('10'),
+                                  ],
+                                  onSelectedItemChanged: (int value) {
+                                    setState(() {
+                                      _selectedValue = value;
+                                    });
+                                  },
+                                )
+                              ))
                       ),
                       ),
                       Divider(),
