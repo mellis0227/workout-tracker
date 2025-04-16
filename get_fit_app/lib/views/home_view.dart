@@ -32,7 +32,9 @@ class _HomeViewState extends State<HomeView> {
     _presenter = HomePresenter(); // Initialize presenter
     _pages = [
       DashboardView(onTabSelected: _onSelectTab), // Dashboard screen
-      const AlarmApp(), // Fitness alarm screen
+      const AlarmApp(),
+      const RunningLogView(),
+      const LiftingLogView(),// Fitness alarm screen
       const ActivityLog(), // Activity log screen
       const WorkoutAPIScreen(), // Workout API screen
       const MusicPlayerView(), // Music player screen
@@ -103,10 +105,26 @@ class _HomeViewState extends State<HomeView> {
                   },
                 ),
                 ListTile(
+                  leading: const Icon(Icons.directions_run),
+                  title: const Text('Running Log'),
+                  onTap: () {
+                    _presenter.onSelectPage(2); // Switch to Activity Log
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.fitness_center),
+                  title: const Text('Lifting Log'),
+                  onTap: () {
+                    _presenter.onSelectPage(3); // Switch to Activity Log
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.timeline),
                   title: const Text('Activity Log'),
                   onTap: () {
-                    _presenter.onSelectPage(2); // Switch to Activity Log
+                    _presenter.onSelectPage(4); // Switch to Activity Log
                     Navigator.pop(context);
                   },
                 ),
@@ -114,7 +132,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.api),
                   title: const Text('Workouts'),
                   onTap: () {
-                    _presenter.onSelectPage(3); // Switch to Workout API
+                    _presenter.onSelectPage(5); // Switch to Workout API
                     Navigator.pop(context);
                   },
                 ),
@@ -122,7 +140,7 @@ class _HomeViewState extends State<HomeView> {
                   leading: const Icon(Icons.music_note_rounded),
                   title: const Text('Music'),
                   onTap: () {
-                    _presenter.onSelectPage(4); // Switch to Music
+                    _presenter.onSelectPage(6); // Switch to Music
                     Navigator.pop(context);
                   },
                 ),

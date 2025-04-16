@@ -84,9 +84,9 @@ class _DashboardViewState extends State<DashboardView> {
 
             // Quick access tiles for different functionalities
             _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
-            _buildTile(context, Icons.timeline, 'Activity Log', 2),
-            _buildTile(context, Icons.api, 'Find Workouts', 3),
-            _buildTile(context, Icons.music_note_rounded, 'Music Player', 4),
+            _buildTile(context, Icons.timeline, 'Activity Log', 4),
+            _buildTile(context, Icons.api, 'Find Workouts', 5),
+            _buildTile(context, Icons.music_note_rounded, 'Music Player', 6),
           ],
         ),
       ),

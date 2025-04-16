@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../viewmodel/running_log_model.dart';
 import '../presenter/running_log_presenter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// Running Log view widget
+
 class RunningLogView extends StatelessWidget {
   const RunningLogView({super.key});
 
@@ -16,7 +17,6 @@ class RunningLogView extends StatelessWidget {
   }
 }
 
-// Stateful widget for running log input
 class runningLog extends StatefulWidget {
   const runningLog({super.key});
 
@@ -25,64 +25,71 @@ class runningLog extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<runningLog> {
-  final TextEditingController _runController = TextEditingController(); // Controller for run field
-  final TextEditingController _distanceController = TextEditingController(); // Controller for distance
-  final TextEditingController _timeController = TextEditingController(); // Controller for time
-  final RunningLogPresenter _presenter = RunningLogPresenter(); // Presenter to handle the logic
+  final TextEditingController _runController = TextEditingController();
+  final TextEditingController _distanceController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final RunningLogPresenter _presenter = RunningLogPresenter();
 
-  String _vanishingMessage = ''; // Message that disappears after a set time
-  Timer? _vanishingTimer; // Timer to hide the message after a few seconds
-  String _selectedExercise = 'Run'; // Default exercise is 'Run'
+  String _vanishingMessage = '';
+  Timer? _vanishingTimer;
+  String _selectedExercise = 'Run';
+  String? _userID;
 
-  // Function to log the run or walk
+@override
+void initState() {
+  super.initState();
+  _userID = FirebaseAuth.instance.currentUser?.email;
+  print("Current user ID: $_userID");
+
+}
+
+
   void _logRun() {
-    // Ensure that all fields are filled before logging
-    if (_selectedExercise.isEmpty ||
-        _distanceController.text.isEmpty ||
-        _timeController.text.isEmpty) {
-      return;
-    }
-
-    // Create a Run object to hold the logged exercise information
-    Run run = Run(
-      run: _selectedExercise, // Selected exercise (Run or Walk)
-      distance: int.tryParse(_distanceController.text) ?? 0, // Parse distance
-      time: int.tryParse(_timeController.text) ?? 0, // Parse time
-      id: '', // Empty id initially
-    );
-
-    // Pass the Run object to the presenter for logging
-    _presenter.logRun(run);
-
-    // Clear the input fields after logging
-    _distanceController.clear();
-    _timeController.clear();
-
-    // Show a success message for 3 seconds
-    _showVanishingMessage('Exercise logged successfully!');
+  if (_userID == null) {
+    _showVanishingMessage('User not logged in.');
+    return;
   }
 
-  // Function to display a temporary message
+  if (_selectedExercise.isEmpty ||
+      _distanceController.text.isEmpty ||
+      _timeController.text.isEmpty) {
+    return;
+  }
+
+  Run run = Run(
+    run: _selectedExercise,
+    distance: int.tryParse(_distanceController.text) ?? 0,
+    time: int.tryParse(_timeController.text) ?? 0,
+    userID: _userID ?? "",
+  );
+
+  _presenter.logRun(_userID!, run);
+
+  _distanceController.clear();
+  _timeController.clear();
+  _showVanishingMessage('Exercise logged successfully!');
+}
+
+
+
   void _showVanishingMessage(String message) {
     setState(() {
-      _vanishingMessage = message; // Set the message to be displayed
+      _vanishingMessage = message;
     });
-    _startVanishingMessageTimer(); // Start the timer to remove the message
+    _startVanishingMessageTimer();
   }
 
-  // Function to start the timer for the vanishing message
   void _startVanishingMessageTimer() {
-    _vanishingTimer?.cancel(); // Cancel any existing timer
+    _vanishingTimer?.cancel();
     _vanishingTimer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
-          _vanishingMessage = ''; // Clear the message after the timer
+          _vanishingMessage = '';
         });
       }
     });
   }
 
-  // Dispose of controllers and the vanishing timer when the widget is disposed
   @override
   void dispose() {
     _runController.dispose();
@@ -92,42 +99,39 @@ class _MyHomePageState extends State<runningLog> {
     super.dispose();
   }
 
-  // Build the widget UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, // Prevents resizing when keyboard shows
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Run/Walk Log'),
-        centerTitle: true, // Center the title in the AppBar
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16.0), // Add padding to the body
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // Dropdown to select between 'Run' or 'Walk'
                   DropdownButtonFormField<String>(
                     value: _selectedExercise,
                     decoration: InputDecoration(
-                      labelText: 'Select exercise',
-                      border: OutlineInputBorder(),
+                     labelText: 'Select exercise',
+                     border: OutlineInputBorder(),
                     ),
                     items: ['Run', 'Walk'].map((String exercise) {
-                      return DropdownMenuItem<String>(
-                        value: exercise,
-                        child: Text(exercise),
-                      );
-                    }).toList(),
+                     return DropdownMenuItem<String>(
+                       value: exercise,
+                       child: Text(exercise),
+                       );
+                      }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        _selectedExercise = newValue!; // Update selected exercise
-                      });
-                    },
-                  ),
-                  // Distance input field
+                        _selectedExercise = newValue!;
+                          });
+                         },
+                       ),
                   Text("Distance (miles)"),
                   TextField(
                     controller: _distanceController,
@@ -137,7 +141,6 @@ class _MyHomePageState extends State<runningLog> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  // Time input field
                   Text("Time (minutes)"),
                   TextField(
                     controller: _timeController,
@@ -147,16 +150,14 @@ class _MyHomePageState extends State<runningLog> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  // Button to log the run/walk exercise
                   ElevatedButton(
-                    onPressed: _logRun, // Call the logRun function
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Button color
-                      foregroundColor: Colors.white, // Text color
-                    ),
+                    onPressed: _logRun,
                     child: Text('Log Exercise'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
                   ),
-                  // Display the vanishing message
                   Column(
                     children: [
                       if (_vanishingMessage.isNotEmpty)
@@ -167,7 +168,7 @@ class _MyHomePageState extends State<runningLog> {
                               _vanishingMessage,
                               style: TextStyle(
                                 fontSize: 16.0,
-                                color: Colors.blue, // Message color
+                                color: Colors.blue,
                               ),
                             ),
                           ],
