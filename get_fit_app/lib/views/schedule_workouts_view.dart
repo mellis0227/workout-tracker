@@ -56,32 +56,32 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
 
  @override
  Widget build(BuildContext context) {
-   return Column(
-     children: [
-       TableCalendar(
-         firstDay: DateTime.utc(2025, 4, 16),
-         lastDay: DateTime.utc(2050, 3, 14),
-         focusedDay: DateTime.now(),
-         calendarFormat: CalendarFormat.week,
-         onDaySelected: (focusedDay, selectedDay) {
-           setState(() {
-             _focusedDay = focusedDay;
-             _selectedDay = selectedDay;
-           });
-
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => buildPlaylistAlert(selectedDay),
-          );
-
-         }
-       ),
-     ],
+   return Scaffold(
+     body: Column(
+       children: [
+         TableCalendar(
+             firstDay: DateTime.utc(2025, 4, 16),
+             lastDay: DateTime.utc(2050, 4, 16),
+             focusedDay: DateTime.now(),
+             calendarFormat: CalendarFormat.month,
+             onDaySelected: (focusedDay, selectedDay) {
+               setState(() {
+                 _focusedDay = focusedDay;
+                 _selectedDay = selectedDay;
+               });
+               showDialog(
+                 context: context,
+                 builder: (BuildContext context) => buildPlaylistAlert(selectedDay),
+               );
+             }
+         ),
+       ],
+     ),
    );
  }
 
-  AlertDialog buildPlaylistAlert(DateTime currentTime) {
-    String formattedTime = "${weekDayNames[currentTime.weekday]} the ${currentTime.day}";
+  AlertDialog buildPlaylistAlert(DateTime currentDate) {
+    String formattedTime = "${weekDayNames[currentDate.weekday]} the ${currentDate.day}";
     return AlertDialog(
       title: Text("Select Your Playlist"),
       content: SizedBox(
@@ -98,6 +98,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                 );
               }).toList(),
               onChanged: (value) => {
+                _presenter.setWeekdayInFirebase(userID!, value!, currentDate),
                 Navigator.pop(context),
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Added $value to $formattedTime"), duration: Duration(seconds: 2)),
