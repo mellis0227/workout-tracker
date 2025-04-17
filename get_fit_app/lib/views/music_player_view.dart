@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:audioplayers/audioplayers.dart";
 import "package:just_audio/just_audio.dart";
 
 // Music Player view widget
