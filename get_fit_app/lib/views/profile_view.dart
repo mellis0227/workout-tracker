@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wheel_picker/wheel_picker.dart';
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
@@ -26,12 +27,12 @@ class _MyHomePageState extends State<Profile> {
   String text = '';
   String height = '';
   String weight = '';
-  int _selectedValue = 0;
+  int selectedItemIndex = 0;
+  int selectedFeet = 0;
+  int selectedInches = 0;
   late DateTime date = DateTime(2025, 4, 15);
-  final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final dateController = TextEditingController();
-  final heightFeetController = ScrollController();
 
   void initState() {
     super.initState();
@@ -39,29 +40,80 @@ class _MyHomePageState extends State<Profile> {
 
   @override
   void dispose() {
-    _heightController.dispose();
     _weightController.dispose();
     dateController.dispose();
     super.dispose();
   }
 
-  Future<String?> openHeightDialog(BuildContext context) => showDialog<String>(
+  void _openHeightPickerDialog(BuildContext context) {
+    showModalBottomSheet(
     context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Height'),
-      content: TextField(
-        autofocus: true,
-       decoration: InputDecoration(hintText: 'Enter your height (feet)'),
-        controller: _heightController,
-      ),
-      actions: [
+    builder: (context) => SizedBox(
+        height: 400,
+        child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: WheelPicker(
+              itemCount: 9,
+              builder: (context, index) => Text("${index} ft", style:
+              TextStyle(fontSize: 30.0)),
+              selectedIndexColor: Colors.blue,
+              onIndexChanged: (index, _) {
+                setState(() {
+                  selectedFeet = index;
+                });
+              },
+              style: WheelPickerStyle(
+                itemExtent: 40.0,
+                squeeze: 1.25,
+                diameterRatio: 0.9,
+                surroundingOpacity: 0.25,
+              )
+            ),
+          ),
+          Expanded(
+            child: WheelPicker(
+              itemCount: 12,
+              builder: (context, index) => Text("$index in", style:
+              TextStyle(fontSize: 30.0)),
+              selectedIndexColor: Colors.blue,
+              onIndexChanged: (index, _) {
+                setState(() {
+                  selectedInches = index;
+                });
+              },
+              style: WheelPickerStyle(
+                itemExtent: 40,
+                squeeze: 1.25,
+                diameterRatio: 0.9,
+                surroundingOpacity: 0.25,
+              )
+            ),
+          ),
+        Column(
+        children: [
+          TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel',
+          style: TextStyle(fontSize: 20.0)),
+        ),
+        SizedBox(height: 150),
         TextButton(
-          child: Text('SUBMIT'),
-          onPressed: submitHeight,
-        )
-      ]
+          onPressed: () {
+            setState(() {
+              height = "$selectedFeet ft $selectedInches in";
+            });
+            Navigator.pop(context);
+          },
+          child: const Text("OK",
+          style: TextStyle(fontSize: 20.0)),
+        ),],),
+      ],
+    ),
     ),
   );
+  }
 
   Future<String?> openWeightDialog(BuildContext context) => showDialog<String>(
     context: context,
@@ -81,15 +133,9 @@ class _MyHomePageState extends State<Profile> {
     ),
   );
 
-  void submitHeight() {
-    Navigator.of(context).pop(_heightController.text);
-  }
-
   void submitWeight() {
     Navigator.of(context).pop(_weightController.text);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -191,37 +237,7 @@ class _MyHomePageState extends State<Profile> {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
                         ),
-                          onPressed: () => showCupertinoModalPopup(
-                              context: context,
-                              builder: (_) => SizedBox(
-                                width: double.infinity,
-                                height: 400,
-                                child: CupertinoPicker(
-                                  backgroundColor: Colors.white,
-                                    itemExtent: 10,
-                                    scrollController: FixedExtentScrollController(
-                                      initialItem: 1,
-                                    ),
-                                  children: const [
-                                    Text('0'),
-                                    Text('1'),
-                                    Text('2'),
-                                    Text('3'),
-                                    Text('4'),
-                                    Text('5'),
-                                    Text('6'),
-                                    Text('7'),
-                                    Text('8'),
-                                    Text('9'),
-                                    Text('10'),
-                                  ],
-                                  onSelectedItemChanged: (int value) {
-                                    setState(() {
-                                      _selectedValue = value;
-                                    });
-                                  },
-                                )
-                              ))
+                          onPressed: () => _openHeightPickerDialog(context),
                       ),
                       ),
                       Divider(),
