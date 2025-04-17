@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wheel_picker/wheel_picker.dart';
+import 'package:ruler_slider/ruler_slider.dart';
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
@@ -30,6 +31,7 @@ class _MyHomePageState extends State<Profile> {
   int selectedItemIndex = 0;
   int selectedFeet = 0;
   int selectedInches = 0;
+  double selectedWeight = 0.0;
   late DateTime date = DateTime(2025, 4, 15);
   final TextEditingController _weightController = TextEditingController();
   final dateController = TextEditingController();
@@ -115,23 +117,69 @@ class _MyHomePageState extends State<Profile> {
   );
   }
 
-  Future<String?> openWeightDialog(BuildContext context) => showDialog<String>(
-    context: context,
-    builder: (context) => AlertDialog(
-        title: Text('Weight'),
-        content: TextField(
-          autofocus: true,
-          decoration: InputDecoration(hintText: 'Enter your height (lbs)'),
-          controller: _weightController,
+  void _openWeightDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RulerSlider(
+              minValue: 0.0,
+              maxValue: 1000.0,
+              initialValue: 100.0,
+              rulerHeight: 100.0,
+              selectedBarColor: Colors.grey,
+              unselectedBarColor: Colors.grey,
+              tickSpacing: 30.0,
+              valueTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
+              onChanged: (double value) {
+                setState(() {
+                  selectedWeight = value;
+                });
+              },
+              showFixedBar: true,
+              fixedBarColor: Colors.blue,
+              fixedBarWidth: 3.0,
+              fixedBarHeight: 40.0,
+              showFixedLabel: true,
+              fixedLabelColor: Colors.blue,
+              scrollSensitivity: 3.0,
+              enableSnapping: true,
+              majorTickInterval: 5,
+              labelInterval: 1,
+              labelVerticalOffset: 30.0,
+              showBottomLabels: true,
+              labelTextStyle: TextStyle(color: Colors.black, fontSize: 12),
+              majorTickHeight: 20.0,
+              minorTickHeight: 10.0,
+            ),
+            SizedBox(height: 20), // Space between buttons
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  weight = "$selectedWeight lbs";
+                });
+                Navigator.pop(context);
+              },
+              child: const Text(
+                "OK",
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+            SizedBox(height: 20), // Space between slider and buttons
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            child: Text('SUBMIT'),
-            onPressed: submitWeight,
-          )
-        ]
-    ),
-  );
+      ),
+    );
+  }
 
   void submitWeight() {
     Navigator.of(context).pop(_weightController.text);
@@ -250,7 +298,7 @@ class _MyHomePageState extends State<Profile> {
                               )
                           ),
                           subtitle: Text(
-                              weight + ' lbs',
+                              weight,
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontSize: 20,
@@ -263,12 +311,7 @@ class _MyHomePageState extends State<Profile> {
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.blue,
                           ),
-                          onPressed: () async {
-                            final weight = await openWeightDialog(context);
-                            if(weight == null || weight.isEmpty) return;
-
-                            setState(() => this.weight = weight);
-                          }
+                          onPressed: () => _openWeightDialog(context),
                       ),
                       Divider(),
                     ]
