@@ -39,7 +39,6 @@ class _HomeViewState extends State<HomeView> {
       const ActivityLog(), // Activity log screen
       const WorkoutAPIScreen(), // Workout API screen
       const MusicPlayerView(), // Music player screen
-      const ScheduleWorkoutView(),
     ];
   }
 
@@ -143,14 +142,6 @@ class _HomeViewState extends State<HomeView> {
                   title: const Text('Music'),
                   onTap: () {
                     _presenter.onSelectPage(6); // Switch to Music
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.calendar_month),
-                  title: const Text('Schedule Workouts'),
-                  onTap: () {
-                    _presenter.onSelectPage(7); // Switch to Music
                     Navigator.pop(context);
                   },
                 ),

@@ -1,17 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
-import 'package:table_calendar/table_calendar.dart';
 /*
   notes:
-    maybe it would make more sense to have just the weekdays in a
-    nice formatted schedule look instead of using a calendar
-    why have a non consistent workout schedule lol
-     -- get datetime.weekday in dashboard, then work from there
-     -- scheduled list firebase ex:
-          "Leg Day": {workout information and stuff}, "scheduled_day": "Monday"
-    this would be more intuitive and make more sense with consistency and such
+   added onto dashboard instead of seperate page,
+   a map needs to be populated and find a way to add multiple days into firebase probably best solution is a seperate collection
+   person should be able to add multiple workouts
  */
 class ScheduleWorkoutView extends StatefulWidget {
  const ScheduleWorkoutView({super.key});
@@ -24,20 +18,22 @@ class ScheduleWorkoutView extends StatefulWidget {
 
 class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
   final ScheduleWorkoutPresenter _presenter = ScheduleWorkoutPresenter();
-  Map<int, String> weekDayNames = {
-    1: "Monday",
-    2: "Tuesday",
-    3: "Wednesday",
-    4: "Thursday",
-    5: "Friday",
-    6: "Saturday",
-    7: "Sunday"
+  DateTime currentDate = DateTime.now();
+  String? currentAddedPlaylist;
+
+  Map<int, String> weeklyWorkouts = {
+    1: "",
+    2: "",
+    3: "",
+    4: "",
+    5: "",
+    6: "",
+    7: "",
   };
+
 
   String? userID;
   List<String> playlists = [];
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
 
   void getPlaylists(String userID) async {
     List<dynamic> tempPlaylists = await _presenter.getPlaylists(userID);
@@ -59,29 +55,77 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
    return Scaffold(
      body: Column(
        children: [
-         TableCalendar(
-             firstDay: DateTime.utc(2025, 4, 16),
-             lastDay: DateTime.utc(2050, 4, 16),
-             focusedDay: DateTime.now(),
-             calendarFormat: CalendarFormat.month,
-             onDaySelected: (focusedDay, selectedDay) {
-               setState(() {
-                 _focusedDay = focusedDay;
-                 _selectedDay = selectedDay;
-               });
-               showDialog(
-                 context: context,
-                 builder: (BuildContext context) => buildPlaylistAlert(selectedDay),
-               );
-             }
+         SingleChildScrollView(
+           scrollDirection: Axis.horizontal,
+           child: Row(
+             children: [
+               //make less D.R.Y lol
+               _buildWeekDayCard(dayOfWeek: "Monday", index: 1),
+               _buildWeekDayCard(dayOfWeek: "Tuesday", index: 2),
+               _buildWeekDayCard(dayOfWeek: "Wednesday",  index: 3),
+               _buildWeekDayCard(dayOfWeek: "Thursday",  index: 4),
+               _buildWeekDayCard(dayOfWeek: "Friday",  index: 5),
+               _buildWeekDayCard(dayOfWeek: "Saturday",  index: 6),
+               _buildWeekDayCard(dayOfWeek: "Sunday",  index: 7),
+             ],
+           ),
          ),
        ],
      ),
    );
  }
 
-  AlertDialog buildPlaylistAlert(DateTime currentDate) {
-    String formattedTime = "${weekDayNames[currentDate.weekday]} the ${currentDate.day}";
+  Widget _buildWeekDayCard({required String dayOfWeek, required int index}) {
+    return Padding(
+      padding: EdgeInsets.all(5),
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek, index),
+          );
+          print(playlists);
+        },
+        child: Container(
+          width: 160,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Color(0xFF598392),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    dayOfWeek,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  Text(
+                    weeklyWorkouts[index]!,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Color(0xFFAEC3B0),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      )
+    );
+  }
+
+
+ AlertDialog buildPlaylistAlert(String dayOfWeek, int index) {
+    String formattedTime = dayOfWeek;
     return AlertDialog(
       title: Text("Select Your Playlist"),
       content: SizedBox(
@@ -98,7 +142,11 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                 );
               }).toList(),
               onChanged: (value) => {
-                _presenter.setWeekdayInFirebase(userID!, value!, currentDate),
+                _presenter.setWeekdayInFirebase(userID!, value!, dayOfWeek),
+                setState(() {
+                  weeklyWorkouts[index] = value;
+                }),
+
                 Navigator.pop(context),
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Added $value to $formattedTime"), duration: Duration(seconds: 2)),

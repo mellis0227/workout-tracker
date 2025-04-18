@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_fit_app/views/schedule_workouts_view.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
 
@@ -69,9 +70,21 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 10),
+            Text(
+              "Workout Schedule",
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1C1C1E),
+                  letterSpacing: .8
+              ),
+            ),
+            Expanded(
+              child: ScheduleWorkoutView(),
+            ),
 
             // Quick Access section header
+
             Text(
               "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -80,7 +93,7 @@ class _DashboardViewState extends State<DashboardView> {
                 letterSpacing: .8
               ),
             ),
-            Padding(padding: EdgeInsets.all(10)),
+            Padding(padding: EdgeInsets.all(3)),
 
             // Quick access tiles for different functionalities
             _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
