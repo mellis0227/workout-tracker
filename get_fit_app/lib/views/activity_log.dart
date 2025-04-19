@@ -6,7 +6,6 @@ import 'package:get_fit_app/views/lifting_log_view.dart';
 import 'package:get_fit_app/views/running_log_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 void main() {
   runApp(activityLog());
 }
@@ -38,12 +37,12 @@ class _MyHomePageState extends State<ActivityLog> {
     super.initState();
     _userID = FirebaseAuth.instance.currentUser?.email;
     print("Current user ID: $_userID");
-
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference runs = FirebaseFirestore.instance.collection('user_data/$_userID/runs');
+    CollectionReference runs =
+        FirebaseFirestore.instance.collection('user_data/$_userID/runs');
 
     return Scaffold(
       body: FutureBuilder<QuerySnapshot>(
@@ -68,8 +67,7 @@ class _MyHomePageState extends State<ActivityLog> {
               return ListTile(
                 title: Text(runData['run']?.toString() ?? 'Unnamed Run'),
                 subtitle: Text(
-                  'Distance: ${runData['distance']?.toString() ??
-                      'N/A'} | Time: ${runData['time']?.toString() ?? 'N/A'}',
+                  'Distance: ${runData['distance']?.toString() ?? 'N/A'} | Time: ${runData['time']?.toString() ?? 'N/A'}',
                 ),
               );
             }).toList(),

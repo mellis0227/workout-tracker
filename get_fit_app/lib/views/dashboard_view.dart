@@ -26,7 +26,7 @@ class _DashboardViewState extends State<DashboardView> {
   Future<void> getFullName(String userID) async {
     String tempFullName = await _presenter.getUsersFullName(userID);
     setState(() {
-      if(tempFullName.isNotEmpty) {
+      if (tempFullName.isNotEmpty) {
         fullName = tempFullName;
       }
     });
@@ -38,7 +38,8 @@ class _DashboardViewState extends State<DashboardView> {
     _presenter = DashboardPresenter(model: DashboardModel());
     userID = FirebaseAuth.instance.currentUser?.email;
     getFullName(userID!);
-    quote = _presenter.getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
+    quote = _presenter
+        .getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
   }
 
   @override
@@ -75,10 +76,9 @@ class _DashboardViewState extends State<DashboardView> {
             Text(
               "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF1C1C1E),
-                letterSpacing: .8
-              ),
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1C1C1E),
+                  letterSpacing: .8),
             ),
             Padding(padding: EdgeInsets.all(10)),
 
@@ -94,14 +94,13 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Text buildWelcomeText(BuildContext context) {
-    if(fullName.length <= 12){
+    if (fullName.length <= 12) {
       return Text(
         fullName.isNotEmpty ? "Welcome Back, $fullName!" : "Welcome Back!",
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w800,
             color: const Color(0xFF1C1C1E),
-            letterSpacing: .5
-        ),
+            letterSpacing: .5),
       );
     }
     return Text(
@@ -109,8 +108,7 @@ class _DashboardViewState extends State<DashboardView> {
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
           fontWeight: FontWeight.w800,
           color: const Color(0xFF1C1C1E),
-          letterSpacing: .5
-      ),
+          letterSpacing: .5),
     );
   }
 
@@ -167,7 +165,8 @@ class _DashboardViewState extends State<DashboardView> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
-        onTap: () => widget.onTabSelected?.call(tabIndex), // Calls callback on tap
+        onTap: () =>
+            widget.onTabSelected?.call(tabIndex), // Calls callback on tap
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(

@@ -173,7 +173,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
             ),
           ),
           Padding(padding: EdgeInsets.all(10)),
-          if(_register)
+          if (_register)
             Row(
               children: [
                 Flexible(
@@ -183,7 +183,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                     validator: _firstAndLastNameValidator,
                   ),
                 ),
-                Padding(padding: EdgeInsets.all(10),),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                ),
                 Flexible(
                   child: AuthenticationTextFormField(
                     label: "Last Name",
@@ -193,25 +195,31 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
                 )
               ],
             ),
-          Padding(padding: EdgeInsets.all(10),),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
           AuthenticationTextFormField(
             label: 'Email',
             textEditingController: _emailController,
             validator: _emailValidator, // Use email validator
           ),
-          Padding(padding: EdgeInsets.all(10),),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
           AuthenticationTextFormField(
             label: 'Password',
             textEditingController: _passwordController,
             validator: _passwordValidator, // Use password validator
           ),
-          Padding(padding: EdgeInsets.all(10),),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
           if (_register) // Only show confirmation in register mode
             AuthenticationTextFormField(
               label: 'Confirm Password',
               textEditingController: _passwordConfirmationController,
               validator:
-              _passwordConfirmationValidator, // Use confirmation validator
+                  _passwordConfirmationValidator, // Use confirmation validator
             ),
         ],
       ),

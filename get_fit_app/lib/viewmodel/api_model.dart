@@ -48,7 +48,7 @@ class WorkoutApiModel {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Reference to the user's workout plan collection in Firestore
       final workoutPlanName =
-      firestore.collection('user_data/$userID/workout_plans');
+          firestore.collection('user_data/$userID/workout_plans');
       // Create or update the workout plan document with the specified planName
       await workoutPlanName.doc(planName).set({"plan_name": planName});
     } catch (e) {
@@ -56,6 +56,7 @@ class WorkoutApiModel {
       print("Error $e : issues setting workout plan name");
     }
   }
+
   /*Not finished function, delete if i forgot to
 
   Future<void> saveWorkoutToPlaylist(String planName, String userID){
@@ -98,8 +99,7 @@ class WorkoutApiModel {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Reference to the user's workout plans collection
       final workoutPlansCollection =
-      firestore.collection('user_data/$userID/workout_plans');
-
+          firestore.collection('user_data/$userID/workout_plans');
 
       // Fetch all workout plan documents from Firestore
       final querySnapshot = await workoutPlansCollection.get();
