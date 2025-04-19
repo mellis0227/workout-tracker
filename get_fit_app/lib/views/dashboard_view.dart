@@ -23,6 +23,7 @@ class _DashboardViewState extends State<DashboardView> {
   //the userID is capable of fetching data && full name is the users displayed name
   String? userID;
   String fullName = "";
+  bool viewWorkoutPlan = false;
 
   Future<void> getFullName(String userID) async {
     String tempFullName = await _presenter.getUsersFullName(userID);
@@ -70,34 +71,61 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Text(
+                  "Workout Schedule",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF1C1C1E),
+                      letterSpacing: .8
+                  ),
+                ),
+                const SizedBox(width: 15),
+                TextButton(
+                    child: Text(
+                      !viewWorkoutPlan ? "Press to View Workouts" : "Close Workouts",
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () => {
+                      setState(() {
+                        if(viewWorkoutPlan){
+                          viewWorkoutPlan = false;
+                        } else {
+                          viewWorkoutPlan = true;
+                        }
+                      }),
+                    }
+                ),
+              ],
+            ),
+            Expanded(
+              child: ScheduleWorkoutView(viewWorkouts: viewWorkoutPlan,),
+            ),
+            // Quick Access section header
+
+            // Quick access tiles for different functionalities
             Text(
-              "Workout Schedule",
+              "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: const Color(0xFF1C1C1E),
                   letterSpacing: .8
               ),
             ),
-            Expanded(
-              child: ScheduleWorkoutView(),
-            ),
-            // Quick Access section header
-            Text(
-              "Quick Access",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF1C1C1E),
-                letterSpacing: .8
-              ),
-            ),
-            Padding(padding: EdgeInsets.all(3)),
-
-            // Quick access tiles for different functionalities
-            _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
-            _buildTile(context, Icons.timeline, 'Activity Log', 4),
             _buildTile(context, Icons.api, 'Find Workouts', 5),
             _buildTile(context, Icons.music_note_rounded, 'Music Player', 6),
+            Padding(padding: EdgeInsets.all(3)),
+
+            //conditional check so no overlapping widgets after view workout is pressed
+            if(!viewWorkoutPlan) ... [
+              _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
+              _buildTile(context, Icons.timeline, 'Activity Log', 4),
+            ]
           ],
         ),
       ),

@@ -12,7 +12,21 @@ class ScheduleWorkoutPresenter {
 
 
   Future<void> setWeekdayInFirebase(String userID, String playlistName, String dayOfWeek) async {
+    scheduleModel.buildScheduleMapFromFirebase(userID);
     return scheduleModel.setWeekdayInFirebase(userID, playlistName, dayOfWeek);
+  }
+
+  Future<Map<String, List<dynamic>>> populateScheduleMap(String userID) async {
+    return scheduleModel.buildScheduleMapFromFirebase(userID);
+  }
+
+  String formatScheduleSubtext(List<dynamic> key) {
+    if(key.isEmpty){
+      return "Off Day";
+    } else {
+      return "Planned!";
+    }
+
   }
 
 }

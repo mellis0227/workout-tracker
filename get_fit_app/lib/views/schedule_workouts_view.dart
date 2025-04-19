@@ -8,7 +8,8 @@ import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
    person should be able to add multiple workouts
  */
 class ScheduleWorkoutView extends StatefulWidget {
- const ScheduleWorkoutView({super.key});
+  bool viewWorkouts;
+  ScheduleWorkoutView({super.key, required this.viewWorkouts});
 
 
  @override
@@ -20,34 +21,30 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
   final ScheduleWorkoutPresenter _presenter = ScheduleWorkoutPresenter();
   DateTime currentDate = DateTime.now();
   String? currentAddedPlaylist;
-
-  //stupid, dont do this
-  Map<int, String> weeklyWorkouts = {
-    1: "",
-    2: "",
-    3: "",
-    4: "",
-    5: "",
-    6: "",
-    7: "",
-  };
+  
+  Map<String, List<dynamic>> weeklyWorkouts = {};
 
 
   String? userID;
   List<String> playlists = [];
 
-  void getPlaylists(String userID) async {
+
+  void getPlaylistsAndSetMap(String userID) async {
     List<dynamic> tempPlaylists = await _presenter.getPlaylists(userID);
+    Map<String, List<dynamic>> tempMap = await _presenter.populateScheduleMap(userID);
     setState(() {
       playlists = tempPlaylists.map((item) => item.toString()).toList();
+      weeklyWorkouts = tempMap;
     });
   }
+
+
 
  @override
  void initState() {
     super.initState();
     userID = FirebaseAuth.instance.currentUser?.email;
-    getPlaylists(userID!);
+    getPlaylistsAndSetMap(userID!);
  }
 
 
@@ -60,14 +57,13 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
            scrollDirection: Axis.horizontal,
            child: Row(
              children: [
-               //make less D.R.Y lol
-               _buildWeekDayCard(dayOfWeek: "Monday", index: 1),
-               _buildWeekDayCard(dayOfWeek: "Tuesday", index: 2),
-               _buildWeekDayCard(dayOfWeek: "Wednesday",  index: 3),
-               _buildWeekDayCard(dayOfWeek: "Thursday",  index: 4),
-               _buildWeekDayCard(dayOfWeek: "Friday",  index: 5),
-               _buildWeekDayCard(dayOfWeek: "Saturday",  index: 6),
-               _buildWeekDayCard(dayOfWeek: "Sunday",  index: 7),
+               _buildWeekDayCard(dayOfWeek: "Monday"),
+               _buildWeekDayCard(dayOfWeek: "Tuesday"),
+               _buildWeekDayCard(dayOfWeek: "Wednesday"),
+               _buildWeekDayCard(dayOfWeek: "Thursday"),
+               _buildWeekDayCard(dayOfWeek: "Friday"),
+               _buildWeekDayCard(dayOfWeek: "Saturday"),
+               _buildWeekDayCard(dayOfWeek: "Sunday"),
              ],
            ),
          ),
@@ -76,76 +72,96 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
    );
  }
 
-  Widget _buildWeekDayCard({required String dayOfWeek, required int index}) {
+  Widget _buildWeekDayCard({required String dayOfWeek}) {
     return Padding(
       padding: EdgeInsets.all(5),
       child: InkWell(
         onTap: () {
           showDialog(
             context: context,
-            builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek, index),
+            builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek),
           );
         },
         child: Container(
           width: 160,
-          height: 80,
+          height: !widget.viewWorkouts ? 65 : 200,
           decoration: BoxDecoration(
             color: Color(0xFF598392),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(10),
               child: Column(
                 children: [
+                  const SizedBox(height: 16),
                   Text(
                     dayOfWeek,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: 0.8,
                     ),
                   ),
-                  Text(
-                    weeklyWorkouts[index]!,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Color(0xFFAEC3B0),
-                    ),
-                  )
+
                 ],
               ),
             ),
           ),
         ),
-      )
+      );
+  }
+
+  Container buildSinglePlaylist(String playListName) {
+    return Container(
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Text(
+                playListName,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color(0xFFAEC3B00),
+                ),
+              ),
+              Icon(
+                Icons.delete,
+                color: Color(0xFF01161E),
+              ),
+            ],
+          ),
+        ),
     );
   }
 
 
- AlertDialog buildPlaylistAlert(String dayOfWeek, int index) {
+ AlertDialog buildPlaylistAlert(String dayOfWeek) {
     String formattedTime = dayOfWeek;
     return AlertDialog(
-      title: Text("Select Your Playlist"),
+      backgroundColor: Color(0xFF01161E),
+      title: Text("Select Your Workouts", style: TextStyle(color: Colors.white70),),
       content: SizedBox(
         height: 50,
         child: Column(
           children: [
             DropdownButton<String>(
-              hint: Text("Playlists", style: TextStyle(color: Colors.black)),
+              dropdownColor: Color(0xFF01161E),
+              hint: Text("Playlists", style: TextStyle(color: Colors.white70)),
               isExpanded: true,
               items: playlists.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(value, style: TextStyle(color: Colors.white70),),
                 );
               }).toList(),
               onChanged: (value) => {
                 _presenter.setWeekdayInFirebase(userID!, value!, dayOfWeek),
-                setState(() {
-                  weeklyWorkouts[index] = value;
-                }),
+                if(!weeklyWorkouts[dayOfWeek]!.contains(value)){
+                  setState(() {
+                    weeklyWorkouts[dayOfWeek]?.add(value);
+                  }),
+                },
+               // print(_presenter.formatScheduleSubtext(weeklyWorkouts[dayOfWeek]!)),
 
                 Navigator.pop(context),
                 ScaffoldMessenger.of(context).showSnackBar(
