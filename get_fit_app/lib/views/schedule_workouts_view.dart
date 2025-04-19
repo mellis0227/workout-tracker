@@ -21,6 +21,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
   DateTime currentDate = DateTime.now();
   String? currentAddedPlaylist;
 
+  //stupid, dont do this
   Map<int, String> weeklyWorkouts = {
     1: "",
     2: "",
@@ -53,7 +54,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
  @override
  Widget build(BuildContext context) {
    return Scaffold(
-     body: Column(
+       body: Column(
        children: [
          SingleChildScrollView(
            scrollDirection: Axis.horizontal,
@@ -84,7 +85,6 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
             context: context,
             builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek, index),
           );
-          print(playlists);
         },
         child: Container(
           width: 160,

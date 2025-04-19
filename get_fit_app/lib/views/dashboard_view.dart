@@ -47,7 +47,7 @@ class _DashboardViewState extends State<DashboardView> {
     return Scaffold(
       backgroundColor: Colors.white70,
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -70,7 +70,7 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 25),
             Text(
               "Workout Schedule",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -82,9 +82,7 @@ class _DashboardViewState extends State<DashboardView> {
             Expanded(
               child: ScheduleWorkoutView(),
             ),
-
             // Quick Access section header
-
             Text(
               "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
