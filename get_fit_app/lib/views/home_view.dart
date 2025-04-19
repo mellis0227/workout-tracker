@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
       DashboardView(onTabSelected: _onSelectTab), // Dashboard screen
       const AlarmApp(),
       const RunningLogView(),
-      const LiftingLogView(),// Fitness alarm screen
+      const LiftingLogView(), // Fitness alarm screen
       const ActivityLog(), // Activity log screen
       const WorkoutAPIScreen(), // Workout API screen
       const MusicPlayerView(), // Music player screen
@@ -51,7 +51,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: _presenter.currentIndex, // Listen to changes in selected page
+      valueListenable:
+          _presenter.currentIndex, // Listen to changes in selected page
       builder: (context, index, _) {
         return Scaffold(
           appBar: AppBar(

@@ -13,17 +13,17 @@ class DashboardModel {
 
   List<String> get quotes => _quotes;
 
-
   Future<String> getUsersFullName(String userID) async {
     String fullName = "";
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      final currentUserCollection = await firestore.collection("user_data").doc(userID).get();
+      final currentUserCollection =
+          await firestore.collection("user_data").doc(userID).get();
 
       Map<String, dynamic>? userData = currentUserCollection.data();
       fullName = "${userData?['first_name']} ${userData?['last_name']}";
       return fullName;
-    } catch(e) {
+    } catch (e) {
       print("Error getting users name: $e");
     }
     return "";
