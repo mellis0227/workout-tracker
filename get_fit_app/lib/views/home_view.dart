@@ -55,10 +55,10 @@ class _HomeViewState extends State<HomeView> {
       builder: (context, index, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(_presenter.pageTitles[index]), // Set app bar title based on current page
+            title: Text(_presenter.pageTitles[index]),
             elevation: 0,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
+            backgroundColor: const Color(0xFF01161E), // Rich black
+            foregroundColor: const Color(0xFFEFF6E0), // Beige text
           ),
           drawer: Drawer(
             shape: const RoundedRectangleBorder(
@@ -72,9 +72,9 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 // Drawer header with a gradient background
                 DrawerHeader(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.blue.shade400, Colors.blue.shade700],
+                      colors: [Color(0xFF124559), Color(0xFF598392)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),

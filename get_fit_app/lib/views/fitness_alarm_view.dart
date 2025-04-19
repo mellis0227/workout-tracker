@@ -10,30 +10,32 @@ class AlarmApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFFF6F7FB),
-        primaryColor: Color(0xFF007AFF), // Primary blue color
-        colorScheme: ColorScheme.light(
-          primary: Color(0xFF007AFF),
-          secondary: Color(0xFF34C759), // Green for success messages
-          error: Color(0xFFFF3B30), // Red for error messages
+        scaffoldBackgroundColor: const Color(0xFFEFF6E0), // Beige
+        primaryColor: const Color(0xFF124559), // Midnight green
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFF124559),      // Midnight green
+          secondary: Color(0xFF598392),    // Air Force blue
+          background: Color(0xFFEFF6E0),   // Beige
+          surface: Color(0xFFAEC3B0),      // Ash gray
+          error: Color(0xFFFF3B30),        // Red
         ),
-        textTheme: TextTheme(
-          bodyMedium: TextStyle(color: Color(0xFF1C1C1E)), // Dark text for body
-          bodySmall: TextStyle(color: Color(0xFF6E6E73)), // Light text for sub-headings
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Color(0xFF01161E)), // Rich black
+          bodySmall: TextStyle(color: Color(0xFF124559)), // Midnight green
         ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF01161E),
           elevation: 1,
-          iconTheme: IconThemeData(color: Color(0xFF1C1C1E)),
+          iconTheme: IconThemeData(color: Color(0xFFEFF6E0)),
           titleTextStyle: TextStyle(
-            color: Color(0xFF1C1C1E),
+            color: Color(0xFFEFF6E0),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF007AFF),
+            backgroundColor: Color(0xFF124559),
             foregroundColor: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(
@@ -43,7 +45,7 @@ class AlarmApp extends StatelessWidget {
           ),
         ),
       ),
-      home: AlarmView(), // Home screen is AlarmView
+      home: const AlarmView(),
     );
   }
 }
@@ -56,9 +58,9 @@ class AlarmView extends StatefulWidget {
 }
 
 class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
-  late AlarmPresenter _presenter; // Presenter for alarm logic
-  String _currentTime = ''; // Stores the current time
-  String? _alarmTime; // Stores the alarm time once set
+  late AlarmPresenter _presenter;
+  String _currentTime = '';
+  String? _alarmTime;
 
   final TextEditingController _hourController = TextEditingController();
   final TextEditingController _minuteController = TextEditingController();
@@ -66,19 +68,19 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   final List<String> _ringtones = [
     'samsung_ringtone.mp3', '1985_ring.mp3', 'army_wake_up.mp3',
     'air_raid_siren.mp3', 'extreme_alarm_clock.mp3',
-  ]; // Available ringtones
-  String _selectedRingtone = 'samsung_ringtone.mp3'; // Default ringtone
+  ];
+  String _selectedRingtone = 'samsung_ringtone.mp3';
 
   @override
   void initState() {
     super.initState();
-    _presenter = AlarmPresenter(this); // Initialize presenter
-    _presenter.startClock(); // Start clock to update current time
+    _presenter = AlarmPresenter(this);
+    _presenter.startClock();
   }
 
   @override
   void dispose() {
-    _presenter.dispose(); // Clean up presenter
+    _presenter.dispose();
     _hourController.dispose();
     _minuteController.dispose();
     super.dispose();
@@ -87,17 +89,16 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   @override
   void updateCurrentTime(String time) {
     setState(() {
-      _currentTime = time; // Update current time in UI
+      _currentTime = time;
     });
   }
 
   @override
   void showAlarmSet(String alarmTime) {
     setState(() {
-      _alarmTime = alarmTime; // Update alarm time when set
+      _alarmTime = alarmTime;
     });
 
-    // Show a confirmation snack bar
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Alarm set for $alarmTime')),
     );
@@ -106,17 +107,17 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   @override
   void showInputError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)), // Show error message
+      SnackBar(content: Text(message)),
     );
   }
 
   @override
   void showAlarmTriggered(String ringtonePath) async {
     final player = AudioPlayer();
-    await player.play(AssetSource('ringtones/$ringtonePath')); // Play selected ringtone
+    await player.play(AssetSource('ringtones/$ringtonePath'));
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Alarm is ringing!')),
+      const SnackBar(content: Text('Alarm is ringing!')),
     );
   }
 
@@ -127,13 +128,12 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
     final hour = int.tryParse(hourText);
     final minute = int.tryParse(minuteText);
 
-    // Validate time input
     if (hour == null || minute == null || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
       showInputError('Please enter a valid hour (0–23) and minute (0–59)');
       return;
     }
 
-    _presenter.setAlarm(hourText, minuteText, _selectedRingtone); // Set the alarm
+    _presenter.setAlarm(hourText, minuteText, _selectedRingtone);
   }
 
   @override
@@ -146,7 +146,7 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 'Current Time:',
                 style: Theme.of(context)
@@ -154,7 +154,7 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                     .bodySmall
                     ?.copyWith(fontSize: 18),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 _currentTime,
                 style: TextStyle(
@@ -163,14 +163,14 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 8,
@@ -180,12 +180,11 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                 ),
                 child: Column(
                   children: [
-                    Text('Pick Alarm Time:', style: TextStyle(fontSize: 18)),
-                    SizedBox(height: 12),
+                    const Text('Pick Alarm Time:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(height: 12),
                     TimePickerSpinner(
                       is24HourMode: true,
-                      normalTextStyle:
-                      TextStyle(fontSize: 18, color: Colors.black54),
+                      normalTextStyle: const TextStyle(fontSize: 18, color: Colors.black54),
                       highlightedTextStyle: TextStyle(
                           fontSize: 24,
                           color: Theme.of(context).colorScheme.primary),
@@ -200,55 +199,60 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 8,
-                        offset: Offset(0, 4)),
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
                   ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Select Ringtone:', style: TextStyle(fontSize: 18)),
-                    SizedBox(height: 10),
+                    const Text('Select Ringtone:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(height: 10),
                     DropdownButton<String>(
                       value: _selectedRingtone,
                       isExpanded: true,
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedRingtone = newValue!; // Update selected ringtone
+                          _selectedRingtone = newValue!;
                         });
                       },
                       items: _ringtones.map((ringtone) {
                         return DropdownMenuItem(
                           value: ringtone,
-                          child: Text(ringtone), // Display ringtone names
+                          child: Text(
+                            ringtone,
+                            style: const TextStyle(color: Color(0xFF01161E)), // Rich black
+                          ),
                         );
                       }).toList(),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _onSetAlarmPressed,
-                child: Text('Set Alarm', style: TextStyle(fontSize: 16)),
+                child: const Text('Set Alarm', style: TextStyle(fontSize: 16)),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (_alarmTime != null)
                 Text(
-                  'Alarm Set For: $_alarmTime', // Display alarm time
+                  'Alarm Set For: $_alarmTime',
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).colorScheme.secondary),
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
                 ),
             ],
           ),

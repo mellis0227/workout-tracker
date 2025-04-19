@@ -4,26 +4,14 @@ import '../viewmodel/lifting_log_model.dart';
 import '../presenter/lifting_log_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class LiftingLogView extends StatelessWidget {
+class LiftingLogView extends StatefulWidget {
   const LiftingLogView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Lifting Log',
-      home: LiftingLog(),
-    );
-  }
+  _LiftingLogViewState createState() => _LiftingLogViewState();
 }
 
-class LiftingLog extends StatefulWidget {
-  const LiftingLog({super.key});
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<LiftingLog> {
+class _LiftingLogViewState extends State<LiftingLogView> {
   final TextEditingController _exerciseController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _repsController = TextEditingController();
@@ -54,7 +42,7 @@ class _MyHomePageState extends State<LiftingLog> {
       weight: int.tryParse(_weightController.text) ?? 0,
       sets: int.tryParse(_setsController.text) ?? 0,
       reps: int.tryParse(_repsController.text) ?? 0,
-      userID: '',
+      userID: _userID ?? '',
     );
 
     _presenter.logExercise(_userID!, exercise);
@@ -97,121 +85,90 @@ class _MyHomePageState extends State<LiftingLog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('Lifting Log'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+      backgroundColor: const Color(0xFFEFF6E0), // Beige
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFAEC3B0), // Ash gray
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
               child: Column(
                 children: [
-                  Text("Exercise"),
                   TextField(
                     controller: _exerciseController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter exercise here',
+                    decoration: const InputDecoration(
+                      labelText: 'Exercise',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text("Weight"),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _weightController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter weight here (lbs)',
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Weight (lbs)',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text("Reps"),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _repsController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter reps here',
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Reps',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text("Sets"),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _setsController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter sets here',
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Sets',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logExercise,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: const Color(0xFF124559), // Midnight green
                       foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    child: Text('Log Exercise'),
+                    child: const Text('Log Exercise'),
                   ),
-                  Column(
-                    children: [
-                      if (_vanishingMessage.isNotEmpty)
-                        Column(
-                          children: [
-                            SizedBox(height: 20),
-                            Text(
-                              _vanishingMessage,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
-                        ),
-                    ],
-                  )
+                  if (_vanishingMessage.isNotEmpty) ...[
+                    const SizedBox(height: 20),
+                    Text(
+                      _vanishingMessage,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Color(0xFF124559),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Transform.scale(
-                scale: 1.5,
-                child: IconButton(
-                  icon: Icon(Icons.home),
-                  color: Colors.blue,
-                  onPressed: () => print('Home pressed'),
-                ),
-              ),
-              Transform.scale(
-                scale: 1.5,
-                child: IconButton(
-                  icon: Icon(Icons.auto_graph),
-                  color: Colors.blue,
-                  onPressed: () => print('Activity pressed'),
-                ),
-              ),
-              Transform.scale(
-                scale: 1.5,
-                child: IconButton(
-                  icon: Icon(Icons.alarm),
-                  color: Colors.blue,
-                  onPressed: () => print('Schedule pressed'),
-                ),
-              ),
-              Transform.scale(
-                scale: 1.5,
-                child: IconButton(
-                  icon: Icon(Icons.person),
-                  color: Colors.blue,
-                  onPressed: () => print('Profile pressed'),
-                ),
-              ),
-            ],
-          ),
-        ],
+            const SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }

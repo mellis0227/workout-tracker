@@ -46,7 +46,6 @@ class _MyHomePageState extends State<ActivityLog> {
     CollectionReference runs = FirebaseFirestore.instance.collection('user_data/$_userID/runs');
 
     return Scaffold(
-      appBar: AppBar(title: Text("Activity Log")),
       body: FutureBuilder<QuerySnapshot>(
         future: runs.get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
