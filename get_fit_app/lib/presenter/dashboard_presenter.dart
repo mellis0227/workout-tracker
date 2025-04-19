@@ -17,4 +17,3 @@ class DashboardPresenter {
     return model.getUsersFullName(userID);
   }
 }
-

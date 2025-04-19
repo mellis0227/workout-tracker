@@ -143,9 +143,11 @@ class _LiftingLogViewState extends State<LiftingLogView> {
                   ElevatedButton(
                     onPressed: _logExercise,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF124559), // Midnight green
+                      backgroundColor:
+                          const Color(0xFF124559), // Midnight green
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

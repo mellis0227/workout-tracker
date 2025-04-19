@@ -13,11 +13,11 @@ class AlarmApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFEFF6E0), // Beige
         primaryColor: const Color(0xFF124559), // Midnight green
         colorScheme: const ColorScheme.light(
-          primary: Color(0xFF124559),      // Midnight green
-          secondary: Color(0xFF598392),    // Air Force blue
-          background: Color(0xFFEFF6E0),   // Beige
-          surface: Color(0xFFAEC3B0),      // Ash gray
-          error: Color(0xFFFF3B30),        // Red
+          primary: Color(0xFF124559), // Midnight green
+          secondary: Color(0xFF598392), // Air Force blue
+          background: Color(0xFFEFF6E0), // Beige
+          surface: Color(0xFFAEC3B0), // Ash gray
+          error: Color(0xFFFF3B30), // Red
         ),
         textTheme: const TextTheme(
           bodyMedium: TextStyle(color: Color(0xFF01161E)), // Rich black
@@ -66,8 +66,11 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
   final TextEditingController _minuteController = TextEditingController();
 
   final List<String> _ringtones = [
-    'samsung_ringtone.mp3', '1985_ring.mp3', 'army_wake_up.mp3',
-    'air_raid_siren.mp3', 'extreme_alarm_clock.mp3',
+    'samsung_ringtone.mp3',
+    '1985_ring.mp3',
+    'army_wake_up.mp3',
+    'air_raid_siren.mp3',
+    'extreme_alarm_clock.mp3',
   ];
   String _selectedRingtone = 'samsung_ringtone.mp3';
 
@@ -128,7 +131,12 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
     final hour = int.tryParse(hourText);
     final minute = int.tryParse(minuteText);
 
-    if (hour == null || minute == null || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    if (hour == null ||
+        minute == null ||
+        hour < 0 ||
+        hour > 23 ||
+        minute < 0 ||
+        minute > 59) {
       showInputError('Please enter a valid hour (0–23) and minute (0–59)');
       return;
     }
@@ -180,11 +188,13 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                 ),
                 child: Column(
                   children: [
-                    const Text('Pick Alarm Time:', style: TextStyle(fontSize: 18)),
+                    const Text('Pick Alarm Time:',
+                        style: TextStyle(fontSize: 18)),
                     const SizedBox(height: 12),
                     TimePickerSpinner(
                       is24HourMode: true,
-                      normalTextStyle: const TextStyle(fontSize: 18, color: Colors.black54),
+                      normalTextStyle:
+                          const TextStyle(fontSize: 18, color: Colors.black54),
                       highlightedTextStyle: TextStyle(
                           fontSize: 24,
                           color: Theme.of(context).colorScheme.primary),
@@ -202,7 +212,8 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
               const SizedBox(height: 30),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
@@ -217,7 +228,8 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Select Ringtone:', style: TextStyle(fontSize: 18)),
+                    const Text('Select Ringtone:',
+                        style: TextStyle(fontSize: 18)),
                     const SizedBox(height: 10),
                     DropdownButton<String>(
                       value: _selectedRingtone,
@@ -232,7 +244,8 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
                           value: ringtone,
                           child: Text(
                             ringtone,
-                            style: const TextStyle(color: Color(0xFF01161E)), // Rich black
+                            style: const TextStyle(
+                                color: Color(0xFF01161E)), // Rich black
                           ),
                         );
                       }).toList(),

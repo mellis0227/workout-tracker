@@ -5,14 +5,16 @@ class AlarmModel {
 
   // Sets the alarm with a specific hour, minute, and ringtone
   void setAlarm(String hour, String minute, String ringtone) {
-    alarmTime = '${hour.padLeft(2, '0')}:${minute.padLeft(2, '0')}'; // Format time to "HH:mm"
+    alarmTime =
+        '${hour.padLeft(2, '0')}:${minute.padLeft(2, '0')}'; // Format time to "HH:mm"
     selectedRingtone = ringtone;
     hasTriggered = false; // Reset triggered status
   }
 
   // Checks if the current time matches the alarm time and triggers the alarm
   bool isAlarmTime(DateTime currentTime) {
-    if (alarmTime == null || hasTriggered) return false; // No alarm or already triggered
+    if (alarmTime == null || hasTriggered)
+      return false; // No alarm or already triggered
 
     final currentFormattedTime =
         '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}'; // Format current time
