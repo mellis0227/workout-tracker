@@ -74,7 +74,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
 
   Widget _buildWeekDayCard({required String dayOfWeek}) {
     return Padding(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.all(3),
       child: InkWell(
         onTap: () {
           showDialog(
@@ -102,7 +102,10 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                       letterSpacing: 0.8,
                     ),
                   ),
-
+                 if(widget.viewWorkouts)
+                  Expanded(
+                    child: buildViewWorkouts(weeklyWorkouts[dayOfWeek]!, dayOfWeek, widget.viewWorkouts),
+                  )
                 ],
               ),
             ),
@@ -111,27 +114,58 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
       );
   }
 
-  Container buildSinglePlaylist(String playListName) {
-    return Container(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            children: [
-              Text(
-                playListName,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Color(0xFFAEC3B00),
-                ),
-              ),
-              Icon(
-                Icons.delete,
-                color: Color(0xFF01161E),
-              ),
-            ],
+  Widget buildViewWorkouts(List<dynamic> playlists, String weekday, bool viewWorkouts) {
+      return Padding(
+        padding: EdgeInsets.all(15),
+        child: Container(
+          width: 140,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
           ),
+          child: playlists.isNotEmpty ? buildListOfScheduledWorkouts(playlists, weekday)
+              : Center(
+                child: Text(
+                  "Off Day",
+                  style: TextStyle(
+                    color: Color(0xFFAEC3B0),
+                    fontSize: 20,
+                    //fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
         ),
-    );
+      );
+    }
+
+  ListView buildListOfScheduledWorkouts(List<dynamic> playlists, String weekday) {
+    return ListView.builder(
+            itemCount: playlists.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    playlists[index],
+                    style: TextStyle(
+                      color: Color(0xFFAEC3B0),
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red.shade300),
+                    onPressed: () => {
+                      _presenter.removeSelectedPlaylist(userID!, playlists[index], weekday),
+                      setState(() {
+                        weeklyWorkouts[weekday]?.remove(playlists[index]);
+                      }),
+                    },
+                  ),
+                ],
+              );
+            },
+          );
   }
 
 

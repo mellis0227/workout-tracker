@@ -20,13 +20,8 @@ class ScheduleWorkoutPresenter {
     return scheduleModel.buildScheduleMapFromFirebase(userID);
   }
 
-  String formatScheduleSubtext(List<dynamic> key) {
-    if(key.isEmpty){
-      return "Off Day";
-    } else {
-      return "Planned!";
-    }
-
+  Future<void> removeSelectedPlaylist(String userID, String playlistName, String dayOfWeek) async {
+    return scheduleModel.removeSelectedPlaylist(userID, playlistName, dayOfWeek);
   }
 
 }

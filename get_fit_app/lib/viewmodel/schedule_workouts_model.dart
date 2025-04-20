@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 
 
 class ScheduleModel {
@@ -58,6 +55,20 @@ class ScheduleModel {
     }
   }
 
+  Future<void> removeSelectedPlaylist(String userID, String playlistName, String dayOfWeek) async {
+    try{
+      final workoutPlan = firestore.collection('user_data/$userID/workout_schedule');
+      DocumentReference docRef = workoutPlan.doc(dayOfWeek);
+      DocumentSnapshot snapshot = await docRef.get();
 
+      await docRef.update({
+        "playlist": FieldValue.arrayRemove([playlistName]),
+      });
+
+
+    }catch(e){
+      print("Failed to remove $playlistName on $dayOfWeek within database");
+    }
+  }
 
 }
