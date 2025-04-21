@@ -8,8 +8,8 @@ import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
    person should be able to add multiple workouts
  */
 class ScheduleWorkoutView extends StatefulWidget {
-  bool viewWorkouts;
-  ScheduleWorkoutView({super.key, required this.viewWorkouts});
+  final bool viewWorkouts;
+  const ScheduleWorkoutView({super.key, required this.viewWorkouts});
 
 
  @override
@@ -74,15 +74,8 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
 
   Widget _buildWeekDayCard({required String dayOfWeek}) {
     return Padding(
-      padding: EdgeInsets.all(3),
-      child: InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek),
-          );
-        },
-        child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 3),
+      child: Container(
           width: 160,
           height: !widget.viewWorkouts ? 65 : 200,
           decoration: BoxDecoration(
@@ -92,15 +85,34 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
           child: Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 16),
-                  Text(
-                    dayOfWeek,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 0.8,
-                    ),
+                  const SizedBox(height: 16,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        dayOfWeek,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek),
+                          );
+                        },
+                        child: Icon(
+                          Icons.add_box_outlined,
+                          size: 18,
+                          color: Color(0xFFAEC3B0),
+                        ),
+                      ),
+                    ],
                   ),
                  if(widget.viewWorkouts)
                   Expanded(
@@ -110,7 +122,6 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
               ),
             ),
           ),
-        ),
       );
   }
 
@@ -143,8 +154,17 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
             itemCount: playlists.length,
             itemBuilder: (BuildContext context, int index) {
               return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  IconButton(
+                    icon: Icon(Icons.cancel_outlined, color: Colors.red.shade200, size: 15),
+                    onPressed: () => {
+                      _presenter.removeSelectedPlaylist(userID!, playlists[index], weekday),
+                      setState(() {
+                        weeklyWorkouts[weekday]?.remove(playlists[index]);
+                      }),
+                    },
+                  ),
                   Text(
                     playlists[index],
                     style: TextStyle(
@@ -152,15 +172,6 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red.shade300),
-                    onPressed: () => {
-                      _presenter.removeSelectedPlaylist(userID!, playlists[index], weekday),
-                      setState(() {
-                        weeklyWorkouts[weekday]?.remove(playlists[index]);
-                      }),
-                    },
                   ),
                 ],
               );
@@ -180,7 +191,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
           children: [
             DropdownButton<String>(
               dropdownColor: Color(0xFF01161E),
-              hint: Text("Playlists", style: TextStyle(color: Colors.white70)),
+              hint: Text(playlists.isNotEmpty ? "Playlists" : "No Playlists!", style: TextStyle(color: Colors.white70)),
               isExpanded: true,
               items: playlists.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(

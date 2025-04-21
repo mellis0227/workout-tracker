@@ -49,7 +49,8 @@ class _DashboardViewState extends State<DashboardView> {
     return Scaffold(
       backgroundColor: Colors.white70,
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        //conditional padding for no schedule overflow, temporary solution
+        padding: EdgeInsets.all(fullName.length > 12 ? 12 : 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -57,7 +58,7 @@ class _DashboardViewState extends State<DashboardView> {
             Center(
               child: buildWelcomeText(context),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
