@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_fit_app/views/authentication_screen_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:get_fit_app/views/home_view.dart';
+import 'package:get_fit_app/views/splash_view.dart';
 
 void main() async {
   WidgetsFlutterBinding
@@ -18,6 +19,10 @@ void main() async {
 final _router = GoRouter(initialLocation: '/', routes: [
   GoRoute(
     path: '/',
+    builder: (context, state) => const SplashView(),
+  ),
+  GoRoute(
+    path: '/auth',
     builder: (context, state) => AuthenticationScreen(),
   ),
   GoRoute(
