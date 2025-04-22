@@ -31,10 +31,13 @@ class _MyHomePageState extends State<Profile> {
   int selectedItemIndex = 0;
   int selectedFeet = 0;
   int selectedInches = 0;
-  double selectedWeight = 0.0;
+  double selectedWeightLbs = 0.0;
+  double selectedWeightKgs = 0.0;
+  List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
   late DateTime date = DateTime(2025, 4, 15);
   final TextEditingController _weightController = TextEditingController();
   final dateController = TextEditingController();
+  List<bool> isSelected = [true, false];
 
   void initState() {
     super.initState();
@@ -117,7 +120,7 @@ class _MyHomePageState extends State<Profile> {
   );
   }
 
-  void _openWeightDialog(BuildContext context) {
+  void _openWeightLbsDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (context) => SizedBox(
@@ -135,7 +138,7 @@ class _MyHomePageState extends State<Profile> {
               valueTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
               onChanged: (double value) {
                 setState(() {
-                  selectedWeight = value;
+                  selectedWeightLbs = value;
                 });
               },
               showFixedBar: true,
@@ -158,7 +161,71 @@ class _MyHomePageState extends State<Profile> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  weight = "$selectedWeight lbs";
+                  weight = "$selectedWeightLbs lbs";
+                });
+                Navigator.pop(context);
+              },
+              child: const Text(
+                "OK",
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+            SizedBox(height: 20), // Space between slider and buttons
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openWeightKgsDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RulerSlider(
+              minValue: 0.0,
+              maxValue: 500.0,
+              initialValue: 45.0,
+              rulerHeight: 100.0,
+              selectedBarColor: Colors.grey,
+              unselectedBarColor: Colors.grey,
+              tickSpacing: 30.0,
+              valueTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
+              onChanged: (double value) {
+                setState(() {
+                  selectedWeightKgs = value;
+                });
+              },
+              showFixedBar: true,
+              fixedBarColor: Colors.blue,
+              fixedBarWidth: 3.0,
+              fixedBarHeight: 40.0,
+              showFixedLabel: true,
+              fixedLabelColor: Colors.blue,
+              scrollSensitivity: 3.0,
+              enableSnapping: true,
+              majorTickInterval: 5,
+              labelInterval: 1,
+              labelVerticalOffset: 30.0,
+              showBottomLabels: true,
+              labelTextStyle: TextStyle(color: Colors.black, fontSize: 12),
+              majorTickHeight: 20.0,
+              minorTickHeight: 10.0,
+            ),
+            SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  weight = "$selectedWeightKgs Kgs";
                 });
                 Navigator.pop(context);
               },
@@ -221,6 +288,7 @@ class _MyHomePageState extends State<Profile> {
                       SizedBox(
                         height: 10,
                       ),
+                      Divider(),
                       ListTile(
                           title: Center(
                             child: Text('Birthday',
@@ -277,7 +345,6 @@ class _MyHomePageState extends State<Profile> {
                           )
                       ),
                       Container(
-                        padding: EdgeInsets.all(8.0),
                       child:
                       ElevatedButton(
                         child: Text('Edit'),
@@ -305,13 +372,43 @@ class _MyHomePageState extends State<Profile> {
                               )
                           )
                       ),
+                      ToggleButtons(
+                        isSelected: isSelected,
+                        onPressed: (int index) {
+                          setState(() {
+                            for(int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++){
+                              if(buttonIndex == index) {
+                                isSelected[buttonIndex] = true;
+                              }
+                              else {
+                                isSelected[buttonIndex] = false;
+                              }
+                            }
+                            if (index == 0) {
+                              "$selectedWeightLbs lbs";
+                            }
+                            else {
+                              "$selectedWeightKgs Kgs";
+                            }
+                          });
+                        },
+                        children: weightMetrics,
+                      ),
+                      SizedBox(height: 20),
                       ElevatedButton(
                           child: Text('Edit'),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.blue,
                           ),
-                          onPressed: () => _openWeightDialog(context),
+                          onPressed: () {
+                           if (isSelected[0]) {
+                            _openWeightLbsDialog(context);
+                           }
+                           else {
+                             _openWeightKgsDialog(context);
+                           }
+                           },
                       ),
                       Divider(),
                     ]
