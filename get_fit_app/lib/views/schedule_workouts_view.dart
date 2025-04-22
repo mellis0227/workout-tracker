@@ -21,13 +21,9 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
   final ScheduleWorkoutPresenter _presenter = ScheduleWorkoutPresenter();
   DateTime currentDate = DateTime.now();
   String? currentAddedPlaylist;
-  
   Map<String, List<dynamic>> weeklyWorkouts = {};
-
-
   String? userID;
   List<String> playlists = [];
-
 
   void getPlaylistsAndSetMap(String userID) async {
     List<dynamic> tempPlaylists = await _presenter.getPlaylists(userID);
@@ -37,8 +33,6 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
       weeklyWorkouts = tempMap;
     });
   }
-
-
 
  @override
  void initState() {
@@ -154,17 +148,9 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
             itemCount: playlists.length,
             itemBuilder: (BuildContext context, int index) {
               return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  IconButton(
-                    icon: Icon(Icons.cancel_outlined, color: Colors.red.shade200, size: 15),
-                    onPressed: () => {
-                      _presenter.removeSelectedPlaylist(userID!, playlists[index], weekday),
-                      setState(() {
-                        weeklyWorkouts[weekday]?.remove(playlists[index]);
-                      }),
-                    },
-                  ),
+                  const SizedBox(height: 40),
                   Text(
                     playlists[index],
                     style: TextStyle(
@@ -173,6 +159,16 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+
+                  GestureDetector(
+                    onTap: () => {
+                      _presenter.removeSelectedPlaylist(userID!, playlists[index], weekday),
+                          setState(() {
+                            weeklyWorkouts[weekday]?.remove(playlists[index]);
+                          }),
+                    },
+                    child: Icon(Icons.cancel_outlined, color: Colors.red.shade200, size: 15, ),
+                  )
                 ],
               );
             },

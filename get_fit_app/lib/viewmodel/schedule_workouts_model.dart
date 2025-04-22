@@ -59,12 +59,10 @@ class ScheduleModel {
     try{
       final workoutPlan = firestore.collection('user_data/$userID/workout_schedule');
       DocumentReference docRef = workoutPlan.doc(dayOfWeek);
-      DocumentSnapshot snapshot = await docRef.get();
 
       await docRef.update({
         "playlist": FieldValue.arrayRemove([playlistName]),
       });
-
 
     }catch(e){
       print("Failed to remove $playlistName on $dayOfWeek within database");

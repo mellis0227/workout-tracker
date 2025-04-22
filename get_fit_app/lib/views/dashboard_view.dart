@@ -50,7 +50,7 @@ class _DashboardViewState extends State<DashboardView> {
       backgroundColor: Colors.white70,
       body: Padding(
         //conditional padding for no schedule overflow, temporary solution
-        padding: EdgeInsets.all(fullName.length > 12 ? 12 : 20),
+        padding: EdgeInsets.all(fullName.length > 12 ? 12 : 18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -58,7 +58,7 @@ class _DashboardViewState extends State<DashboardView> {
             Center(
               child: buildWelcomeText(context),
             ),
-            const SizedBox(height: 30),
+           const SizedBox(height: 30),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
@@ -73,7 +73,7 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             Row(
               children: [
                 Text(

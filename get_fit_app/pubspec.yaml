@@ -23,7 +23,6 @@ dependencies:
   go_router: ^14.8.1
   audioplayers: ^6.4.0
   just_audio: ^0.9.46
-  table_calendar: ^3.2.0
 
   
   cupertino_icons: ^1.0.8
