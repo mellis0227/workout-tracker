@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:get_fit_app/views/fitness_alarm_view.dart';
-import 'package:get_fit_app/views/lifting_log_view.dart';
-import 'package:get_fit_app/views/running_log_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
@@ -45,8 +41,9 @@ class _MyHomePageState extends State<ActivityLog> {
   Widget build(BuildContext context) {
     CollectionReference runs = FirebaseFirestore.instance.collection('user_data/$_userID/runs');
 
-    return Scaffold(
-      appBar: AppBar(title: Text("Activity Log")),
+  return Scaffold(
+  backgroundColor: Color(0xFFEFF6E0),
+  appBar: AppBar(title: Text("Activity Log")),
       body: FutureBuilder<QuerySnapshot>(
         future: runs.get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -70,7 +67,7 @@ class _MyHomePageState extends State<ActivityLog> {
                 title: Text(runData['run'].toString()),
                 subtitle: Text(
                   '${runData['distance'] != null ? 'Distance: ${runData['distance']} Miles | ' : ''}Time: ${runData['time'].toString() } Minutes'
-                      '${runData['distance'] != null ? '\nAverage MPH: ${(runData['distance'] / (runData['time'] / 60))} ' : ''}',
+                      '${runData['distance'] != null ? '\nAverage MPH: ${(runData['distance'] / (runData['time'] / 60)).toStringAsFixed(2)} ' : ''}',
                 ),
 
               );

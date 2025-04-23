@@ -44,6 +44,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFEFF6E0),
       body: Column(
         children: [
           SingleChildScrollView(

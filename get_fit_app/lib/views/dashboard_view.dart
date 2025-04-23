@@ -47,7 +47,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white70,
+      backgroundColor: Color(0xFFEFF6E0),
       body: Padding(
         //conditional padding for no schedule overflow, temporary solution
         padding: EdgeInsets.all(fullName.length > 12 ? 12 : 18),
