@@ -237,7 +237,7 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                   hint: Text("Muscle", style: TextStyle(color: Colors.black)),
                   isExpanded: true,
                   items:
-                      <String>['Biceps', 'Chest', 'Lats'].map((String value) {
+                      <String>['Biceps', 'Chest', 'Legs'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value.toLowerCase(),
                       child: Text(value),

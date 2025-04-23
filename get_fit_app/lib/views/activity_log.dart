@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 void main() {
   runApp(activityLog());
 }
@@ -34,15 +33,15 @@ class _MyHomePageState extends State<ActivityLog> {
     super.initState();
     _userID = FirebaseAuth.instance.currentUser?.email;
     print("Current user ID: $_userID");
-
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference runs = FirebaseFirestore.instance.collection('user_data/$_userID/runs');
+    CollectionReference runs =
+        FirebaseFirestore.instance.collection('user_data/$_userID/runs');
 
-  return Scaffold(
-  backgroundColor: Color(0xFFEFF6E0),
+    return Scaffold(
+      backgroundColor: Color(0xFFEFF6E0),
       body: FutureBuilder<QuerySnapshot>(
         future: runs.get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -65,10 +64,9 @@ class _MyHomePageState extends State<ActivityLog> {
               return ListTile(
                 title: Text(runData['run'].toString()),
                 subtitle: Text(
-                  '${runData['distance'] != null ? 'Distance: ${runData['distance']} Miles | ' : ''}Time: ${runData['time'].toString() } Minutes'
-                      '${runData['distance'] != null ? '\nAverage MPH: ${(runData['distance'] / (runData['time'] / 60)).toStringAsFixed(2)} ' : ''}',
+                  '${runData['distance'] != null ? 'Distance: ${runData['distance']} Miles | ' : ''}Time: ${runData['time'].toString()} Minutes'
+                  '${runData['distance'] != null ? '\nAverage MPH: ${(runData['distance'] / (runData['time'] / 60)).toStringAsFixed(2)} ' : ''}',
                 ),
-
               );
             }).toList(),
           );

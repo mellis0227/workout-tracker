@@ -4,7 +4,6 @@ import '../viewmodel/running_log_model.dart';
 import '../presenter/running_log_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class RunningLogView extends StatelessWidget {
   const RunningLogView({super.key});
 
@@ -40,9 +39,7 @@ class _MyHomePageState extends State<runningLog> {
     super.initState();
     _userID = FirebaseAuth.instance.currentUser?.email;
     print("Current user ID: $_userID");
-
   }
-
 
   void _logRun() {
     if (_userID == null) {
@@ -50,8 +47,7 @@ class _MyHomePageState extends State<runningLog> {
       return;
     }
 
-    if (_selectedExercise.isEmpty ||
-        _timeController.text.isEmpty) {
+    if (_selectedExercise.isEmpty || _timeController.text.isEmpty) {
       return;
     }
 
@@ -68,8 +64,6 @@ class _MyHomePageState extends State<runningLog> {
     _timeController.clear();
     _showVanishingMessage('Exercise logged successfully!');
   }
-
-
 
   void _showVanishingMessage(String message) {
     setState(() {
@@ -119,7 +113,17 @@ class _MyHomePageState extends State<runningLog> {
                       labelText: 'Select exercise',
                       border: OutlineInputBorder(),
                     ),
-                    items: ['Run', 'Walk','Swim','Bike','Basketball','Soccer','Baseball','Dance','Football'].map((String exercise) {
+                    items: [
+                      'Run',
+                      'Walk',
+                      'Swim',
+                      'Bike',
+                      'Basketball',
+                      'Soccer',
+                      'Baseball',
+                      'Dance',
+                      'Football'
+                    ].map((String exercise) {
                       return DropdownMenuItem<String>(
                         value: exercise,
                         child: Text(exercise),

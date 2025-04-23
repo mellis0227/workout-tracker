@@ -153,7 +153,8 @@ class _AlarmViewState extends State<AlarmView>
                 const SizedBox(height: 10),
                 Text(
                   'Current Time:',
-                  style: customTheme.textTheme.bodySmall?.copyWith(fontSize: 18),
+                  style:
+                      customTheme.textTheme.bodySmall?.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -205,8 +206,8 @@ class _AlarmViewState extends State<AlarmView>
                 const SizedBox(height: 30),
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   decoration: BoxDecoration(
                     color: customTheme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
@@ -250,7 +251,7 @@ class _AlarmViewState extends State<AlarmView>
                 ElevatedButton(
                   onPressed: _onSetAlarmPressed,
                   child:
-                  const Text('Set Alarm', style: TextStyle(fontSize: 16)),
+                      const Text('Set Alarm', style: TextStyle(fontSize: 16)),
                 ),
                 const SizedBox(height: 20),
                 if (_alarmTime != null)
