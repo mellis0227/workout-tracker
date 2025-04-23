@@ -9,7 +9,8 @@ import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
  */
 class ScheduleWorkoutView extends StatefulWidget {
   final bool viewWorkouts;
-  const ScheduleWorkoutView({super.key, required this.viewWorkouts});
+  final VoidCallback? onPlaylistScheduled;
+  const ScheduleWorkoutView({super.key, required this.viewWorkouts, this.onPlaylistScheduled});
 
 
  @override
@@ -163,6 +164,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                   GestureDetector(
                     onTap: () => {
                       _presenter.removeSelectedPlaylist(userID!, playlists[index], weekday),
+                      widget.onPlaylistScheduled?.call(),
                           setState(() {
                             weeklyWorkouts[weekday]?.remove(playlists[index]);
                           }),
@@ -195,19 +197,21 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                   child: Text(value, style: TextStyle(color: Colors.white70),),
                 );
               }).toList(),
-              onChanged: (value) => {
-                _presenter.setWeekdayInFirebase(userID!, value!, dayOfWeek),
+              onChanged: (value) async {
+                await _presenter.setWeekdayInFirebase(userID!, value!, dayOfWeek);
+                widget.onPlaylistScheduled?.call();
+                print("called on changed");
                 if(!weeklyWorkouts[dayOfWeek]!.contains(value)){
                   setState(() {
                     weeklyWorkouts[dayOfWeek]?.add(value);
-                  }),
-                },
+                  });
+                };
                // print(_presenter.formatScheduleSubtext(weeklyWorkouts[dayOfWeek]!)),
 
-                Navigator.pop(context),
+                Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Added $value to $formattedTime"), duration: Duration(seconds: 2)),
-                )
+                );
               },
             ),
           ],

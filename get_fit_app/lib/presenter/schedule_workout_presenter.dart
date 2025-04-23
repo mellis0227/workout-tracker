@@ -24,4 +24,8 @@ class ScheduleWorkoutPresenter {
     return scheduleModel.removeSelectedPlaylist(userID, playlistName, dayOfWeek);
   }
 
+  Future<List> getWeekDayPlaylist(String userID, String weekDay) async {
+    return scheduleModel.getScheduledPlaylists(userID, weekDay);
+  }
+
 }

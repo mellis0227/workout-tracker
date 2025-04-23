@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
 import 'package:get_fit_app/views/schedule_workouts_view.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
+import 'do_workouts_view.dart';
 
 class DashboardView extends StatefulWidget {
   final void Function(int index)? onTabSelected; // Callback for tab selection
@@ -18,12 +20,18 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   late final DashboardPresenter _presenter;
+  late final ScheduleWorkoutPresenter _schedulePresenter;
   late String welcomeMessage; // Get welcome message
   late String quote; // Get motivational quote// Presenter to handle logic
   //the userID is capable of fetching data && full name is the users displayed name
   String? userID;
   String fullName = "";
+  DateTime currentDate = DateTime.now();
+  String currentDateString = "";
   bool viewWorkoutPlan = false;
+  List<dynamic> currentPlaylist = [];
+  String? currentWeekday;
+  bool isScheduled = false;
 
   Future<void> getFullName(String userID) async {
     String tempFullName = await _presenter.getUsersFullName(userID);
@@ -34,14 +42,26 @@ class _DashboardViewState extends State<DashboardView> {
     });
   }
 
+  Future<void> getPlaylist(String weekDay) async {
+    List<dynamic> tempList = await _schedulePresenter.getWeekDayPlaylist(userID!, weekDay);
+    setState(() {
+      currentPlaylist = tempList;
+      isScheduled = currentPlaylist.isNotEmpty;
+    });
+  }
+
+
+
   @override
   void initState() {
     super.initState();
     _presenter = DashboardPresenter(model: DashboardModel());
+    _schedulePresenter = ScheduleWorkoutPresenter();
     userID = FirebaseAuth.instance.currentUser?.email;
     getFullName(userID!);
-    quote = _presenter
-        .getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
+    currentWeekday = _presenter.getWeekdayString(currentDate);
+    getPlaylist(currentWeekday!);
+    quote = _presenter.getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
   }
 
   @override
@@ -63,7 +83,8 @@ class _DashboardViewState extends State<DashboardView> {
             // Display workout summary card (No workout scheduled)
             _buildCard(
               title: "Today's Workout",
-              content: "No workout scheduled. Let's get moving!",
+              content: currentPlaylist.isEmpty ? "No workout scheduled. Let's get moving!" : "Today is $currentWeekday. Let's get moving!",
+              isScheduled: isScheduled,
             ),
             const SizedBox(height: 16),
 
@@ -106,7 +127,12 @@ class _DashboardViewState extends State<DashboardView> {
               ],
             ),
             Expanded(
-              child: ScheduleWorkoutView(viewWorkouts: viewWorkoutPlan,),
+              child: ScheduleWorkoutView(
+                viewWorkouts: viewWorkoutPlan,
+                onPlaylistScheduled: ()  {
+                   getPlaylist(currentWeekday!);
+                }
+              ),
             ),
             // Quick Access section header
 
@@ -158,6 +184,7 @@ class _DashboardViewState extends State<DashboardView> {
     required String title,
     required String content,
     bool isItalic = false,
+    bool isScheduled = false,
   }) {
     return Container(
       width: double.infinity,
@@ -187,6 +214,31 @@ class _DashboardViewState extends State<DashboardView> {
           ),
           const SizedBox(height: 8),
           // Display card content, optionally italicized
+          isScheduled ? Row(
+            children: [
+              Text(
+                content,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: const Color(0xFFAEC3B0),
+                  fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+                ),
+              ),
+             const SizedBox(width: 15),
+             GestureDetector(
+               onTap: () => {
+               Navigator.of(context).push(
+                 MaterialPageRoute(builder: (context) => DoWorkoutsView(playlists: currentPlaylist,)),
+                ),
+               },
+               child: Icon(
+                 Icons.start_rounded,
+                 color: Colors.white,
+                 size: 30,
+               )
+             ),
+            ],
+          ) :
           Text(
             content,
             style: TextStyle(

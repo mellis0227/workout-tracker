@@ -10,13 +10,14 @@ class DashboardModel {
     "Hmm... exercise? I thought you just said extra fries xD",
     "Working out is life, when life give you workout lemons you make GAINS lemonade!"
   ];
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   List<String> get quotes => _quotes;
 
   Future<String> getUsersFullName(String userID) async {
     String fullName = "";
     try {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
       final currentUserCollection =
           await firestore.collection("user_data").doc(userID).get();
 
@@ -28,4 +29,6 @@ class DashboardModel {
     }
     return "";
   }
+
+
 }

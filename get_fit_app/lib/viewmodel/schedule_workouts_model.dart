@@ -69,4 +69,22 @@ class ScheduleModel {
     }
   }
 
+  Future<List> getScheduledPlaylists(String userID, String weekDay) async {
+    List<dynamic> playlists = [];
+    try {
+      final workoutPlan = firestore.collection('user_data/$userID/workout_schedule');
+      final weekdaySnapshot = await workoutPlan.get();
+
+      for(var doc in weekdaySnapshot.docs){
+        if(doc.data()["day"] == weekDay){
+          playlists = doc.data()["playlist"];
+        }
+      }
+
+    } catch(e){
+      print(e);
+    }
+    return playlists;
+  }
+
 }
