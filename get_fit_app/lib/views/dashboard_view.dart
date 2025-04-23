@@ -58,7 +58,7 @@ class _DashboardViewState extends State<DashboardView> {
             Center(
               child: buildWelcomeText(context),
             ),
-           const SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
@@ -79,14 +79,16 @@ class _DashboardViewState extends State<DashboardView> {
                 Text(
                   "Workout Schedule",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1C1C1E),
-                  ),
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1C1C1E),
+                      ),
                 ),
                 const SizedBox(width: 5),
                 TextButton(
                     child: Text(
-                      !viewWorkoutPlan ? "Press to View Workouts" : "Close Workouts",
+                      !viewWorkoutPlan
+                          ? "Press to View Workouts"
+                          : "Close Workouts",
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.black,
@@ -94,19 +96,20 @@ class _DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                     onPressed: () => {
-                      setState(() {
-                        if(viewWorkoutPlan){
-                          viewWorkoutPlan = false;
-                        } else {
-                          viewWorkoutPlan = true;
-                        }
-                      }),
-                    }
-                ),
+                          setState(() {
+                            if (viewWorkoutPlan) {
+                              viewWorkoutPlan = false;
+                            } else {
+                              viewWorkoutPlan = true;
+                            }
+                          }),
+                        }),
               ],
             ),
             Expanded(
-              child: ScheduleWorkoutView(viewWorkouts: viewWorkoutPlan,),
+              child: ScheduleWorkoutView(
+                viewWorkouts: viewWorkoutPlan,
+              ),
             ),
             // Quick Access section header
 
@@ -116,15 +119,14 @@ class _DashboardViewState extends State<DashboardView> {
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: const Color(0xFF1C1C1E),
-                  letterSpacing: .8
-              ),
+                  letterSpacing: .8),
             ),
             Padding(padding: EdgeInsets.all(4)),
             _buildTile(context, Icons.api, 'Find Workouts', 5),
             _buildTile(context, Icons.music_note_rounded, 'Music Player', 6),
 
             //conditional check so no overlapping widgets after view workout is pressed
-            if(!viewWorkoutPlan) ... [
+            if (!viewWorkoutPlan) ...[
               _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
               _buildTile(context, Icons.timeline, 'Activity Log', 4),
             ]
