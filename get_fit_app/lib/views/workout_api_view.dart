@@ -51,55 +51,130 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        // Header with buttons for filtering and managing workout playlists
-        Container(
-          width: 425,
-          height: 45,
-          decoration: BoxDecoration(
-            color: Color(0xFFAEC3B0),
-          ),
-          child: Row(
-            children: [
-              Padding(padding: EdgeInsets.all(20)),
-              // Button to filter workouts by muscle and difficulty
-              TextButton(
-                child: Text("Filter",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF124559),
-                        fontSize: 20)),
-                onPressed: () {
-                  // Show the filter dialog
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) => showFilters());
-                },
-              ),
-              Padding(padding: EdgeInsets.all(45)),
-              // Button to manage workout playlists
-              TextButton(
-                  child: Text("Workout Playlist",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF124559),
-                          fontSize: 20)),
+      backgroundColor: Color(0xFFEFF6E0),
+      body: Column(
+        children: [
+          // Improved Header
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            height: 60,
+            decoration: BoxDecoration(
+              color: Color(0xFFAEC3B0),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
                   onPressed: () {
-                    // Show the playlist management dialog
                     showDialog(
-                        context: context,
-                        builder: (BuildContext context) => showPlaylist());
-                  })
-            ],
+                      context: context,
+                      builder: (_) => showFilters(),
+                    );
+                  },
+                  child: Text(
+                    "Filter",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF124559),
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => showPlaylist(),
+                    );
+                  },
+                  child: Text(
+                    "Workout Playlist",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF124559),
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        // Display the list of workouts
-        Expanded(
-          child: _buildWorkoutList(),
-        ),
-      ],
-    ));
+
+          // Workouts List
+          Expanded(
+            child: displayedWorkouts.isNotEmpty
+                ? ListView.builder(
+                    padding: const EdgeInsets.all(10),
+                    itemCount: displayedWorkouts.length,
+                    itemBuilder: (BuildContext context, index) {
+                      final workout = displayedWorkouts[index];
+                      return Card(
+                        elevation: 5,
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        shadowColor: Color(0xFF01161E),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          tileColor: Color(0xFFEFF6E0),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          title: Text(
+                            workout["name"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 4),
+                              Text("Muscle: ${workout["muscle"]}"),
+                              Text("Type: ${workout["type"]}"),
+                              Text("Difficulty: ${workout["difficulty"]}"),
+                            ],
+                          ),
+                          trailing: Wrap(
+                            direction: Axis.vertical,
+                            spacing: 4,
+                            children: [
+                              TextButton(
+                                child: Text("View"),
+                                onPressed: () =>
+                                    viewInstructionContainer(context, index),
+                              ),
+                              TextButton(
+                                child: Text("Save"),
+                                onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (_) => savePlaylist(index),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        "No workouts found.\nPress 'Filter' to explore workouts!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF124559),
+                        ),
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 
   // Builds the workout list view
