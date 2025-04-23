@@ -4,6 +4,7 @@ import 'package:wheel_picker/wheel_picker.dart';
 import 'package:ruler_slider/ruler_slider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
+import 'package:units_converter/units_converter.dart';
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
@@ -37,11 +38,13 @@ class _MyHomePageState extends State<Profile> {
   int selectedCentimeters = 0;
   double selectedWeightLbs = 0.0;
   double selectedWeightKgs = 0.0;
+  List<Widget> heightMetrics = <Widget>[Text('ft'), Text('m')];
   List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
   late DateTime date = DateTime(2025, 4, 15);
   final TextEditingController _weightController = TextEditingController();
   final dateController = TextEditingController();
-  List<bool> isSelected = [true, false];
+  List<bool> isHeightSelected = [true, false];
+  List<bool> isWeightSelected = [true, false];
 
   void initState() {
     super.initState();
@@ -134,8 +137,8 @@ class _MyHomePageState extends State<Profile> {
           children: [
             Expanded(
               child: WheelPicker(
-                  itemCount: 9,
-                  builder: (context, index) => Text("${index} m", style:
+                  itemCount: 4,
+                  builder: (context, index) => Text("${index}", style:
                   TextStyle(fontSize: 30.0)),
                   selectedIndexColor: Colors.blue,
                   onIndexChanged: (index, _) {
@@ -153,8 +156,8 @@ class _MyHomePageState extends State<Profile> {
             ),
             Expanded(
               child: WheelPicker(
-                  itemCount: 12,
-                  builder: (context, index) => Text("$index cm", style:
+                  itemCount: 10,
+                  builder: (context, index) => Text(".$index", style:
                   TextStyle(fontSize: 30.0)),
                   selectedIndexColor: Colors.blue,
                   onIndexChanged: (index, _) {
@@ -181,7 +184,7 @@ class _MyHomePageState extends State<Profile> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      height = "$selectedFeet ft $selectedInches in";
+                      height = "$selectedMeters.$selectedCentimeters m";
                     });
                     Navigator.pop(context);
                   },
@@ -447,6 +450,29 @@ class _MyHomePageState extends State<Profile> {
                               )
                           )
                       ),
+                      ToggleButtons(
+                        isSelected: isHeightSelected,
+                        onPressed: (int index) {
+                          setState(() {
+                            for(int buttonIndex = 0; buttonIndex < isHeightSelected.length; buttonIndex++){
+                              if(buttonIndex == index) {
+                                isHeightSelected[buttonIndex] = true;
+                              }
+                              else {
+                                isHeightSelected[buttonIndex] = false;
+                              }
+                            }
+                            if (index == 0) {
+                              "$selectedFeet ft $selectedInches in";
+                            }
+                            else {
+                              "$selectedMeters . $selectedCentimeters m";
+                            }
+                          });
+                        },
+                        children: heightMetrics,
+                      ),
+                      SizedBox(height: 20),
                       Container(
                       child:
                       ElevatedButton(
@@ -455,7 +481,14 @@ class _MyHomePageState extends State<Profile> {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
                         ),
-                          onPressed: () => _openHeightFtPickerDialog(context),
+                          onPressed: () {
+                          if(isHeightSelected[0]) {
+                            _openHeightFtPickerDialog(context);
+                          }
+                          else {
+                            _openHeightMetersPickerDialog(context);
+                          }
+                        }
                       ),
                       ),
                       Divider(),
@@ -476,15 +509,15 @@ class _MyHomePageState extends State<Profile> {
                           )
                       ),
                       ToggleButtons(
-                        isSelected: isSelected,
+                        isSelected: isWeightSelected,
                         onPressed: (int index) {
                           setState(() {
-                            for(int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++){
+                            for(int buttonIndex = 0; buttonIndex < isWeightSelected.length; buttonIndex++){
                               if(buttonIndex == index) {
-                                isSelected[buttonIndex] = true;
+                                isWeightSelected[buttonIndex] = true;
                               }
                               else {
-                                isSelected[buttonIndex] = false;
+                                isWeightSelected[buttonIndex] = false;
                               }
                             }
                             if (index == 0) {
@@ -505,7 +538,7 @@ class _MyHomePageState extends State<Profile> {
                             backgroundColor: Colors.blue,
                           ),
                           onPressed: () {
-                           if (isSelected[0]) {
+                           if (isWeightSelected[0]) {
                             _openWeightLbsDialog(context);
                            }
                            else {
