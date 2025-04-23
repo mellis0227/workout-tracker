@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/presenter/do_workouts_presenter.dart';
 import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
-
 import '../viewmodel/do_workout_model.dart';
 
 
@@ -35,6 +34,7 @@ class _DoWorkoutsViewState extends State<DoWorkoutsView> {
     for(var playlist in playlistNames){
       List<Workouts> workout = await _doWorkoutPresenter.getPlaylistData(playlist, userID);
       tempMap[playlist] = workout;
+      print(tempMap);
     }
     setState(() {
       playlistInformation = tempMap;
@@ -70,15 +70,51 @@ class _DoWorkoutsViewState extends State<DoWorkoutsView> {
                 itemCount: playlistNames.length,
                 itemBuilder: (BuildContext context, int index) {
                   List<Workouts>? workouts = playlistInformation[playlistNames[index]];
+                  bool onCheck = false;
                   return Card(
                     elevation: .5,
                     child: ExpansionTile(
                       title: Text(playlistNames[index]),
-                      children: workouts != null
-                            ? workouts.map((workout) => ListTile(
-                          title: Text(workout.workoutName), // adjust to match your Workouts model
-                        )).toList()
-                            : [Text("Loading...")],
+                      leading: IconButton(
+                        icon: Icon(onCheck ? Icons.check_box_outline_blank : Icons.check_box),
+                        onPressed: () {
+                          setState(() {
+                            onCheck = true;
+                            playlistNames.remove(playlistNames[index]);
+                          });
+                        },
+                      ),
+                      children: workouts != null ? workouts.map((workout) {
+                        return ListTile(
+                          title: Text(workout.workoutName),
+                          subtitle: Text(workout.difficulty),
+                          trailing: TextButton(
+                            child: Text("View Instructions"),
+                            onPressed: () => {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SizedBox(
+                                    height: 500,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          Text("Instructions"),
+                                          Text(workout.instructions,
+                                              style: TextStyle(letterSpacing: 0.8))
+                                        ],
+                                      ),
+                                    )
+                                  );
+                                }
+                              )
+                            },
+                          ),
+
+
+                        );
+                      }).toList() :
+                          [Text("No Workouts Provided")],
                     )
                   );
                 },

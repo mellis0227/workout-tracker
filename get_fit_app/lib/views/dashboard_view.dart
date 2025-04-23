@@ -224,7 +224,7 @@ class _DashboardViewState extends State<DashboardView> {
                   fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
                 ),
               ),
-             const SizedBox(width: 15),
+             const SizedBox(width: 10),
              GestureDetector(
                onTap: () => {
                Navigator.of(context).push(

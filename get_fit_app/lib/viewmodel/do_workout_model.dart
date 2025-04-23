@@ -17,17 +17,17 @@ class DoWorkoutModel {
   Future<List<Workouts>> getPlaylistData(String playlist, String userID) async {
     List<Workouts> playlistData = [];
     try {
-      final workoutData = firestore.collection("user_data/$userID/workout_plans/$playlist");
+      final workoutData = firestore.collection("user_data/$userID/workout_plans/$playlist/workouts");
       final snapshot = await workoutData.get();
-
       for(var doc in snapshot.docs){
         final workout = Workouts(
           workoutName: doc.id,
-          difficulty: doc["difficulty"] ?? "No Difficulty Listed",
-          instructions: doc["instructions"] ?? "No Instructions Listed",
+          difficulty: doc.data()["workout_difficulty"],
+          instructions: doc.data()["workout_details"],
         );
         playlistData.add(workout);
       }
+
 
 
     } catch(e){
