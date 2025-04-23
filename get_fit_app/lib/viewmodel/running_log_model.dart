@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Run {
   String userID;
   String run;
-  int distance;
+  int? distance;
   int time;
 
   Run({
     required this.userID,
     required this.run,
-    required this.distance,
+    this.distance,
     required this.time,
   });
 
@@ -28,19 +28,23 @@ class RunningLogModel {
   Future<void> logRun({
     required String userID,
     required String run,
-    required int distance,
+    int? distance,
     required int time,
   }) async {
+    final data = {
+      'run': run,
+      'time': time,
+    };
+
+    if (distance != null) {
+      data['distance'] = distance;
+    }
     try {
       await firestore
           .collection('user_data')
           .doc(userID)
           .collection('runs')
-          .add({
-        'run': run,
-        'distance': distance,
-        'time': time,
-      });
+          .add(data);
     } catch (e) {
       print('Error logging run: $e');
     }
