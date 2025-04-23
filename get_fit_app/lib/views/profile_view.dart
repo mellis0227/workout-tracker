@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 import 'package:ruler_slider/ruler_slider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
@@ -31,6 +33,8 @@ class _MyHomePageState extends State<Profile> {
   int selectedItemIndex = 0;
   int selectedFeet = 0;
   int selectedInches = 0;
+  int selectedMeters = 0;
+  int selectedCentimeters = 0;
   double selectedWeightLbs = 0.0;
   double selectedWeightKgs = 0.0;
   List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
@@ -50,7 +54,7 @@ class _MyHomePageState extends State<Profile> {
     super.dispose();
   }
 
-  void _openHeightPickerDialog(BuildContext context) {
+  void _openHeightFtPickerDialog(BuildContext context) {
     showModalBottomSheet(
     context: context,
     builder: (context) => SizedBox(
@@ -118,6 +122,76 @@ class _MyHomePageState extends State<Profile> {
     ),
     ),
   );
+  }
+
+  void _openHeightMetersPickerDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SizedBox(
+        height: 400,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: WheelPicker(
+                  itemCount: 9,
+                  builder: (context, index) => Text("${index} m", style:
+                  TextStyle(fontSize: 30.0)),
+                  selectedIndexColor: Colors.blue,
+                  onIndexChanged: (index, _) {
+                    setState(() {
+                      selectedMeters = index;
+                    });
+                  },
+                  style: WheelPickerStyle(
+                    itemExtent: 40.0,
+                    squeeze: 1.25,
+                    diameterRatio: 0.9,
+                    surroundingOpacity: 0.25,
+                  )
+              ),
+            ),
+            Expanded(
+              child: WheelPicker(
+                  itemCount: 12,
+                  builder: (context, index) => Text("$index cm", style:
+                  TextStyle(fontSize: 30.0)),
+                  selectedIndexColor: Colors.blue,
+                  onIndexChanged: (index, _) {
+                    setState(() {
+                      selectedCentimeters = index;
+                    });
+                  },
+                  style: WheelPickerStyle(
+                    itemExtent: 40,
+                    squeeze: 1.25,
+                    diameterRatio: 0.9,
+                    surroundingOpacity: 0.25,
+                  )
+              ),
+            ),
+            Column(
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel',
+                      style: TextStyle(fontSize: 20.0)),
+                ),
+                SizedBox(height: 150),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      height = "$selectedFeet ft $selectedInches in";
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK",
+                      style: TextStyle(fontSize: 20.0)),
+                ),],),
+          ],
+        ),
+      ),
+    );
   }
 
   void _openWeightLbsDialog(BuildContext context) {
@@ -248,8 +322,19 @@ class _MyHomePageState extends State<Profile> {
     );
   }
 
-  void submitWeight() {
-    Navigator.of(context).pop(_weightController.text);
+  Uint8List? _imageBytes;
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final PickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if(PickedImage != null){
+      final imageBytes = await PickedImage.readAsBytes();
+
+      setState(() {
+        _imageBytes = imageBytes;
+      });
+    }
   }
 
   @override
@@ -262,23 +347,41 @@ class _MyHomePageState extends State<Profile> {
         ),
         body: ListView(
           children: <Widget>[
+            Stack(children: [CircleAvatar(
+              minRadius: 60.0,
+              child: CircleAvatar(
+                  radius: 50.0,
+                  backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : null,
+                child: _imageBytes == null
+                ? Icon(
+                  Icons.person,
+                  size: 70,
+                  color: Colors.grey.shade700,
+                )
+                 : null
+              ),
+            ),
+            Positioned(
+              right: 140,
+              bottom: 10,
+              child: InkWell(
+                onTap: pickImage,
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.blue,
+                  child: Icon(Icons.edit,
+                      color: Colors.white,
+                      size: 20),
+                ),
+              ),
+            ),],),
                 Column(
                     children: <Widget>[
                       SizedBox(height: 10,),
-                      CircleAvatar(
-                        minRadius: 60.0,
-                        child: CircleAvatar(
-                          radius: 50.0,
-                          backgroundImage: AssetImage('assets/images/luke-chesser-PHtp0cDBJSM-unsplash.jpg'),
-                        ),
-                      ),
+
                       SizedBox(
                         height: 10,
                       ),
-                      Text('@username',
-                          style: TextStyle(
-                            color: Colors.blue,
-                          )),
                       Text('Your Name',
                           style: TextStyle(
                             color: Colors.blue,
@@ -352,7 +455,7 @@ class _MyHomePageState extends State<Profile> {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
                         ),
-                          onPressed: () => _openHeightPickerDialog(context),
+                          onPressed: () => _openHeightFtPickerDialog(context),
                       ),
                       ),
                       Divider(),
