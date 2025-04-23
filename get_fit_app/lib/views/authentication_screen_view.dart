@@ -94,19 +94,17 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
     return null;
   }
 
-  // Password confirmation validator (only in register mode)
   String? _passwordConfirmationValidator(String? value) {
-    if (_register && value != _passwordController.text) {
+    if (!_register) return null;
+    if (value != _passwordController.text) {
       return 'Passwords do not match';
     }
     return null;
   }
 
   String? _firstAndLastNameValidator(String? value) {
-    if (_register && _firstNameController.text.isEmpty) {
-      return "Enter first name";
-    } else if (_register && _firstNameController.text.isEmpty) {
-      return "Enter last name";
+    if (_register && value != null && value.isEmpty) {
+      return "This field is required";
     }
     return null;
   }
@@ -173,28 +171,29 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
             ),
           ),
           Padding(padding: EdgeInsets.all(10)),
-          if (_register)
-            Row(
-              children: [
-                Flexible(
-                  child: AuthenticationTextFormField(
-                    label: "First Name",
-                    textEditingController: _firstNameController,
-                    validator: _firstAndLastNameValidator,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                ),
-                Flexible(
-                  child: AuthenticationTextFormField(
-                    label: "Last Name",
-                    textEditingController: _lastNameController,
-                    validator: _firstAndLastNameValidator,
-                  ),
+          _register
+              ? Row(
+                  children: [
+                    Flexible(
+                      child: AuthenticationTextFormField(
+                        label: "First Name",
+                        textEditingController: _firstNameController,
+                        validator: _firstAndLastNameValidator,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    Flexible(
+                      child: AuthenticationTextFormField(
+                        label: "Last Name",
+                        textEditingController: _lastNameController,
+                        validator: _firstAndLastNameValidator,
+                      ),
+                    ),
+                  ],
                 )
-              ],
-            ),
+              : const SizedBox.shrink(),
           Padding(
             padding: EdgeInsets.all(10),
           ),
@@ -248,7 +247,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
       onPressed: () {
         if (_formKey.currentState?.validate() ?? false) {
           _presenter.authenticate(
-              context); // Delegate to presenter for authentication
+              context, _register); // Delegate to presenter for authentication
         }
       },
       style: ButtonStyle(

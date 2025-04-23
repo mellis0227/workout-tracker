@@ -5,13 +5,12 @@ class ScheduleWorkoutPresenter {
   WorkoutApiModel playlistModel = WorkoutApiModel();
   ScheduleModel scheduleModel = ScheduleModel();
 
-
   Future<List> getPlaylists(String userID) {
     return playlistModel.getWorkoutPlans(userID);
   }
 
-
-  Future<void> setWeekdayInFirebase(String userID, String playlistName, String dayOfWeek) async {
+  Future<void> setWeekdayInFirebase(
+      String userID, String playlistName, String dayOfWeek) async {
     scheduleModel.buildScheduleMapFromFirebase(userID);
     return scheduleModel.setWeekdayInFirebase(userID, playlistName, dayOfWeek);
   }
@@ -20,8 +19,9 @@ class ScheduleWorkoutPresenter {
     return scheduleModel.buildScheduleMapFromFirebase(userID);
   }
 
-  Future<void> removeSelectedPlaylist(String userID, String playlistName, String dayOfWeek) async {
-    return scheduleModel.removeSelectedPlaylist(userID, playlistName, dayOfWeek);
+  Future<void> removeSelectedPlaylist(
+      String userID, String playlistName, String dayOfWeek) async {
+    return scheduleModel.removeSelectedPlaylist(
+        userID, playlistName, dayOfWeek);
   }
-
 }
