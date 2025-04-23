@@ -6,6 +6,7 @@ import 'package:get_fit_app/views/lifting_log_view.dart';
 import 'package:get_fit_app/views/running_log_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
 void main() {
   runApp(activityLog());
 }
@@ -37,14 +38,15 @@ class _MyHomePageState extends State<ActivityLog> {
     super.initState();
     _userID = FirebaseAuth.instance.currentUser?.email;
     print("Current user ID: $_userID");
+
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference runs =
-        FirebaseFirestore.instance.collection('user_data/$_userID/runs');
+    CollectionReference runs = FirebaseFirestore.instance.collection('user_data/$_userID/runs');
 
     return Scaffold(
+      appBar: AppBar(title: Text("Activity Log")),
       body: FutureBuilder<QuerySnapshot>(
         future: runs.get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -65,10 +67,12 @@ class _MyHomePageState extends State<ActivityLog> {
             children: data.docs.map((DocumentSnapshot document) {
               final runData = document.data() as Map<String, dynamic>;
               return ListTile(
-                title: Text(runData['run']?.toString() ?? 'Unnamed Run'),
+                title: Text(runData['run'].toString()),
                 subtitle: Text(
-                  'Distance: ${runData['distance']?.toString() ?? 'N/A'} | Time: ${runData['time']?.toString() ?? 'N/A'}',
+                  '${runData['distance'] != null ? 'Distance: ${runData['distance']} Miles | ' : ''}Time: ${runData['time'].toString() } Minutes'
+                      '${runData['distance'] != null ? '\nAverage MPH: ${(runData['distance'] / (runData['time'] / 60))} ' : ''}',
                 ),
+
               );
             }).toList(),
           );
