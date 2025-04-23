@@ -43,7 +43,6 @@ class _MyHomePageState extends State<ActivityLog> {
 
   return Scaffold(
   backgroundColor: Color(0xFFEFF6E0),
-  appBar: AppBar(title: Text("Activity Log")),
       body: FutureBuilder<QuerySnapshot>(
         future: runs.get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
