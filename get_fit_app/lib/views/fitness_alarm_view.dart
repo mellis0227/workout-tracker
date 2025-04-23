@@ -57,7 +57,7 @@ class AlarmView extends StatefulWidget {
   _AlarmViewState createState() => _AlarmViewState();
 }
 
-class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
+class _AlarmViewState extends State<AlarmView> with AutomaticKeepAliveClientMixin implements AlarmViewContract {
   late AlarmPresenter _presenter;
   String _currentTime = '';
   String? _alarmTime;
@@ -146,6 +146,7 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -273,4 +274,7 @@ class _AlarmViewState extends State<AlarmView> implements AlarmViewContract {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
