@@ -38,7 +38,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
   @override
   String get lastName => _lastNameController.text;
 
-  bool _register = true; // Whether user is registering or logging in
+  bool _register = false; // Whether user is registering or logging in
   double registerToLoginPadding = 0;
   @override
   void initState() {
