@@ -66,7 +66,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white70,
+      backgroundColor: Color(0xFFEFF6E0),
       body: Padding(
         //conditional padding for no schedule overflow, temporary solution
         padding: EdgeInsets.all(fullName.length > 12 ? 12 : 18),
@@ -77,7 +77,7 @@ class _DashboardViewState extends State<DashboardView> {
             Center(
               child: buildWelcomeText(context),
             ),
-           const SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
@@ -99,14 +99,16 @@ class _DashboardViewState extends State<DashboardView> {
                 Text(
                   "Workout Schedule",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1C1C1E),
-                  ),
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1C1C1E),
+                      ),
                 ),
                 const SizedBox(width: 5),
                 TextButton(
                     child: Text(
-                      !viewWorkoutPlan ? "Press to View Workouts" : "Close Workouts",
+                      !viewWorkoutPlan
+                          ? "Press to View Workouts"
+                          : "Close Workouts",
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.black,
@@ -149,7 +151,7 @@ class _DashboardViewState extends State<DashboardView> {
             _buildTile(context, Icons.music_note_rounded, 'Music Player', 6),
 
             //conditional check so no overlapping widgets after view workout is pressed
-            if(!viewWorkoutPlan) ... [
+            if (!viewWorkoutPlan) ...[
               _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
               _buildTile(context, Icons.timeline, 'Activity Log', 4),
             ]

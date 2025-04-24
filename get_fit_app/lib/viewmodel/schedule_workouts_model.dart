@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class ScheduleModel {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -18,9 +17,8 @@ class ScheduleModel {
         await docRef.update({
           "playlist": FieldValue.arrayUnion([playlistName]),
         });
-     }
-
-    }catch(e){
+      }
+    } catch (e) {
       print("Failed to set $playlistName on $dayOfWeek within database");
     }
   }
@@ -40,16 +38,13 @@ class ScheduleModel {
       final workoutPlan = firestore.collection('user_data/$userID/workout_schedule');
       final weekdaySnapshot = await workoutPlan.get();
 
-
-      for(var doc in weekdaySnapshot.docs) {
+      for (var doc in weekdaySnapshot.docs) {
         final weekDay = doc.id;
         final listOfPlaylists = doc.data()["playlist"];
         mappedSchedule[weekDay] = listOfPlaylists;
-
       }
       return mappedSchedule;
-
-    } catch(e) {
+    } catch (e) {
       print("Failed to build map");
       return {};
     }
@@ -63,8 +58,7 @@ class ScheduleModel {
       await docRef.update({
         "playlist": FieldValue.arrayRemove([playlistName]),
       });
-
-    }catch(e){
+    } catch (e) {
       print("Failed to remove $playlistName on $dayOfWeek within database");
     }
   }

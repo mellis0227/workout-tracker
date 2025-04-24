@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
+
 /*
   notes:
    added onto dashboard instead of seperate page,
@@ -12,11 +13,9 @@ class ScheduleWorkoutView extends StatefulWidget {
   final VoidCallback? onPlaylistScheduled;
   const ScheduleWorkoutView({super.key, required this.viewWorkouts, this.onPlaylistScheduled});
 
-
- @override
- _ScheduleWorkoutView createState() => _ScheduleWorkoutView();
+  @override
+  _ScheduleWorkoutView createState() => _ScheduleWorkoutView();
 }
-
 
 class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
   final ScheduleWorkoutPresenter _presenter = ScheduleWorkoutPresenter();
@@ -42,30 +41,30 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
     getPlaylistsAndSetMap(userID!);
  }
 
-
- @override
- Widget build(BuildContext context) {
-   return Scaffold(
-       body: Column(
-       children: [
-         SingleChildScrollView(
-           scrollDirection: Axis.horizontal,
-           child: Row(
-             children: [
-               _buildWeekDayCard(dayOfWeek: "Monday"),
-               _buildWeekDayCard(dayOfWeek: "Tuesday"),
-               _buildWeekDayCard(dayOfWeek: "Wednesday"),
-               _buildWeekDayCard(dayOfWeek: "Thursday"),
-               _buildWeekDayCard(dayOfWeek: "Friday"),
-               _buildWeekDayCard(dayOfWeek: "Saturday"),
-               _buildWeekDayCard(dayOfWeek: "Sunday"),
-             ],
-           ),
-         ),
-       ],
-     ),
-   );
- }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFFEFF6E0),
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildWeekDayCard(dayOfWeek: "Monday"),
+                _buildWeekDayCard(dayOfWeek: "Tuesday"),
+                _buildWeekDayCard(dayOfWeek: "Wednesday"),
+                _buildWeekDayCard(dayOfWeek: "Thursday"),
+                _buildWeekDayCard(dayOfWeek: "Friday"),
+                _buildWeekDayCard(dayOfWeek: "Saturday"),
+                _buildWeekDayCard(dayOfWeek: "Sunday"),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildWeekDayCard({required String dayOfWeek}) {
     return Padding(
@@ -129,20 +128,20 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: playlists.isNotEmpty ? buildListOfScheduledWorkouts(playlists, weekday)
+          child: playlists.isNotEmpty
+              ? buildListOfScheduledWorkouts(playlists, weekday)
               : Center(
-                child: Text(
-                  "Off Day",
-                  style: TextStyle(
-                    color: Color(0xFFAEC3B0),
-                    fontSize: 20,
-                    //fontWeight: FontWeight.bold,
+                  child: Text(
+                    "Off Day",
+                    style: TextStyle(
+                      color: Color(0xFFAEC3B0),
+                      fontSize: 20,
+                      //fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              )
-        ),
-      );
-    }
+                )),
+    );
+  }
 
   ListView buildListOfScheduledWorkouts(List<dynamic> playlists, String weekday) {
     return ListView.builder(
@@ -177,24 +176,30 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
           );
   }
 
-
- AlertDialog buildPlaylistAlert(String dayOfWeek) {
+  AlertDialog buildPlaylistAlert(String dayOfWeek) {
     String formattedTime = dayOfWeek;
     return AlertDialog(
       backgroundColor: Color(0xFF01161E),
-      title: Text("Select Your Workouts", style: TextStyle(color: Colors.white70),),
+      title: Text(
+        "Select Your Workouts",
+        style: TextStyle(color: Colors.white70),
+      ),
       content: SizedBox(
         height: 50,
         child: Column(
           children: [
             DropdownButton<String>(
               dropdownColor: Color(0xFF01161E),
-              hint: Text(playlists.isNotEmpty ? "Playlists" : "No Playlists!", style: TextStyle(color: Colors.white70)),
+              hint: Text(playlists.isNotEmpty ? "Playlists" : "No Playlists!",
+                  style: TextStyle(color: Colors.white70)),
               isExpanded: true,
               items: playlists.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value, style: TextStyle(color: Colors.white70),),
+                  child: Text(
+                    value,
+                    style: TextStyle(color: Colors.white70),
+                  ),
                 );
               }).toList(),
               onChanged: (value) async {
@@ -220,6 +225,3 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
     );
   }
 }
-
-
-

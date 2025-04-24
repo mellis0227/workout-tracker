@@ -33,7 +33,7 @@ class _HomeViewState extends State<HomeView> {
     _presenter = HomePresenter(); // Initialize presenter
     _pages = [
       DashboardView(onTabSelected: _onSelectTab), // Dashboard screen
-      const AlarmApp(),
+      const AlarmView(),
       const RunningLogView(),
       const LiftingLogView(), // Fitness alarm screen
       const ActivityLog(), // Activity log screen
@@ -150,9 +150,9 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
           // Animated transition between pages
-          body: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: _pages[index], // Display the selected page
+          body: IndexedStack(
+            index: index,
+            children: _pages,
           ),
         );
       },

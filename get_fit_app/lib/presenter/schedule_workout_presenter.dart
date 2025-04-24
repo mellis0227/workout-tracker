@@ -5,7 +5,6 @@ class ScheduleWorkoutPresenter {
   WorkoutApiModel playlistModel = WorkoutApiModel();
   ScheduleModel scheduleModel = ScheduleModel();
 
-
   Future<List> getPlaylists(String userID) {
     return playlistModel.getWorkoutPlans(userID);
   }
