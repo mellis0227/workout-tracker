@@ -4,7 +4,6 @@ import 'package:wheel_picker/wheel_picker.dart';
 import 'package:ruler_slider/ruler_slider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
-import 'package:units_converter/units_converter.dart';
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
@@ -38,7 +37,7 @@ class _MyHomePageState extends State<Profile> {
   int selectedCentimeters = 0;
   double selectedWeightLbs = 0.0;
   double selectedWeightKgs = 0.0;
-  List<Widget> heightMetrics = <Widget>[Text('ft'), Text('m')];
+  List<Widget> heightMetrics = <Widget>[Text('Ft'), Text('m')];
   List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
   late DateTime date = DateTime(2025, 4, 15);
   final TextEditingController _weightController = TextEditingController();
@@ -70,7 +69,7 @@ class _MyHomePageState extends State<Profile> {
               itemCount: 9,
               builder: (context, index) => Text("${index} ft", style:
               TextStyle(fontSize: 30.0)),
-              selectedIndexColor: Colors.blue,
+              selectedIndexColor: Color(0xFF598392),
               onIndexChanged: (index, _) {
                 setState(() {
                   selectedFeet = index;
@@ -89,7 +88,7 @@ class _MyHomePageState extends State<Profile> {
               itemCount: 12,
               builder: (context, index) => Text("$index in", style:
               TextStyle(fontSize: 30.0)),
-              selectedIndexColor: Colors.blue,
+              selectedIndexColor: Color(0xFF598392),
               onIndexChanged: (index, _) {
                 setState(() {
                   selectedInches = index;
@@ -140,7 +139,7 @@ class _MyHomePageState extends State<Profile> {
                   itemCount: 4,
                   builder: (context, index) => Text("${index}", style:
                   TextStyle(fontSize: 30.0)),
-                  selectedIndexColor: Colors.blue,
+                  selectedIndexColor: Color(0xFF598392),
                   onIndexChanged: (index, _) {
                     setState(() {
                       selectedMeters = index;
@@ -159,7 +158,7 @@ class _MyHomePageState extends State<Profile> {
                   itemCount: 10,
                   builder: (context, index) => Text(".$index", style:
                   TextStyle(fontSize: 30.0)),
-                  selectedIndexColor: Colors.blue,
+                  selectedIndexColor: Color(0xFF598392),
                   onIndexChanged: (index, _) {
                     setState(() {
                       selectedCentimeters = index;
@@ -212,18 +211,18 @@ class _MyHomePageState extends State<Profile> {
               selectedBarColor: Colors.grey,
               unselectedBarColor: Colors.grey,
               tickSpacing: 30.0,
-              valueTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
+              valueTextStyle: TextStyle(color: Color(0xFF598392), fontSize: 18),
               onChanged: (double value) {
                 setState(() {
                   selectedWeightLbs = value;
                 });
               },
               showFixedBar: true,
-              fixedBarColor: Colors.blue,
+              fixedBarColor: Color(0xFF598392),
               fixedBarWidth: 3.0,
               fixedBarHeight: 40.0,
               showFixedLabel: true,
-              fixedLabelColor: Colors.blue,
+              fixedLabelColor: Color(0xFF598392),
               scrollSensitivity: 3.0,
               enableSnapping: true,
               majorTickInterval: 5,
@@ -276,18 +275,18 @@ class _MyHomePageState extends State<Profile> {
               selectedBarColor: Colors.grey,
               unselectedBarColor: Colors.grey,
               tickSpacing: 30.0,
-              valueTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
+              valueTextStyle: TextStyle(color: Color(0xFF598392), fontSize: 18),
               onChanged: (double value) {
                 setState(() {
                   selectedWeightKgs = value;
                 });
               },
               showFixedBar: true,
-              fixedBarColor: Colors.blue,
+              fixedBarColor: Color(0xFF598392),
               fixedBarWidth: 3.0,
               fixedBarHeight: 40.0,
               showFixedLabel: true,
-              fixedLabelColor: Colors.blue,
+              fixedLabelColor: Color(0xFF598392),
               scrollSensitivity: 3.0,
               enableSnapping: true,
               majorTickInterval: 5,
@@ -344,22 +343,27 @@ class _MyHomePageState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xFFEFF6E0),
         appBar: AppBar(
           title: Text('Profile'),
           centerTitle: true,
         ),
         body: ListView(
           children: <Widget>[
-            Stack(children: [CircleAvatar(
+            SizedBox(height: 10),
+            Stack(children: [
+              CircleAvatar(
               minRadius: 60.0,
+              backgroundColor: Color(0xFFAEC3B0),
               child: CircleAvatar(
+                backgroundColor: Color(0xFFAEC3B0),
                   radius: 50.0,
                   backgroundImage: _imageBytes != null ? MemoryImage(_imageBytes!) : null,
                 child: _imageBytes == null
                 ? Icon(
                   Icons.person,
                   size: 70,
-                  color: Colors.grey.shade700,
+                  color: Color(0xFF598392),
                 )
                  : null
               ),
@@ -371,43 +375,42 @@ class _MyHomePageState extends State<Profile> {
                 onTap: pickImage,
                 child: CircleAvatar(
                   radius: 20,
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color(0xFF124559),
                   child: Icon(Icons.edit,
-                      color: Colors.white,
+                      color: Color(0xFFEFF6E0),
                       size: 20),
                 ),
               ),
             ),],),
                 Column(
                     children: <Widget>[
-                      SizedBox(height: 10,),
-
                       SizedBox(
                         height: 10,
                       ),
                       Text('Your Name',
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Color(0xFF124559),
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                           )),
                       SizedBox(
                         height: 10,
                       ),
-                      Divider(),
+                      Divider(color: Color(0xFFAEC3B0)),
                       ListTile(
                           title: Center(
                             child: Text('Birthday',
                               style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 20,
+                                color: Color(0xFF124559),
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                           subtitle: Text(
                               '${date.month}/${date.day}/${date.year}',
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xFF598392),
                                 fontSize: 20,
                               )
                           )
@@ -417,8 +420,8 @@ class _MyHomePageState extends State<Profile> {
                           return ElevatedButton(
                             child: Text('Edit'),
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.blue,
+                              foregroundColor: Color(0xFFAEC3B0),
+                              backgroundColor: Color(0xFF124559),
                             ),
                             onPressed: () async {
                               DateTime? newDate = await showDatePicker(
@@ -433,19 +436,20 @@ class _MyHomePageState extends State<Profile> {
                           );
                         },
                       ),
-                      Divider(),
+                      Divider(color: Color(0xFFAEC3B0)),
                       ListTile(
                           title: Center(
                             child: Text('Height',
                                 style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 20,
+                                  color: Color(0xFF124559),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
                                 )),
                           ),
                           subtitle: Text(
                               height,
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xFF598392),
                                 fontSize: 20,
                               )
                           )
@@ -471,6 +475,9 @@ class _MyHomePageState extends State<Profile> {
                           });
                         },
                         children: heightMetrics,
+                        color: Color(0xFFAEC3B0),
+                        selectedColor: Color(0xFF124559),
+                        fillColor: Color(0xFFAEC3B0),
                       ),
                       SizedBox(height: 20),
                       Container(
@@ -478,8 +485,8 @@ class _MyHomePageState extends State<Profile> {
                       ElevatedButton(
                         child: Text('Edit'),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue,
+                          foregroundColor: Color(0xFFAEC3B0),
+                          backgroundColor: Color(0xFF124559),
                         ),
                           onPressed: () {
                           if(isHeightSelected[0]) {
@@ -491,19 +498,21 @@ class _MyHomePageState extends State<Profile> {
                         }
                       ),
                       ),
-                      Divider(),
+                      Divider(color: Color(0xFFAEC3B0)),
                       ListTile(
                           title: Center(
                               child: Text('Weight',
                                   style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 20,)
+                                    color: Color(0xFF124559),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  )
                               )
                           ),
                           subtitle: Text(
                               weight,
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color(0xFF598392),
                                 fontSize: 20,
                               )
                           )
@@ -529,13 +538,16 @@ class _MyHomePageState extends State<Profile> {
                           });
                         },
                         children: weightMetrics,
+                        color: Color(0xFFAEC3B0),
+                        selectedColor: Color(0xFF124559),
+                        fillColor: Color(0xFFAEC3B0),
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
                           child: Text('Edit'),
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue,
+                            foregroundColor: Color(0xFFAEC3B0),
+                            backgroundColor: Color(0xFF124559),
                           ),
                           onPressed: () {
                            if (isWeightSelected[0]) {
@@ -546,7 +558,7 @@ class _MyHomePageState extends State<Profile> {
                            }
                            },
                       ),
-                      Divider(),
+
                     ]
                 )
           ],
