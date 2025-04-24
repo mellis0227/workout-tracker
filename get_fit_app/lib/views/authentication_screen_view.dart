@@ -118,15 +118,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
         key: _formKey, // Associate the form with the key
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.all(50)),
-            Text(
-              "Get Fit",
-              style: TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
             Padding(padding: EdgeInsets.all(40)),
+            Image(image: AssetImage("./assets/images/logo.png"), width: 300, height: 140),
+            Padding(padding: EdgeInsets.all(20)),
             Center(
               child: Container(
                 height: _register ? 500 : 340,
