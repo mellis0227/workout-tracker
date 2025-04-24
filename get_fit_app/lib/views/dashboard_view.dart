@@ -31,7 +31,6 @@ class _DashboardViewState extends State<DashboardView> {
   bool viewWorkoutPlan = false;
   List<dynamic> currentPlaylist = [];
   String? currentWeekday;
-  bool isScheduled = false;
 
   Future<void> getFullName(String userID) async {
     String tempFullName = await _presenter.getUsersFullName(userID);
@@ -43,10 +42,10 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Future<void> getPlaylist(String weekDay) async {
+    if(!mounted) return;
     List<dynamic> tempList = await _schedulePresenter.getWeekDayPlaylist(userID!, weekDay);
     setState(() {
       currentPlaylist = tempList;
-      isScheduled = currentPlaylist.isNotEmpty;
     });
   }
 
@@ -84,7 +83,7 @@ class _DashboardViewState extends State<DashboardView> {
             _buildCard(
               title: "Today's Workout",
               content: currentPlaylist.isEmpty ? "No workout scheduled. Let's get moving!" : "Today is $currentWeekday. Let's get moving!",
-              isScheduled: isScheduled,
+              hasSchedule: currentPlaylist.isNotEmpty,
             ),
             const SizedBox(height: 16),
 
@@ -184,7 +183,7 @@ class _DashboardViewState extends State<DashboardView> {
     required String title,
     required String content,
     bool isItalic = false,
-    bool isScheduled = false,
+    bool hasSchedule = false,
   }) {
     return Container(
       width: double.infinity,
@@ -214,7 +213,7 @@ class _DashboardViewState extends State<DashboardView> {
           ),
           const SizedBox(height: 8),
           // Display card content, optionally italicized
-          isScheduled ? Row(
+          hasSchedule ? Row(
             children: [
               Text(
                 content,
@@ -227,6 +226,7 @@ class _DashboardViewState extends State<DashboardView> {
              const SizedBox(width: 10),
              GestureDetector(
                onTap: () => {
+                 print(currentPlaylist),
                Navigator.of(context).push(
                  MaterialPageRoute(builder: (context) => DoWorkoutsView(playlists: currentPlaylist,)),
                 ),

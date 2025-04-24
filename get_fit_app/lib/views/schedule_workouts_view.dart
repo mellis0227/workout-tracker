@@ -80,7 +80,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
           child: Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
