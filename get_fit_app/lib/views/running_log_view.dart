@@ -4,14 +4,27 @@ import '../viewmodel/running_log_model.dart';
 import '../presenter/running_log_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class RunningLogView extends StatefulWidget {
+class RunningLogView extends StatelessWidget {
   const RunningLogView({super.key});
 
   @override
-  _RunningLogViewState createState() => _RunningLogViewState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Run/Walk Log',
+      home: runningLog(),
+    );
+  }
 }
 
-class _RunningLogViewState extends State<RunningLogView> {
+class runningLog extends StatefulWidget {
+  const runningLog({super.key});
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<runningLog> {
+  final TextEditingController _runController = TextEditingController();
   final TextEditingController _distanceController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final RunningLogPresenter _presenter = RunningLogPresenter();
@@ -34,21 +47,19 @@ class _RunningLogViewState extends State<RunningLogView> {
       return;
     }
 
-    if (_selectedExercise.isEmpty ||
-        _distanceController.text.isEmpty ||
-        _timeController.text.isEmpty) {
-      _showVanishingMessage('Please fill in all fields.');
+    if (_selectedExercise.isEmpty || _timeController.text.isEmpty) {
       return;
     }
 
     Run run = Run(
       run: _selectedExercise,
-      distance: int.tryParse(_distanceController.text) ?? 0,
+      distance: int.tryParse(_distanceController.text) ?? null,
       time: int.tryParse(_timeController.text) ?? 0,
       userID: _userID ?? "",
     );
 
     _presenter.logRun(_userID!, run);
+
     _distanceController.clear();
     _timeController.clear();
     _showVanishingMessage('Exercise logged successfully!');
@@ -74,6 +85,7 @@ class _RunningLogViewState extends State<RunningLogView> {
 
   @override
   void dispose() {
+    _runController.dispose();
     _distanceController.dispose();
     _timeController.dispose();
     _vanishingTimer?.cancel();
@@ -83,33 +95,35 @@ class _RunningLogViewState extends State<RunningLogView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEFF6E0), // Beige
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFAEC3B0), // Ash gray
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text('Run/Walk Log'),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   DropdownButtonFormField<String>(
                     value: _selectedExercise,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Select exercise',
                       border: OutlineInputBorder(),
                     ),
-                    items: ['Run', 'Walk'].map((String exercise) {
+                    items: [
+                      'Run',
+                      'Walk',
+                      'Swim',
+                      'Bike',
+                      'Basketball',
+                      'Soccer',
+                      'Baseball',
+                      'Dance',
+                      'Football'
+                    ].map((String exercise) {
                       return DropdownMenuItem<String>(
                         value: exercise,
                         child: Text(exercise),
@@ -121,55 +135,54 @@ class _RunningLogViewState extends State<RunningLogView> {
                       });
                     },
                   ),
-                  const SizedBox(height: 20),
+                  Text("Distance (optional)"),
                   TextField(
                     controller: _distanceController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Distance (miles)',
+                    decoration: InputDecoration(
+                      labelText: 'Enter distance here (miles)',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
+                  Text("Time"),
                   TextField(
                     controller: _timeController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Time (minutes)',
+                    decoration: InputDecoration(
+                      labelText: 'Enter Time here (minutes)',
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logRun,
+                    child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color(0xFF124559), // Midnight green
+                      backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                     ),
-                    child: const Text('Log Exercise'),
                   ),
+                  Column(
+                    children: [
+                      if (_vanishingMessage.isNotEmpty)
+                        Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Text(
+                              _vanishingMessage,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  )
                 ],
               ),
             ),
-            if (_vanishingMessage.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              Text(
-                _vanishingMessage,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF124559),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ]
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

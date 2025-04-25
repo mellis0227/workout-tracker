@@ -17,33 +17,33 @@ class AuthenticationPresenter {
   AuthenticationPresenter(this._view);
 
   // Method to authenticate the user based on whether they're logging in or registering.
-  Future<void> authenticate(BuildContext context) async {
-    // Validate form inputs (email and password).
+  Future<void> authenticate(BuildContext context, bool isRegisterMode) async {
     print(_view.email);
     print(_view.password);
     print(_view.lastName);
     print(_view.firstName);
+    print("isRegisterMode: $isRegisterMode");
 
     if (_view.email.isEmpty ||
         _view.password.isEmpty ||
-        (_register && _view.passwordConfirmation == null)) {
-      _view.showErrorMessage(
-          'Please fill in all fields.'); // Show error message if fields are empty.
+        (isRegisterMode &&
+            (_view.passwordConfirmation == null ||
+                _view.passwordConfirmation!.isEmpty))) {
+      _view.showErrorMessage('Please fill in all fields.');
       return;
     }
 
-    if (_register && _view.password != _view.passwordConfirmation) {
-      _view.showErrorMessage(
-          'Passwords do not match.'); // Show error message if passwords don't match.
+    if (isRegisterMode &&
+        (_view.passwordConfirmation == null ||
+            _view.password != _view.passwordConfirmation)) {
+      _view.showErrorMessage('Passwords do not match.');
       return;
     }
 
     try {
-      // Create a UserModel with the email and password.
       UserModel user;
 
-      if (_register) {
-        // Include firstName and lastName in the UserModel if it's a registration.
+      if (isRegisterMode) {
         user = UserModel(
           email: _view.email,
           password: _view.password,
@@ -52,22 +52,17 @@ class AuthenticationPresenter {
         );
         _authService.setUserInDatabase(user);
       } else {
-        // For login, only pass email and password.
         user = UserModel(
           email: _view.email,
           password: _view.password,
         );
       }
 
-      // Call AuthService to perform the authentication.
-      await _authService.authenticate(user, _register);
-      //sends to home page
+      await _authService.authenticate(user, isRegisterMode);
       context.go("/home");
-      // Show a success message once authentication is successful.
       _view.showSuccessMessage(
-          _register ? 'Registration Successful' : 'Login Successful');
+          isRegisterMode ? 'Registration Successful' : 'Login Successful');
     } catch (e) {
-      // If authentication fails, show an error message.
       _view.showErrorMessage('Error: $e');
     }
   }

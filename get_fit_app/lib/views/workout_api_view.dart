@@ -115,7 +115,6 @@ class _WorkoutAPIScreenState extends State<WorkoutAPIScreen> {
                           color: Color(0xFF124559),
                           fontSize: 18)),
                   onPressed: () {
-                    // Show the playlist management dialog
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => playListCreationScreen());
