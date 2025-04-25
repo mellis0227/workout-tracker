@@ -10,7 +10,6 @@ class WorkoutAPIPresenter {
   // It calls the model's fetchWorkoutData function and returns the data
   Future<List> retrieveWorkoutAPIData(String nameParameter,
       String parameterMatcher) async {
-    print("oerh");
     return await model.fetchWorkoutData(nameParameter, parameterMatcher);
   }
 
