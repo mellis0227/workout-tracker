@@ -93,7 +93,7 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Text(

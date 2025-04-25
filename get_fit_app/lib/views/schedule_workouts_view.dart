@@ -79,7 +79,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
           child: Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -95,6 +95,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                       const SizedBox(width: 10),
                       GestureDetector(
                         onTap: () {
+                          getPlaylistsAndSetMap(userID!);
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => buildPlaylistAlert(dayOfWeek),
@@ -102,7 +103,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                         },
                         child: Icon(
                           Icons.add_box_outlined,
-                          size: 18,
+                          size: 22,
                           color: Color(0xFFAEC3B0),
                         ),
                       ),
@@ -155,7 +156,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                     playlists[index],
                     style: TextStyle(
                       color: Color(0xFFAEC3B0),
-                      fontSize: 13,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -168,7 +169,7 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
                             weeklyWorkouts[weekday]?.remove(playlists[index]);
                           }),
                     },
-                    child: Icon(Icons.cancel_outlined, color: Colors.red.shade200, size: 15, ),
+                    child: Icon(Icons.cancel_outlined, color: Colors.red.shade200, size: 19, ),
                   )
                 ],
               );
@@ -205,13 +206,11 @@ class _ScheduleWorkoutView extends State<ScheduleWorkoutView> {
               onChanged: (value) async {
                 await _presenter.setWeekdayInFirebase(userID!, value!, dayOfWeek);
                 widget.onPlaylistScheduled?.call();
-                print("called on changed");
                 if(!weeklyWorkouts[dayOfWeek]!.contains(value)){
                   setState(() {
                     weeklyWorkouts[dayOfWeek]?.add(value);
                   });
                 };
-               // print(_presenter.formatScheduleSubtext(weeklyWorkouts[dayOfWeek]!)),
 
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
