@@ -8,8 +8,8 @@ class WorkoutAPIPresenter {
 
   // This function retrieves workout data from the API based on the name and matcher parameters
   // It calls the model's fetchWorkoutData function and returns the data
-  Future<List> retrieveWorkoutAPIData(
-      String nameParameter, String parameterMatcher) async {
+  Future<List> retrieveWorkoutAPIData(String nameParameter,
+      String parameterMatcher) async {
     return await model.fetchWorkoutData(nameParameter, parameterMatcher);
   }
 
@@ -17,6 +17,7 @@ class WorkoutAPIPresenter {
   // It passes the user ID, plan name, workout data, and the specific index to the model
   Future<void> setWorkoutDetails(String userID, String planName,
       List<dynamic> workoutData, int index) async {
+
     await model.setWorkoutDetails(userID, planName, workoutData, index);
   }
 
@@ -30,5 +31,9 @@ class WorkoutAPIPresenter {
   // It calls the model's setWorkoutPlanName method to save the plan name
   Future<void> setWorkoutPlanName(String planName, String userID) async {
     await model.setWorkoutPlanName(planName, userID);
+  }
+
+  Future<List> retrieveUserPlaylistData(String playlist, String userID) async {
+    return await model.getPlaylistData(playlist, userID);
   }
 }
