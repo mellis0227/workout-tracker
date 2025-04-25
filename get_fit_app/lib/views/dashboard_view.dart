@@ -127,12 +127,13 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
               ],
             ),
-            Expanded(
+            SizedBox(
+              height: !viewWorkoutPlan ? 80 : 225,
               child: ScheduleWorkoutView(
                 viewWorkouts: viewWorkoutPlan,
-                onPlaylistScheduled: ()  {
-                   getPlaylist(currentWeekday!);
-                }
+                onPlaylistScheduled: () {
+                  getPlaylist(currentWeekday!);
+                },
               ),
             ),
             // Quick Access section header
@@ -189,7 +190,7 @@ class _DashboardViewState extends State<DashboardView> {
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Color(0xFF598392),
         borderRadius: BorderRadius.circular(16),
