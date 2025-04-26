@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_fit_app/views/profile_view.dart';
+import 'package:get_fit_app/views/schedule_workouts_view.dart';
 import '../presenter/home_presenter.dart';
 import 'activity_log.dart';
 import 'fitness_alarm_view.dart';
@@ -33,9 +34,9 @@ class _HomeViewState extends State<HomeView> {
     _presenter = HomePresenter(); // Initialize presenter
     _pages = [
       DashboardView(onTabSelected: _onSelectTab), // Dashboard screen
-      const AlarmApp(),
+      const AlarmView(),
       const RunningLogView(),
-      const LiftingLogView(),// Fitness alarm screen
+      const LiftingLogView(), // Fitness alarm screen
       const ActivityLog(), // Activity log screen
       const WorkoutAPIScreen(), // Workout API screen
       const MusicPlayerView(), // Music player screen
@@ -52,14 +53,15 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: _presenter.currentIndex, // Listen to changes in selected page
+      valueListenable:
+          _presenter.currentIndex, // Listen to changes in selected page
       builder: (context, index, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(_presenter.pageTitles[index]), // Set app bar title based on current page
+            title: Text(_presenter.pageTitles[index]),
             elevation: 0,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
+            backgroundColor: const Color(0xFF01161E), // Rich black
+            foregroundColor: const Color(0xFFEFF6E0), // Beige text
           ),
           drawer: Drawer(
             shape: const RoundedRectangleBorder(
@@ -73,9 +75,9 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 // Drawer header with a gradient background
                 DrawerHeader(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.blue.shade400, Colors.blue.shade700],
+                      colors: [Color(0xFF124559), Color(0xFF598392)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -108,7 +110,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.directions_run),
-                  title: const Text('Running Log'),
+                  title: const Text('Log Cardio'),
                   onTap: () {
                     _presenter.onSelectPage(2); // Switch to Activity Log
                     Navigator.pop(context);
@@ -116,7 +118,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.fitness_center),
-                  title: const Text('Lifting Log'),
+                  title: const Text('Log a Lift'),
                   onTap: () {
                     _presenter.onSelectPage(3); // Switch to Activity Log
                     Navigator.pop(context);
@@ -158,9 +160,9 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
           // Animated transition between pages
-          body: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: _pages[index], // Display the selected page
+          body: IndexedStack(
+            index: index,
+            children: _pages,
           ),
         );
       },

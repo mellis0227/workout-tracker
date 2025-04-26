@@ -1,7 +1,8 @@
-import "package:flutter/material.dart";
-import "package:just_audio/just_audio.dart";
+import 'package:flutter/material.dart';
+import '../viewmodel/music_model.dart';
+import '../presenter/music_presenter.dart';
+import 'music_view_contract.dart';
 
-// Music Player view widget
 class MusicPlayerView extends StatefulWidget {
   const MusicPlayerView({super.key});
 
@@ -9,102 +10,148 @@ class MusicPlayerView extends StatefulWidget {
   State<MusicPlayerView> createState() => _MusicPlayerViewState();
 }
 
-class _MusicPlayerViewState extends State<MusicPlayerView> {
-  final player = AudioPlayer(); // Audio player instance
-  Duration position = Duration.zero; // Current position of the audio
-  Duration duration = Duration.zero; // Total duration of the audio
+class _MusicPlayerViewState extends State<MusicPlayerView>
+    implements MusicViewContract {
+  late final MusicPresenter _presenter;
+  Duration _position = Duration.zero;
+  Duration _duration = Duration.zero;
+  bool _isPlaying = false;
 
-  // Function to format the duration as "MM:SS"
-  String formatDuration(Duration duration) {
+  @override
+  void initState() {
+    super.initState();
+    _presenter = MusicPresenter(this);
+    _presenter.init();
+  }
+
+  @override
+  void dispose() {
+    _presenter.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final song = _presenter.currentSong;
+    return Scaffold(
+      backgroundColor: const Color(0xFFEFF6E0),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (song != null)
+                  Image.asset(
+                    song.imagePath,
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                const SizedBox(height: 24),
+                DropdownButton<SongInfo>(
+                  value: song,
+                  onChanged: (newSong) {
+                    if (newSong != null) _presenter.selectSong(newSong);
+                  },
+                  items: _presenter.songs.map((song) {
+                    return DropdownMenuItem<SongInfo>(
+                      value: song,
+                      child: Text(song.displayName),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFAEC3B0),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8,
+                          offset: Offset(0, 4)),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          activeTrackColor: const Color(0xFF124559),
+                          inactiveTrackColor: Colors.black26,
+                          thumbColor: const Color(0xFF124559),
+                          overlayColor:
+                              const Color(0xFF124559).withOpacity(0.2),
+                        ),
+                        child: Slider(
+                          min: 0.0,
+                          max: _duration.inSeconds.toDouble(),
+                          value: _position.inSeconds
+                              .toDouble()
+                              .clamp(0.0, _duration.inSeconds.toDouble()),
+                          onChanged: _presenter.seek,
+                        ),
+                      ),
+                      Text(
+                        _formatDuration(_position),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF01161E),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      IconButton(
+                        iconSize: 48,
+                        icon: Icon(
+                          _isPlaying
+                              ? Icons.pause_circle_filled
+                              : Icons.play_circle_fill,
+                          color: const Color(0xFF124559),
+                        ),
+                        onPressed: _presenter.togglePlayPause,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDuration(Duration duration) {
     final minutes = duration.inMinutes.remainder(60);
     final seconds = duration.inSeconds.remainder(60);
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
 
-  // Function to handle play/pause action
-  void handlePlayPause() {
-    if (player.playing) {
-      player.pause(); // Pause if already playing
-    } else {
-      player.play(); // Play if paused
-    }
-  }
-
-  // Function to handle seeking within the audio
-  void handleSeek(double value) {
-    player.seek(Duration(seconds: value.toInt())); // Seek to the selected position
-  }
-
-  // Function to fetch and set the audio URL
-  Future<void> fetchPlayerUrl(String link) async {
-    try {
-      await player.setUrl(link); // Set the audio URL
-      final fetchedDuration = player.duration; // Get the duration of the audio
-      if (fetchedDuration != null) {
-        setState(() {
-          duration = fetchedDuration; // Update the duration state
-        });
-      }
-    } catch (e) {
-      print("Error fetching audio URL: $e"); // Handle error if URL fetch fails
-    }
-  }
-
-  // Initialize the player and fetch the audio
   @override
-  void initState() {
-    super.initState();
-    _setupPlayer();
+  void updatePosition(Duration position) {
+    setState(() => _position = position);
   }
 
-  // Setup the audio player with the given URL
-  Future<void> _setupPlayer() async {
-    // Call the fetchPlayerUrl function to load the audio URL
-    await fetchPlayerUrl('https://discoveryprovider.audius.co/v1/tracks/D7KyD/stream');
+  @override
+  void updateDuration(Duration duration) {
+    setState(() => _duration = duration);
+  }
 
-    // Listen for changes in the position of the audio
-    player.positionStream.listen((p) {
-      setState(() {
-        position = p; // Update the position of the audio
-      });
+  @override
+  void updatePlaybackStatus(bool isPlaying) {
+    setState(() => _isPlaying = isPlaying);
+  }
+
+  @override
+  void onSongChanged() {
+    setState(() {
+      _position = Duration.zero;
+      _duration = Duration.zero;
+      _isPlaying = false;
     });
-  }
-
-  // Dispose of the player when the widget is disposed
-  @override
-  void dispose() {
-    player.dispose(); // Dispose of the audio player to release resources
-    super.dispose();
-  }
-
-  // Build the widget UI
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0), // Add padding to the body
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
-          children: [
-            // Slider for controlling the position of the audio
-            Slider(
-              min: 0.0,
-              max: duration.inSeconds.toDouble(),
-              value: position.inSeconds
-                  .toDouble()
-                  .clamp(0.0, duration.inSeconds.toDouble()), // Ensure slider value is within bounds
-              onChanged: handleSeek, // Handle seeking when slider is moved
-            ),
-            // Display the formatted current position of the audio
-            Text(formatDuration(position)),
-            // Play/Pause button to toggle audio playback
-            IconButton(
-              icon: Icon(player.playing ? Icons.pause : Icons.play_arrow), // Change icon based on playback state
-              onPressed: handlePlayPause, // Handle play/pause action
-            )
-          ],
-        ),
-      ),
-    );
   }
 }

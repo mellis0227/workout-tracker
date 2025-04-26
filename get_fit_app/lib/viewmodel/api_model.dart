@@ -14,8 +14,9 @@ class WorkoutApiModel {
   // name parameter is the initial title ex: muscle, then parameter matcher is the specific type ex: biceps
   //passed parameters into hyperlink to return data
   // This function fetches workout data based on the provided nameParameter (e.g., 'muscle') and parameterMatcher (e.g., 'biceps')
-  Future<List<dynamic>> fetchWorkoutData(
-      String nameParameter, String parameterMatcher) async {
+  Future<List<dynamic>> fetchWorkoutData(String nameParameter,
+      String parameterMatcher) async {
+    print("yyyy");
     final String apiUrl =
         "https://api.api-ninjas.com/v1/exercises?$nameParameter=$parameterMatcher";
     final String apiKey = "YOUR_API_NINJAS_KEY";
@@ -29,7 +30,6 @@ class WorkoutApiModel {
         "Content-Type": "application/json",
       },
     );
-
     // Check if the response status code is 200 (OK), then decode the JSON response and return the data
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
@@ -56,22 +56,13 @@ class WorkoutApiModel {
       print("Error $e : issues setting workout plan name");
     }
   }
-  /*Not finished function, delete if i forgot to
 
-  Future<void> saveWorkoutToPlaylist(String planName, String userID){
-    try{
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      final workoutInPlaylist = firestore.collection('user_data/$userID/workout_plan/$planName');
-      await workoutInPlaylist.doc().set({"saved_workout" : )
-    }
-  }
-
-   */
   // This function sets the workout details for a specific workout in a user's workout plan
   // It takes the userID, planName, workoutData, and the index of the specific workout to update
   Future<void> setWorkoutDetails(String userID, String planName,
       List<dynamic> workoutData, int index) async {
+    print("hello");
     try {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       // Reference to the specific workout collection within the user's workout plan
@@ -81,9 +72,12 @@ class WorkoutApiModel {
           .collection("workouts");
       // Set the workout details in Firestore (difficulty and instructions)
       print(workoutData[index]);
-      await workoutPlan.doc(workoutData[index]["name"]).set({
+      await workoutPlan.doc(workoutData[index]['name']).set({
+        'muscle_group': workoutData[index]['muscle'],
         'workout_difficulty': workoutData[index]['difficulty'],
+        'workout_type': workoutData[index]['type'],
         'workout_details': workoutData[index]['instructions'],
+
       });
     } catch (e) {
       // Handle any errors during the Firestore operation
@@ -100,7 +94,6 @@ class WorkoutApiModel {
       final workoutPlansCollection =
       firestore.collection('user_data/$userID/workout_plans');
 
-
       // Fetch all workout plan documents from Firestore
       final querySnapshot = await workoutPlansCollection.get();
       List<dynamic> planNames = [];
@@ -115,5 +108,29 @@ class WorkoutApiModel {
       print("Error $e: unable to retrieve workout plan names");
       return [];
     }
+  }
+
+  // This function retrieves all the workout plans for a specific user from Firestore
+  // It returns a list of plan names
+  Future<List<dynamic>> getPlaylistData(String playlist, String userID) async {
+    List<dynamic> playlistData = [];
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      final workoutData = firestore.collection(
+          "user_data/$userID/workout_plans/$playlist/workouts");
+      final snapshot = await workoutData.get();
+      for (var doc in snapshot.docs) {
+        final workout = (
+        name: doc.id,
+        difficulty: doc.data()["workout_difficulty"],
+        instructions: doc.data()["workout_details"],
+        );
+        playlistData.add(workout);
+        //print( " hehe" + playlistData[0]['difficulty']);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return playlistData;
   }
 }

@@ -38,7 +38,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
   @override
   String get lastName => _lastNameController.text;
 
-  bool _register = true; // Whether user is registering or logging in
+  bool _register = false; // Whether user is registering or logging in
   double registerToLoginPadding = 0;
   @override
   void initState() {
@@ -94,19 +94,17 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
     return null;
   }
 
-  // Password confirmation validator (only in register mode)
   String? _passwordConfirmationValidator(String? value) {
-    if (_register && value != _passwordController.text) {
+    if (!_register) return null;
+    if (value != _passwordController.text) {
       return 'Passwords do not match';
     }
     return null;
   }
 
   String? _firstAndLastNameValidator(String? value) {
-    if (_register && _firstNameController.text.isEmpty) {
-      return "Enter first name";
-    } else if (_register && _firstNameController.text.isEmpty) {
-      return "Enter last name";
+    if (_register && value != null && value.isEmpty) {
+      return "This field is required";
     }
     return null;
   }
@@ -120,15 +118,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
         key: _formKey, // Associate the form with the key
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.all(50)),
-            Text(
-              "Get Fit",
-              style: TextStyle(
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
             Padding(padding: EdgeInsets.all(40)),
+            Image(image: AssetImage("./assets/images/logo.png"), width: 300, height: 140),
+            Padding(padding: EdgeInsets.all(20)),
             Center(
               child: Container(
                 height: _register ? 500 : 340,
@@ -173,45 +165,54 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
             ),
           ),
           Padding(padding: EdgeInsets.all(10)),
-          if(_register)
-            Row(
-              children: [
-                Flexible(
-                  child: AuthenticationTextFormField(
-                    label: "First Name",
-                    textEditingController: _firstNameController,
-                    validator: _firstAndLastNameValidator,
-                  ),
-                ),
-                Padding(padding: EdgeInsets.all(10),),
-                Flexible(
-                  child: AuthenticationTextFormField(
-                    label: "Last Name",
-                    textEditingController: _lastNameController,
-                    validator: _firstAndLastNameValidator,
-                  ),
+          _register
+              ? Row(
+                  children: [
+                    Flexible(
+                      child: AuthenticationTextFormField(
+                        label: "First Name",
+                        textEditingController: _firstNameController,
+                        validator: _firstAndLastNameValidator,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    Flexible(
+                      child: AuthenticationTextFormField(
+                        label: "Last Name",
+                        textEditingController: _lastNameController,
+                        validator: _firstAndLastNameValidator,
+                      ),
+                    ),
+                  ],
                 )
-              ],
-            ),
-          Padding(padding: EdgeInsets.all(10),),
+              : const SizedBox.shrink(),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
           AuthenticationTextFormField(
             label: 'Email',
             textEditingController: _emailController,
             validator: _emailValidator, // Use email validator
           ),
-          Padding(padding: EdgeInsets.all(10),),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
           AuthenticationTextFormField(
             label: 'Password',
             textEditingController: _passwordController,
             validator: _passwordValidator, // Use password validator
           ),
-          Padding(padding: EdgeInsets.all(10),),
+          Padding(
+            padding: EdgeInsets.all(10),
+          ),
           if (_register) // Only show confirmation in register mode
             AuthenticationTextFormField(
               label: 'Confirm Password',
               textEditingController: _passwordConfirmationController,
               validator:
-              _passwordConfirmationValidator, // Use confirmation validator
+                  _passwordConfirmationValidator, // Use confirmation validator
             ),
         ],
       ),
@@ -240,7 +241,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen>
       onPressed: () {
         if (_formKey.currentState?.validate() ?? false) {
           _presenter.authenticate(
-              context); // Delegate to presenter for authentication
+              context, _register); // Delegate to presenter for authentication
         }
       },
       style: ButtonStyle(

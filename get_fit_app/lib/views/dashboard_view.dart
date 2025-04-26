@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_fit_app/presenter/schedule_workout_presenter.dart';
+import 'package:get_fit_app/views/schedule_workouts_view.dart';
 import '../presenter/dashboard_presenter.dart';
 import '../viewmodel/dashboard_model.dart';
+import 'do_workouts_view.dart';
 
 class DashboardView extends StatefulWidget {
   final void Function(int index)? onTabSelected; // Callback for tab selection
@@ -17,36 +20,56 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   late final DashboardPresenter _presenter;
+  late final ScheduleWorkoutPresenter _schedulePresenter;
   late String welcomeMessage; // Get welcome message
   late String quote; // Get motivational quote// Presenter to handle logic
   //the userID is capable of fetching data && full name is the users displayed name
   String? userID;
   String fullName = "";
+  DateTime currentDate = DateTime.now();
+  String currentDateString = "";
+  bool viewWorkoutPlan = false;
+  List<dynamic> currentPlaylist = [];
+  String? currentWeekday;
 
   Future<void> getFullName(String userID) async {
     String tempFullName = await _presenter.getUsersFullName(userID);
     setState(() {
-      if(tempFullName.isNotEmpty) {
+      if (tempFullName.isNotEmpty) {
         fullName = tempFullName;
       }
     });
   }
 
+  Future<void> getPlaylist(String weekDay) async {
+    if(!mounted) return;
+    List<dynamic> tempList = await _schedulePresenter.getWeekDayPlaylist(userID!, weekDay);
+    setState(() {
+      currentPlaylist = tempList;
+    });
+  }
+
+
+
   @override
   void initState() {
     super.initState();
     _presenter = DashboardPresenter(model: DashboardModel());
+    _schedulePresenter = ScheduleWorkoutPresenter();
     userID = FirebaseAuth.instance.currentUser?.email;
     getFullName(userID!);
+    currentWeekday = _presenter.getWeekdayString(currentDate);
+    getPlaylist(currentWeekday!);
     quote = _presenter.getMotivationalQuote(); // Get motivational quote// Presenter to handle logic
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white70,
+      backgroundColor: Color(0xFFEFF6E0),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        //conditional padding for no schedule overflow, temporary solution
+        padding: EdgeInsets.all(fullName.length > 12 ? 12 : 18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,12 +77,13 @@ class _DashboardViewState extends State<DashboardView> {
             Center(
               child: buildWelcomeText(context),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 30),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
               title: "Today's Workout",
-              content: "No workout scheduled. Let's get moving!",
+              content: currentPlaylist.isEmpty ? "No workout scheduled. Let's get moving!" : "Today is $currentWeekday. Let's get moving!",
+              hasSchedule: currentPlaylist.isNotEmpty,
             ),
             const SizedBox(height: 16),
 
@@ -69,24 +93,69 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 24),
-
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Text(
+                  "Workout Schedule",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1C1C1E),
+                      ),
+                ),
+                const SizedBox(width: 5),
+                TextButton(
+                    child: Text(
+                      !viewWorkoutPlan
+                          ? "Press to View Workouts"
+                          : "Close Workouts",
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () => {
+                      setState(() {
+                        if(viewWorkoutPlan){
+                          viewWorkoutPlan = false;
+                        } else {
+                          viewWorkoutPlan = true;
+                        }
+                      }),
+                    }
+                ),
+              ],
+            ),
+            SizedBox(
+              height: !viewWorkoutPlan ? 80 : 225,
+              child: ScheduleWorkoutView(
+                viewWorkouts: viewWorkoutPlan,
+                onPlaylistScheduled: () {
+                  getPlaylist(currentWeekday!);
+                },
+              ),
+            ),
             // Quick Access section header
+
+            // Quick access tiles for different functionalities
             Text(
               "Quick Access",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF1C1C1E),
-                letterSpacing: .8
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1C1C1E),
+                  letterSpacing: .8
               ),
             ),
-            Padding(padding: EdgeInsets.all(10)),
-
-            // Quick access tiles for different functionalities
-            _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
-            _buildTile(context, Icons.timeline, 'Activity Log', 4),
+            Padding(padding: EdgeInsets.all(4)),
             _buildTile(context, Icons.api, 'Find Workouts', 5),
             _buildTile(context, Icons.music_note_rounded, 'Music Player', 6),
+
+            //conditional check so no overlapping widgets after view workout is pressed
+            if (!viewWorkoutPlan) ...[
+              _buildTile(context, Icons.alarm, 'Fitness Alarm', 1),
+              _buildTile(context, Icons.timeline, 'Activity Log', 4),
+            ]
           ],
         ),
       ),
@@ -94,14 +163,13 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Text buildWelcomeText(BuildContext context) {
-    if(fullName.length <= 12){
+    if (fullName.length <= 12) {
       return Text(
         fullName.isNotEmpty ? "Welcome Back, $fullName!" : "Welcome Back!",
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w800,
             color: const Color(0xFF1C1C1E),
-            letterSpacing: .5
-        ),
+            letterSpacing: .5),
       );
     }
     return Text(
@@ -109,8 +177,7 @@ class _DashboardViewState extends State<DashboardView> {
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
           fontWeight: FontWeight.w800,
           color: const Color(0xFF1C1C1E),
-          letterSpacing: .5
-      ),
+          letterSpacing: .5),
     );
   }
 
@@ -119,10 +186,11 @@ class _DashboardViewState extends State<DashboardView> {
     required String title,
     required String content,
     bool isItalic = false,
+    bool hasSchedule = false,
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Color(0xFF598392),
         borderRadius: BorderRadius.circular(16),
@@ -148,6 +216,32 @@ class _DashboardViewState extends State<DashboardView> {
           ),
           const SizedBox(height: 8),
           // Display card content, optionally italicized
+          hasSchedule ? Row(
+            children: [
+              Text(
+                content,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: const Color(0xFFAEC3B0),
+                  fontStyle: isItalic ? FontStyle.italic : FontStyle.normal,
+                ),
+              ),
+             const SizedBox(width: 10),
+             GestureDetector(
+               onTap: () => {
+                 print(currentPlaylist),
+               Navigator.of(context).push(
+                 MaterialPageRoute(builder: (context) => DoWorkoutsView(playlists: currentPlaylist,)),
+                ),
+               },
+               child: Icon(
+                 Icons.start_rounded,
+                 color: Colors.white,
+                 size: 30,
+               )
+             ),
+            ],
+          ) :
           Text(
             content,
             style: TextStyle(
@@ -167,7 +261,8 @@ class _DashboardViewState extends State<DashboardView> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: InkWell(
-        onTap: () => widget.onTabSelected?.call(tabIndex), // Calls callback on tap
+        onTap: () =>
+            widget.onTabSelected?.call(tabIndex), // Calls callback on tap
         borderRadius: BorderRadius.circular(16),
         child: Container(
           decoration: BoxDecoration(

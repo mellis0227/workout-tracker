@@ -4,14 +4,13 @@ import '../viewmodel/running_log_model.dart';
 import '../presenter/running_log_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class RunningLogView extends StatelessWidget {
   const RunningLogView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Run/Walk Log',
+      title: 'Log Cardio',
       home: runningLog(),
     );
   }
@@ -35,42 +34,36 @@ class _MyHomePageState extends State<runningLog> {
   String _selectedExercise = 'Run';
   String? _userID;
 
-@override
-void initState() {
-  super.initState();
-  _userID = FirebaseAuth.instance.currentUser?.email;
-  print("Current user ID: $_userID");
-
-}
-
+  @override
+  void initState() {
+    super.initState();
+    _userID = FirebaseAuth.instance.currentUser?.email;
+    print("Current user ID: $_userID");
+  }
 
   void _logRun() {
-  if (_userID == null) {
-    _showVanishingMessage('User not logged in.');
-    return;
+    if (_userID == null) {
+      _showVanishingMessage('User not logged in.');
+      return;
+    }
+
+    if (_selectedExercise.isEmpty || _timeController.text.isEmpty) {
+      return;
+    }
+
+    Run run = Run(
+      run: _selectedExercise,
+      distance: int.tryParse(_distanceController.text) ?? null,
+      time: int.tryParse(_timeController.text) ?? 0,
+      userID: _userID ?? "",
+    );
+
+    _presenter.logRun(_userID!, run);
+
+    _distanceController.clear();
+    _timeController.clear();
+    _showVanishingMessage('Exercise logged successfully!');
   }
-
-  if (_selectedExercise.isEmpty ||
-      _distanceController.text.isEmpty ||
-      _timeController.text.isEmpty) {
-    return;
-  }
-
-  Run run = Run(
-    run: _selectedExercise,
-    distance: int.tryParse(_distanceController.text) ?? 0,
-    time: int.tryParse(_timeController.text) ?? 0,
-    userID: _userID ?? "",
-  );
-
-  _presenter.logRun(_userID!, run);
-
-  _distanceController.clear();
-  _timeController.clear();
-  _showVanishingMessage('Exercise logged successfully!');
-}
-
-
 
   void _showVanishingMessage(String message) {
     setState(() {
@@ -102,61 +95,87 @@ void initState() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFEFF6E0),
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('Run/Walk Log'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+           children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFAEC3B0), // Ash gray
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(
+                color: Colors.black12,
+               blurRadius: 8,
+                offset: Offset(0, 4),
+               ),
+              ],
+            ),
               child: Column(
                 children: [
                   DropdownButtonFormField<String>(
                     value: _selectedExercise,
                     decoration: InputDecoration(
-                     labelText: 'Select exercise',
-                     border: OutlineInputBorder(),
+                      labelText: 'Select exercise',
+                      border: OutlineInputBorder(),
                     ),
-                    items: ['Run', 'Walk'].map((String exercise) {
-                     return DropdownMenuItem<String>(
-                       value: exercise,
-                       child: Text(exercise),
-                       );
-                      }).toList(),
+                    items: [
+                      'Run',
+                      'Walk',
+                      'Swim',
+                      'Bike',
+                      'Basketball',
+                      'Soccer',
+                      'Baseball',
+                      'Dance',
+                      'Football'
+                    ].map((String exercise) {
+                      return DropdownMenuItem<String>(
+                        value: exercise,
+                        child: Text(exercise),
+                      );
+                    }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
                         _selectedExercise = newValue!;
-                          });
-                         },
-                       ),
-                  Text("Distance (miles)"),
+                      });
+                    },
+                  ),
+                  Text("Distance (optional)"),
                   TextField(
                     controller: _distanceController,
                     decoration: InputDecoration(
-                      labelText: 'Enter distance here',
+                      labelText: 'Enter distance here (miles)',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
-                  Text("Time (minutes)"),
+                  Text("Time"),
                   TextField(
                     controller: _timeController,
                     decoration: InputDecoration(
-                      labelText: 'Enter Time here',
+                      labelText: 'Enter Time here (minutes)',
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logRun,
-                    child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor:
+                      const Color(0xFF124559), // Midnight green
                       foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
+                    child: Text('Log Exercise'),
+
                   ),
                   Column(
                     children: [
@@ -178,8 +197,9 @@ void initState() {
                 ],
               ),
             ),
+            const SizedBox(height: 30),
+          ]
           ),
-        ],
       ),
     );
   }
