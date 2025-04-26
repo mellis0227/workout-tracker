@@ -6,9 +6,8 @@ import 'dart:typed_data';
 import '../viewmodel/profile_model.dart';
 import '../presenter/profile_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-/* Profile page/code is unfinished and very clunky right now, merging to main to
-meet sprint requirements
- */
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -43,8 +42,6 @@ class _MyHomePageState extends State<Profile> {
   List<Widget> heightMetrics = <Widget>[Text('Ft'), Text('m')];
   List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
   late DateTime date = DateTime(2025, 4, 15);
-  final TextEditingController weightController = TextEditingController();
-  final dateController = TextEditingController();
   List<bool> isHeightSelected = [true, false];
   List<bool> isWeightSelected = [true, false];
   Uint8List? _imageBytes;
@@ -57,6 +54,7 @@ class _MyHomePageState extends State<Profile> {
     if (userID != null) {
       getFullName(userID!);
       loadSavedProfileData(userID!);
+      loadImageFromLocalPath();
     }
   }
 
@@ -94,12 +92,37 @@ class _MyHomePageState extends State<Profile> {
     });
   }
 
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final PickedImage = await picker.pickImage(source: ImageSource.gallery);
 
-  @override
-  void dispose() {
-    weightController.dispose();
-    dateController.dispose();
-    super.dispose();
+    if(PickedImage != null){
+      final imageBytes = await PickedImage.readAsBytes();
+      setState(() {
+        _imageBytes = imageBytes;
+      });
+      await saveImageLocally(imageBytes);
+    }
+  }
+
+  Future<String> saveImageLocally(Uint8List imageBytes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = '${directory.path}/profile_picture.jpg';
+    final file = File(path);
+
+    await file.writeAsBytes(imageBytes);
+    return path;
+  }
+
+  void loadImageFromLocalPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = '${directory.path}/profile_picture.jpg';
+    final file = File(path);
+    if (file.existsSync()) {
+      setState(() {
+        _imageBytes = file.readAsBytesSync();
+      });
+    }
   }
 
   void _openHeightFtPickerDialog(BuildContext context) {
@@ -368,19 +391,6 @@ class _MyHomePageState extends State<Profile> {
         ),
       ),
     );
-  }
-
-  Future<void> pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final PickedImage = await picker.pickImage(source: ImageSource.gallery);
-
-    if(PickedImage != null){
-      final imageBytes = await PickedImage.readAsBytes();
-
-      setState(() {
-        _imageBytes = imageBytes;
-      });
-    }
   }
 
   @override
