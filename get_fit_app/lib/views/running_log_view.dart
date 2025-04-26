@@ -10,7 +10,7 @@ class RunningLogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Run/Walk Log',
+      title: 'Log Cardio',
       home: runningLog(),
     );
   }
@@ -95,16 +95,25 @@ class _MyHomePageState extends State<runningLog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFEFF6E0),
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text('Run/Walk Log'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+           children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFAEC3B0), // Ash gray
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: const [
+                  BoxShadow(
+                color: Colors.black12,
+               blurRadius: 8,
+                offset: Offset(0, 4),
+               ),
+              ],
+            ),
               child: Column(
                 children: [
                   DropdownButtonFormField<String>(
@@ -155,11 +164,18 @@ class _MyHomePageState extends State<runningLog> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _logRun,
-                    child: Text('Log Exercise'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor:
+                      const Color(0xFF124559), // Midnight green
                       foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
+                    child: Text('Log Exercise'),
+
                   ),
                   Column(
                     children: [
@@ -181,8 +197,9 @@ class _MyHomePageState extends State<runningLog> {
                 ],
               ),
             ),
+            const SizedBox(height: 30),
+          ]
           ),
-        ],
       ),
     );
   }

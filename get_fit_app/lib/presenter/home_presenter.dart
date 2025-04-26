@@ -8,8 +8,8 @@ class HomePresenter {
   final List<String> pageTitles = [
     'Dashboard',
     'Fitness Alarm',
-    'Running Log',
-    'Lifting Log',
+    'Log a Run',
+    'Log a Lift',
     'Activity Log',
     'Find Workouts',
     'Music',

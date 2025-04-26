@@ -108,7 +108,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.directions_run),
-                  title: const Text('Running Log'),
+                  title: const Text('Log Cardio'),
                   onTap: () {
                     _presenter.onSelectPage(2); // Switch to Activity Log
                     Navigator.pop(context);
@@ -116,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.fitness_center),
-                  title: const Text('Lifting Log'),
+                  title: const Text('Log a Lift'),
                   onTap: () {
                     _presenter.onSelectPage(3); // Switch to Activity Log
                     Navigator.pop(context);
