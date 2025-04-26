@@ -1,9 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 import 'package:ruler_slider/ruler_slider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
+import '../viewmodel/profile_model.dart';
+import '../presenter/profile_presenter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
@@ -27,7 +30,7 @@ class Profile extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Profile> {
-  String text = '';
+  String? userID;
   String height = '';
   String weight = '';
   int selectedItemIndex = 0;
@@ -40,18 +43,35 @@ class _MyHomePageState extends State<Profile> {
   List<Widget> heightMetrics = <Widget>[Text('Ft'), Text('m')];
   List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
   late DateTime date = DateTime(2025, 4, 15);
-  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
   final dateController = TextEditingController();
   List<bool> isHeightSelected = [true, false];
   List<bool> isWeightSelected = [true, false];
+  Uint8List? _imageBytes;
 
+  final ProfilePresenter _presenter = ProfilePresenter();
+
+  @override
   void initState() {
     super.initState();
+    userID = FirebaseAuth.instance.currentUser?.email;
+    print("Current user ID: $userID");
+  }
+
+  // ?
+  void saveProfileData() {
+    ProfileData profileData = ProfileData(
+      userID: userID ?? "",
+      height: height,
+      weight: weight,
+      date: date,
+    );
+    _presenter.saveProfileData(userID!, profileData);
   }
 
   @override
   void dispose() {
-    _weightController.dispose();
+    weightController.dispose();
     dateController.dispose();
     super.dispose();
   }
@@ -324,8 +344,6 @@ class _MyHomePageState extends State<Profile> {
     );
   }
 
-  Uint8List? _imageBytes;
-
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final PickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -344,10 +362,6 @@ class _MyHomePageState extends State<Profile> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xFFEFF6E0),
-        appBar: AppBar(
-          title: Text('Profile'),
-          centerTitle: true,
-        ),
         body: ListView(
           children: <Widget>[
             SizedBox(height: 10),
@@ -558,7 +572,16 @@ class _MyHomePageState extends State<Profile> {
                            }
                            },
                       ),
-
+                      ElevatedButton(
+                        child: Text('Save Profile Data'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Color(0xFFAEC3B0),
+                          backgroundColor: Color(0xFF124559),
+                        ),
+                        onPressed: () {
+                          saveProfileData();
+                        }
+                      ),
                     ]
                 )
           ],
