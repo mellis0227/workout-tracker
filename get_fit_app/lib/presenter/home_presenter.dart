@@ -13,6 +13,7 @@ class HomePresenter {
     'Activity Log',
     'Find Workouts',
     'Music',
+    'Profile',
   ];
 
   // Updates the selected page index

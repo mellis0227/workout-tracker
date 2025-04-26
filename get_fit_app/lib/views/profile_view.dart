@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:wheel_picker/wheel_picker.dart';
 import 'package:ruler_slider/ruler_slider.dart';
@@ -32,6 +34,7 @@ class _MyHomePageState extends State<Profile> {
   String height = '';
   String weight = '';
   String fullName = "";
+
   int selectedItemIndex = 0;
   int selectedFeet = 0;
   int selectedInches = 0;
@@ -39,11 +42,13 @@ class _MyHomePageState extends State<Profile> {
   int selectedCentimeters = 0;
   double selectedWeightLbs = 0.0;
   double selectedWeightKgs = 0.0;
+
   List<Widget> heightMetrics = <Widget>[Text('Ft'), Text('m')];
   List<Widget> weightMetrics = <Widget>[Text('Lbs'), Text('Kgs')];
   late DateTime date = DateTime(2025, 4, 15);
   List<bool> isHeightSelected = [true, false];
   List<bool> isWeightSelected = [true, false];
+
   Uint8List? _imageBytes;
 
   @override
