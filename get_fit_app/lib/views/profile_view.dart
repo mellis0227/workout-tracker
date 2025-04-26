@@ -519,7 +519,7 @@ class _MyHomePageState extends State<Profile> {
                         selectedColor: Color(0xFF124559),
                         fillColor: Color(0xFFAEC3B0),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 5),
                       Container(
                       child:
                       ElevatedButton(
@@ -582,7 +582,7 @@ class _MyHomePageState extends State<Profile> {
                         selectedColor: Color(0xFF124559),
                         fillColor: Color(0xFFAEC3B0),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 5),
                       ElevatedButton(
                           child: Text('Edit'),
                           style: ElevatedButton.styleFrom(
@@ -599,10 +599,11 @@ class _MyHomePageState extends State<Profile> {
                            },
                       ),
                       ElevatedButton(
-                        child: Text('Save Profile Data'),
+                        child: Text('Save Profile'),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Color(0xFFAEC3B0),
                           backgroundColor: Color(0xFF124559),
+                          fixedSize: Size(125, 10),
                         ),
                         onPressed: () {
                           saveProfileData();
