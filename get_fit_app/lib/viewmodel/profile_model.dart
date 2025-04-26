@@ -43,4 +43,20 @@ class ProfileModel {
       'date': date,
     });
   }
+
+  Future<String> getUsersFullName(String userID) async {
+    String fullName = "";
+    try {
+
+      final currentUserCollection =
+      await firestore.collection("user_data").doc(userID).get();
+
+      Map<String, dynamic>? userData = currentUserCollection.data();
+      fullName = "${userData?['first_name']}";
+      return fullName;
+    } catch (e) {
+      print("Error getting users name: $e");
+    }
+    return "";
+  }
 }

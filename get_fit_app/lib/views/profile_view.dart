@@ -6,6 +6,10 @@ import 'dart:typed_data';
 import '../viewmodel/profile_model.dart';
 import '../presenter/profile_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../viewmodel/dashboard_model.dart';
+import '../views/dashboard_view.dart';
+import '../presenter/dashboard_presenter.dart';
+
 
 
 /* Profile page/code is unfinished and very clunky right now, merging to main to
@@ -30,9 +34,11 @@ class Profile extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Profile> {
+  late final ProfilePresenter _presenter;
   String? userID;
   String height = '';
   String weight = '';
+  String fullName = "";
   int selectedItemIndex = 0;
   int selectedFeet = 0;
   int selectedInches = 0;
@@ -49,13 +55,12 @@ class _MyHomePageState extends State<Profile> {
   List<bool> isWeightSelected = [true, false];
   Uint8List? _imageBytes;
 
-  final ProfilePresenter _presenter = ProfilePresenter();
-
   @override
   void initState() {
     super.initState();
+    _presenter = ProfilePresenter(model: ProfileModel());
     userID = FirebaseAuth.instance.currentUser?.email;
-    print("Current user ID: $userID");
+    getFullName(userID!);
   }
 
   // ?
@@ -68,6 +73,16 @@ class _MyHomePageState extends State<Profile> {
     );
     _presenter.saveProfileData(userID!, profileData);
   }
+
+  Future<void> getFullName(String userID) async {
+    String tempFullName = await _presenter.getUsersFullName(userID);
+    setState(() {
+      if (tempFullName.isNotEmpty) {
+        fullName = tempFullName;
+      }
+    });
+  }
+
 
   @override
   void dispose() {
@@ -401,12 +416,12 @@ class _MyHomePageState extends State<Profile> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text('Your Name',
-                          style: TextStyle(
-                            color: Color(0xFF124559),
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      Text(fullName,
+                      style: TextStyle(
+                        color: Color(0xFF124559),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      )),
                       SizedBox(
                         height: 10,
                       ),

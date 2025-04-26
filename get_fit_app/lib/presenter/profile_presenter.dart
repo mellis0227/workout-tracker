@@ -1,7 +1,9 @@
 import '../viewmodel/profile_model.dart';
 
 class ProfilePresenter {
-  final ProfileModel model = ProfileModel();
+  final ProfileModel model;
+
+  ProfilePresenter({required this.model});
 
   Future<void> saveProfileData(String userID, ProfileData profileData) async {
     await model.saveProfileData(
@@ -10,5 +12,9 @@ class ProfilePresenter {
         weight: profileData.weight,
         date: profileData.date,
     );
+  }
+
+  Future<String> getUsersFullName(String userID) async {
+    return model.getUsersFullName(userID);
   }
 }
