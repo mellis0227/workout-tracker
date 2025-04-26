@@ -14,6 +14,10 @@ class ProfilePresenter {
     );
   }
 
+  Future<ProfileData?> getProfileData(String userID) async {
+    return model.getProfileData(userID);
+  }
+
   Future<String> getUsersFullName(String userID) async {
     return model.getUsersFullName(userID);
   }

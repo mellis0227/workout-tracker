@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileData {
@@ -36,13 +35,41 @@ class ProfileModel {
     await firestore
         .collection('user_data')
         .doc(userID)
-        .collection('profile data')
-        .add({
+        .collection('profile_data')
+        .doc('info')
+        .set({
       'height': height,
       'weight': weight,
       'date': date,
     });
   }
+
+  Future<ProfileData?> getProfileData(String userID) async {
+    try {
+      final doc = await firestore
+          .collection('user_data')
+          .doc(userID)
+          .collection('profile_data')
+          .doc('info')
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data();
+        if (data != null) {
+          return ProfileData(
+            userID: userID,
+            height: data['height'],
+            weight: data['weight'],
+            date: (data['date'] as Timestamp).toDate(),
+          );
+        }
+      }
+    }
+      catch (e) {
+        print("Error loading profile data: $e");
+      }
+      return null;
+    }
 
   Future<String> getUsersFullName(String userID) async {
     String fullName = "";
@@ -59,4 +86,5 @@ class ProfileModel {
     }
     return "";
   }
-}
+  }
+

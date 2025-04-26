@@ -6,12 +6,6 @@ import 'dart:typed_data';
 import '../viewmodel/profile_model.dart';
 import '../presenter/profile_presenter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../viewmodel/dashboard_model.dart';
-import '../views/dashboard_view.dart';
-import '../presenter/dashboard_presenter.dart';
-
-
-
 /* Profile page/code is unfinished and very clunky right now, merging to main to
 meet sprint requirements
  */
@@ -60,10 +54,12 @@ class _MyHomePageState extends State<Profile> {
     super.initState();
     _presenter = ProfilePresenter(model: ProfileModel());
     userID = FirebaseAuth.instance.currentUser?.email;
-    getFullName(userID!);
+    if (userID != null) {
+      getFullName(userID!);
+      loadSavedProfileData(userID!);
+    }
   }
 
-  // ?
   void saveProfileData() {
     ProfileData profileData = ProfileData(
       userID: userID ?? "",
@@ -72,6 +68,21 @@ class _MyHomePageState extends State<Profile> {
       date: date,
     );
     _presenter.saveProfileData(userID!, profileData);
+  }
+
+  Future<void> loadSavedProfileData(String userID) async {
+    ProfileData? savedData = await _presenter.getProfileData(userID);
+
+    if (savedData != null) {
+      setState(() {
+        height = savedData.height;
+        weight = savedData.weight;
+        date = savedData.date;
+      });
+    } else {
+      print ("No profile data found for $userID");
+    }
+    print("Trying to load profile data for $userID");
   }
 
   Future<void> getFullName(String userID) async {
