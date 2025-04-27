@@ -229,15 +229,14 @@ class _DashboardViewState extends State<DashboardView> {
              const SizedBox(width: 10),
              GestureDetector(
                onTap: () => {
-                 print(currentPlaylist),
                Navigator.of(context).push(
                  MaterialPageRoute(builder: (context) => DoWorkoutsView(playlists: currentPlaylist,)),
                 ),
                },
                child: Icon(
-                 Icons.start_rounded,
+                 Icons.start_sharp,
                  color: Colors.white,
-                 size: 30,
+                 size: 25,
                )
              ),
             ],

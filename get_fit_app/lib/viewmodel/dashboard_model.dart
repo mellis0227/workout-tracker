@@ -7,8 +7,6 @@ class DashboardModel {
     "Don’t limit your challenges. Challenge your limits.",
     "You don’t have to be extreme, just consistent.",
     "Success starts with self-discipline.",
-    "Hmm... exercise? I thought you just said extra fries xD",
-    "Working out is life, when life give you workout lemons you make GAINS lemonade!"
   ];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
