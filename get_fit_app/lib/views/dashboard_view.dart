@@ -69,15 +69,16 @@ class _DashboardViewState extends State<DashboardView> {
       backgroundColor: Color(0xFFEFF6E0),
       body: Padding(
         //conditional padding for no schedule overflow, temporary solution
-        padding: EdgeInsets.all(fullName.length > 12 ? 12 : 18),
+        padding: EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display the welcome message
+            SizedBox(height: 15),
             Center(
               child: buildWelcomeText(context),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
@@ -93,7 +94,7 @@ class _DashboardViewState extends State<DashboardView> {
               content: '"$quote"',
               isItalic: true, // Quote is italicized
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 14),
             Row(
               children: [
                 Text(
@@ -128,7 +129,7 @@ class _DashboardViewState extends State<DashboardView> {
               ],
             ),
             SizedBox(
-              height: !viewWorkoutPlan ? 80 : 225,
+              height: !viewWorkoutPlan ? 80 : 220,
               child: ScheduleWorkoutView(
                 viewWorkouts: viewWorkoutPlan,
                 onPlaylistScheduled: () {
@@ -147,7 +148,7 @@ class _DashboardViewState extends State<DashboardView> {
                   letterSpacing: .8
               ),
             ),
-            Padding(padding: EdgeInsets.all(4)),
+            Padding(padding: EdgeInsets.all(5)),
             _buildTile(context, Icons.api, 'Find Workouts', 5),
             _buildTile(context, Icons.music_note_rounded, 'Music Player', 6),
 
