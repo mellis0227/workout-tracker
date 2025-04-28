@@ -74,11 +74,11 @@ class _DashboardViewState extends State<DashboardView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display the welcome message
-            SizedBox(height: 15),
+            SizedBox(height: 7),
             Center(
               child: buildWelcomeText(context),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: fullName.length <= 12 ? 20 : 10),
 
             // Display workout summary card (No workout scheduled)
             _buildCard(
